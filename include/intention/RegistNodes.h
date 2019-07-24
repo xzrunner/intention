@@ -30,7 +30,11 @@ public:                                      \
 #define ITT_NODE_PROP
 
 // primitive
-ITT_DEFINE_NODE(Box,    ITT_NODE_PROP)
+ITT_DEFINE_NODE(Box,                     \
+    sm::vec3 size   = sm::vec3(1, 1, 1); \
+    sm::vec3 center = sm::vec3(0, 0, 0); \
+    float scale     = 1.0f;              \
+)
 ITT_DEFINE_NODE(Sphere, ITT_NODE_PROP)
 ITT_DEFINE_NODE(Curve,  ITT_NODE_PROP)
 

@@ -2,6 +2,7 @@
 #include "intention/PinType.h"
 #include "intention/Evaluator.h"
 #include "intention/Node.h"
+#include "intention/RegistNodes.h"
 
 #include <blueprint/Pin.h>
 #include <blueprint/Node.h>
@@ -9,6 +10,8 @@
 #include <blueprint/node/Function.h>
 #include <blueprint/node/Input.h>
 #include <blueprint/node/Output.h>
+
+#include <everything/node/Box.h>
 
 namespace itt
 {
@@ -51,7 +54,15 @@ evt::NodePtr Everything::CreateGraphNode(Evaluator& eval, const bp::Node* node)
         }
     }
 
-    // todo
+    if (type == rttr::type::get<node::Box>())
+    {
+        auto src = static_cast<const node::Box*>(node);
+        auto box = std::static_pointer_cast<evt::node::Box>(dst);
+
+        box->SetSize(src->size);
+        box->SetCenter(src->center);
+        box->SetScale(sm::vec3(src->scale, src->scale, src->scale));
+    }
 
     // insert to cache
     if (dst) {
