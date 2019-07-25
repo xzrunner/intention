@@ -11,6 +11,9 @@
 #include <blueprint/node/Input.h>
 #include <blueprint/node/Output.h>
 
+// manipulate
+#include <everything/node/Transform.h>
+// primitive
 #include <everything/node/Box.h>
 
 namespace itt
@@ -19,7 +22,12 @@ namespace itt
 evt::NodePtr Everything::CreateGraphNode(Evaluator& eval, const bp::Node* node)
 {
     auto cached = eval.QueryEvtNode(node);
-    if (cached) {
+    if (cached)
+    {
+        if (!node->IsEditNotDirty()) {
+            UpdateBackFromFront(node, cached);
+            node->SetEditNotDirty(true);
+        }
         return cached;
     }
 
@@ -41,8 +49,10 @@ evt::NodePtr Everything::CreateGraphNode(Evaluator& eval, const bp::Node* node)
         // fixme: specify node type
 	    if (!t.is_valid())
         {
-            dst = std::make_shared<evt::Node>();
-            InitPortsBackFromFront(*dst, *node);
+            assert(0);
+
+            //dst = std::make_shared<evt::Node>();
+            //InitPortsBackFromFront(*dst, *node);
 	    }
         else
         {
@@ -54,15 +64,7 @@ evt::NodePtr Everything::CreateGraphNode(Evaluator& eval, const bp::Node* node)
         }
     }
 
-    if (type == rttr::type::get<node::Box>())
-    {
-        auto src = static_cast<const node::Box*>(node);
-        auto box = std::static_pointer_cast<evt::node::Box>(dst);
-
-        box->SetSize(src->size);
-        box->SetCenter(src->center);
-        box->SetScale(sm::vec3(src->scale, src->scale, src->scale));
-    }
+    UpdateBackFromFront(node, dst);
 
     // insert to cache
     if (dst) {
@@ -93,6 +95,30 @@ evt::NodePtr Everything::CreateGraphNode(Evaluator& eval, const bp::Node* node)
     }
 
     return dst;
+}
+
+void Everything::UpdateBackFromFront(const bp::Node* front,
+                                     const evt::NodePtr& back)
+{
+    auto type = front->get_type();
+    if (type == rttr::type::get<node::Transform>())
+    {
+        auto src = static_cast<const node::Transform*>(front);
+        auto trans = std::static_pointer_cast<evt::node::Transform>(back);
+        trans->SetTranslate(src->translate);
+        trans->SetRotate(src->rotate);
+        trans->SetScale(src->scale);
+        trans->SetShear(src->shear);
+    }
+    else if (type == rttr::type::get<node::Box>())
+    {
+        auto src = static_cast<const node::Box*>(front);
+        auto box = std::static_pointer_cast<evt::node::Box>(back);
+
+        box->SetSize(src->size);
+        box->SetCenter(src->center);
+        box->SetScale(sm::vec3(src->scale, src->scale, src->scale));
+    }
 }
 
 int Everything::TypeBackToFront(evt::VariableType type)

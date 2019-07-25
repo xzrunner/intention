@@ -1,6 +1,9 @@
 #include "intention/Evaluator.h"
 #include "intention/Everything.h"
 
+#include <blueprint/Evaluator.h>
+#include <blueprint/Node.h>
+
 namespace itt
 {
 
@@ -12,17 +15,27 @@ Evaluator::~Evaluator()
 {
 }
 
-void Evaluator::Rebuild(const std::vector<bp::NodePtr>& nodes)
+bool Evaluator::Execute(const std::vector<bp::NodePtr>& nodes)
 {
-    Clear();
+    bool dirty = false;
 
-    m_back_nodes.reserve(nodes.size());
-    for (auto& node : nodes)
+    auto sorted = nodes;
+    bp::Evaluator::TopologicalSorting(sorted);
+
+    for (auto& node : sorted)
     {
+        if (node->IsEditNotDirty()) {
+            continue;
+        }
+
+        dirty = true;
+
         auto back_node = Everything::CreateGraphNode(*this, node.get());
         back_node->Execute();
-        m_back_nodes.push_back(back_node);
+        node->SetEditNotDirty(true);
     }
+
+    return dirty;
 }
 
 evt::NodePtr Evaluator::QueryEvtNode(const bp::Node* bp_node) const
@@ -38,7 +51,6 @@ void Evaluator::AddNodeMap(const bp::Node* bp_node, const evt::NodePtr& rg_node)
 
 void Evaluator::Clear()
 {
-    m_back_nodes.clear();
     m_nodes_map.clear();
 }
 

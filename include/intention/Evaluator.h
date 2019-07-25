@@ -18,19 +18,15 @@ public:
     Evaluator();
     ~Evaluator();
 
-    void Rebuild(const std::vector<bp::NodePtr>& nodes);
+    bool Execute(const std::vector<bp::NodePtr>& nodes);
 
     evt::NodePtr QueryEvtNode(const bp::Node* bp_node) const;
     void AddNodeMap(const bp::Node* bp_node, const evt::NodePtr& rg_node);
-
-    auto& GetBackNodes() const { return m_back_nodes; }
 
 private:
     void Clear();
 
 private:
-    std::vector<evt::NodePtr> m_back_nodes;
-
     std::unordered_map<const bp::Node*, evt::NodePtr> m_nodes_map;
 
 }; // Evaluator

@@ -15,6 +15,8 @@ class Everything
 public:
     static evt::NodePtr CreateGraphNode(Evaluator& eval,
         const bp::Node* node);
+    static void UpdateBackFromFront(const bp::Node* front,
+        const evt::NodePtr& back);
 
     static int TypeBackToFront(evt::VariableType type);
     static evt::VariableType TypeFrontToBack(int pin_type);
