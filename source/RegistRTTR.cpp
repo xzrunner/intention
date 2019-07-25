@@ -2,13 +2,6 @@
 
 #include <ee0/ReflectPropTypes.h>
 
-RTTR_REGISTRATION
-{
-
-rttr::registration::class_<itt::Node>("itt::node");
-
-}
-
 namespace bp
 {
 extern void regist_sm_rttr();

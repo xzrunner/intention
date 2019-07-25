@@ -14,6 +14,34 @@
 RTTR_REGISTRATION
 {
 
+// base
+rttr::registration::class_<itt::Node>("itt::node")
+.property("display", &itt::Node::GetDisplay, &itt::Node::SetDisplay)
+(
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Display"))
+)
+;
+
+// manipulate
+REGIST_NODE_RTTI(Transform,
+.property("translate", &itt::node::Transform::translate)               \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Translate")) \
+)                                                                      \
+.property("rotate", &itt::node::Transform::rotate)                     \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Rotate"))    \
+)                                                                      \
+.property("scale", &itt::node::Transform::scale)                       \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))     \
+)                                                                      \
+.property("shear", &itt::node::Transform::shear)                       \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Shear"))     \
+)                                                                      \
+)
+
 // primitive
 REGIST_NODE_RTTI(Box,
 .property("size", &itt::node::Box::size)                            \
