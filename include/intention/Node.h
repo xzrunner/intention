@@ -13,6 +13,9 @@ public:
 
     virtual void Draw(const n2::RenderParams& rp) const override;
 
+    bool GetDisplay() const { return m_display; }
+    void SetDisplay(bool display) { m_display = display; }
+
     struct PinDesc
     {
         bool operator == (const PinDesc& desc) const {
@@ -37,7 +40,7 @@ private:
     bool m_lock   = false;
 
     bool m_toggle  = false;
-    bool m_display = false;
+    bool m_display = true;
 
     RTTR_ENABLE(bp::Node)
 
