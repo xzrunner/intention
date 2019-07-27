@@ -9,22 +9,27 @@
 
 #include <everything/typedef.h>
 
+namespace bp { class Connecting; }
+
 namespace itt
 {
 
 class Evaluator : boost::noncopyable
 {
 public:
-    Evaluator();
-    ~Evaluator();
+    // update node
+    void OnAddNode(const bp::Node& node);
+    void OnRemoveNode(const bp::Node& node);
+    void OnClearAllNodes();
 
-    bool Execute(const std::vector<bp::NodePtr>& nodes);
+    void OnNodePropChanged(const bp::NodePtr& node);
 
-    evt::NodePtr QueryEvtNode(const bp::Node* bp_node) const;
-    void AddNodeMap(const bp::Node* bp_node, const evt::NodePtr& rg_node);
+    // update connection
+    void OnConnected(const bp::Connecting& conn);
+    void OnDisconnecting(const bp::Connecting& conn);
+    void OnRebuildConnection();
 
-private:
-    void Clear();
+    auto& GetAllNodes() const { return m_nodes_map; }
 
 private:
     std::unordered_map<const bp::Node*, evt::NodePtr> m_nodes_map;

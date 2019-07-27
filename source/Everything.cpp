@@ -19,19 +19,32 @@
 namespace itt
 {
 
-evt::NodePtr Everything::CreateGraphNode(Evaluator& eval, const bp::Node* node)
+void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
 {
-    auto cached = eval.QueryEvtNode(node);
-    if (cached)
+    auto type = front.get_type();
+    if (type == rttr::type::get<node::Transform>())
     {
-        if (!node->IsEditNotDirty()) {
-            UpdateBackFromFront(node, cached);
-            node->SetEditNotDirty(true);
-        }
-        return cached;
+        auto& src = static_cast<const node::Transform&>(front);
+        auto& trans = static_cast<evt::node::Transform&>(back);
+        trans.SetTranslate(src.translate);
+        trans.SetRotate(src.rotate);
+        trans.SetScale(src.scale);
+        trans.SetShear(src.shear);
     }
+    else if (type == rttr::type::get<node::Box>())
+    {
+        auto& src = static_cast<const node::Box&>(front);
+        auto& box = static_cast<evt::node::Box&>(back);
 
-    auto type = node->get_type();
+        box.SetSize(src.size);
+        box.SetCenter(src.center);
+        box.SetScale(sm::vec3(src.scale, src.scale, src.scale));
+    }
+}
+
+evt::NodePtr Everything::CreateBackFromFront(const bp::Node& node)
+{
+    auto type = node.get_type();
     auto src_type = type.get_name().to_string();
     std::string dst_type;
     std::string lib_str = "evt";
@@ -42,7 +55,6 @@ evt::NodePtr Everything::CreateGraphNode(Evaluator& eval, const bp::Node* node)
 
     evt::NodePtr dst = nullptr;
 
-    // create evt node
     if (!dst_type.empty())
     {
 	    rttr::type t = rttr::type::get_by_name(dst_type);
@@ -64,61 +76,7 @@ evt::NodePtr Everything::CreateGraphNode(Evaluator& eval, const bp::Node* node)
         }
     }
 
-    UpdateBackFromFront(node, dst);
-
-    // insert to cache
-    if (dst) {
-        eval.AddNodeMap(node, dst);
-    }
-
-    // connect input
-    if (dst)
-    {
-        for (int i = 0, n = node->GetAllInput().size(); i < n; ++i)
-        {
-            auto& imports = dst->GetImports();
-            if (node->IsExtensibleInputPorts() && i >= static_cast<int>(imports.size())) {
-                continue;
-            }
-            evt::Node::PortAddr from_port;
-            auto& conns = node->GetAllInput()[i]->GetConnecting();
-            if (conns.empty()) {
-                continue;
-            }
-            assert(conns.size() == 1);
-            auto& bp_from_port = conns[0]->GetFrom();
-            assert(bp_from_port);
-            if (CreateFromNode(eval, bp_from_port, from_port)) {
-                evt::make_connecting(from_port, { dst, i });
-            }
-        }
-    }
-
     return dst;
-}
-
-void Everything::UpdateBackFromFront(const bp::Node* front,
-                                     const evt::NodePtr& back)
-{
-    auto type = front->get_type();
-    if (type == rttr::type::get<node::Transform>())
-    {
-        auto src = static_cast<const node::Transform*>(front);
-        auto trans = std::static_pointer_cast<evt::node::Transform>(back);
-        trans->SetTranslate(src->translate);
-        trans->SetRotate(src->rotate);
-        trans->SetScale(src->scale);
-        trans->SetShear(src->shear);
-    }
-    else if (type == rttr::type::get<node::Box>())
-    {
-        auto src = static_cast<const node::Box*>(front);
-        auto box = std::static_pointer_cast<evt::node::Box>(back);
-
-        box->SetSize(src->size);
-        box->SetCenter(src->center);
-        box->SetScale(sm::vec3(src->scale, src->scale, src->scale));
-    }
 }
 
 int Everything::TypeBackToFront(evt::VariableType type)
@@ -159,70 +117,6 @@ evt::VariableType Everything::TypeFrontToBack(int pin_type)
     }
 
     return ret;
-}
-
-bool Everything::CreateFromNode(Evaluator& eval, const std::shared_ptr<bp::Pin>& bp_from_port,
-                                evt::Node::PortAddr& from_port)
-{
-    auto& parent = bp_from_port->GetParent();
-    auto p_type = parent.get_type();
-    if (p_type == rttr::type::get<bp::node::Input>())
-    {
-        auto& input = static_cast<const bp::node::Input&>(parent);
-        auto func_node = input.GetParent();
-        if (!func_node) {
-            return false;
-        }
-        auto& func_inputs = func_node->GetAllInput();
-        for (int i = 0, n = func_inputs.size(); i < n; ++i)
-        {
-            if (func_inputs[i]->GetName() != input.GetName()) {
-                continue;
-            }
-            auto& conns = func_node->GetAllInput()[i]->GetConnecting();
-            if (conns.empty()) {
-                return false;
-            }
-            assert(conns.size() == 1);
-            auto bp_from_port = conns[0]->GetFrom();
-            assert(bp_from_port);
-
-            return CreateFromNode(eval, bp_from_port, from_port);
-        }
-        return false;
-    }
-    from_port.node = CreateGraphNode(eval, &bp_from_port->GetParent());
-    from_port.idx  = bp_from_port->GetPosIdx();
-
-    return true;
-}
-
-void Everything::InitPortsBackFromFront(evt::Node& back, const bp::Node& front)
-{
-    auto& inputs  = front.GetAllInput();
-    auto& outputs = front.GetAllOutput();
-
-    std::vector<evt::Node::Port> imports, exports;
-    imports.reserve(inputs.size());
-    for (auto i : inputs)
-    {
-        evt::Variable var;
-        var.type = TypeFrontToBack(i->GetType());
-//        var.name = std::string("in") + std::to_string(i);
-        var.name = i->GetName();
-        imports.push_back(var);
-    }
-    exports.reserve(outputs.size());
-    for (auto o : outputs)
-    {
-        evt::Variable var;
-        var.type = TypeFrontToBack(o->GetType());
-//        var.name = std::string("in") + std::to_string(i);
-        var.name = o->GetName();
-        exports.push_back(var);
-    }
-    back.SetImports(imports);
-    back.SetExports(exports);
 }
 
 }

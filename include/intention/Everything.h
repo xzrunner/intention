@@ -13,19 +13,12 @@ class Evaluator;
 class Everything
 {
 public:
-    static evt::NodePtr CreateGraphNode(Evaluator& eval,
-        const bp::Node* node);
-    static void UpdateBackFromFront(const bp::Node* front,
-        const evt::NodePtr& back);
+    static void UpdatePropBackFromFront(const bp::Node& front, evt::Node& back);
+
+    static evt::NodePtr CreateBackFromFront(const bp::Node& front);
 
     static int TypeBackToFront(evt::VariableType type);
     static evt::VariableType TypeFrontToBack(int pin_type);
-
-private:
-    static bool CreateFromNode(Evaluator& eval,
-        const std::shared_ptr<bp::Pin>& bp_from_port, evt::Node::PortAddr& from_port);
-
-    static void InitPortsBackFromFront(evt::Node& back, const bp::Node& front);;
 
 }; // Everything
 

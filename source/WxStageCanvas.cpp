@@ -2,10 +2,10 @@
 #include "intention/Node.h"
 
 #include <ee0/WxStagePage.h>
+#include <ee0/MsgHelper.h>
 #include <blueprint/Node.h>
 #include <blueprint/CompNode.h>
 #include <intention/Evaluator.h>
-#include <intention/Blackboard.h>
 #include <intention/Node.h>
 
 #include <node0/SceneNode.h>
@@ -27,6 +27,16 @@ WxStageCanvas::WxStageCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
 {
 }
 
+void WxStageCanvas::SetEval(const std::shared_ptr<itt::Evaluator>& eval)
+{
+    if (m_eval == eval) {
+        return;
+    }
+
+    m_eval = eval;
+    SetDirty(); // refresh
+}
+
 bool WxStageCanvas::OnUpdate()
 {
     return false;
@@ -39,8 +49,7 @@ void WxStageCanvas::DrawBackground3D() const
 
 void WxStageCanvas::DrawForeground3D() const
 {
-    auto eval = itt::Blackboard::Instance()->GetEval();
-    if (!eval) {
+    if (!m_eval) {
         return;
     }
 
@@ -68,7 +77,7 @@ void WxStageCanvas::DrawForeground3D() const
         pt0::RenderVariant(wc->GetProjMat())
     );
 
-    auto& nodes = eval->GetAllNodes();
+    auto& nodes = m_eval->GetAllNodes();
     for (auto& n : nodes)
     {
         auto bp_node = n.first;
@@ -81,7 +90,7 @@ void WxStageCanvas::DrawForeground3D() const
             continue;
         }
 
-        auto evt_node = eval->QueryEvtNode(bp_node);
+        auto evt_node = n.second;
         if (!evt_node) {
             continue;
         }
