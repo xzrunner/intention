@@ -13,6 +13,9 @@ public:
 
     virtual void Draw(const n2::RenderParams& rp) const override;
 
+    bool GetTemplate() const { return m_template; }
+    void SetTemplate(bool temp) { m_template = temp; }
+
     bool GetDisplay() const { return m_display; }
     void SetDisplay(bool display) { m_display = display; }
 
@@ -39,8 +42,8 @@ private:
     bool m_bypass = false;
     bool m_lock   = false;
 
-    bool m_toggle  = false;
-    bool m_display = true;
+    bool m_template = false;
+    bool m_display  = true;
 
     RTTR_ENABLE(bp::Node)
 
