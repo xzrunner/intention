@@ -55,6 +55,9 @@
     <ClInclude Include="..\..\..\include\intention\Blackboard.h">
       <Filter>tools</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\WxStageCanvas.h">
+      <Filter>view</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -84,6 +87,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\Blackboard.cpp">
       <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxStageCanvas.cpp">
+      <Filter>view</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
