@@ -42,6 +42,18 @@ REGIST_NODE_RTTI(Transform,
 )                                                                      \
 )
 
+// polygon
+REGIST_NODE_RTTI(PolyExtrude,
+.property("group_name", &itt::node::PolyExtrude::group_name)           \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
+)                                                                      \
+.property("distance", &itt::node::PolyExtrude::distance)               \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance"))  \
+)
+)
+
 // primitive
 REGIST_NODE_RTTI(Box,
 .property("size", &itt::node::Box::size)                            \
@@ -59,6 +71,30 @@ REGIST_NODE_RTTI(Box,
 )
 REGIST_NODE_RTTI_DEFAULT(Sphere)
 REGIST_NODE_RTTI_DEFAULT(Curve)
+
+// utility
+REGIST_NODE_RTTI(GroupCreate,                                              \
+.property("name", &itt::node::GroupCreate::name)                           \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Name"))          \
+)                                                                          \
+.property("type", &itt::node::GroupCreate::type)                           \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Type"))          \
+)                                                                          \
+.property("keep_by_normals", &itt::node::GroupCreate::keep_by_normals)     \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("KeepByNormals")) \
+)                                                                          \
+.property("direction", &itt::node::GroupCreate::direction)                 \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Direction"))     \
+)                                                                          \
+.property("spread_angle", &itt::node::GroupCreate::spread_angle)           \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SpreadAngle"))   \
+)                                                                          \
+)
 
 }
 

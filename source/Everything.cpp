@@ -13,8 +13,12 @@
 
 // manipulate
 #include <everything/node/Transform.h>
+// polygon
+#include <everything/node/PolyExtrude.h>
 // primitive
 #include <everything/node/Box.h>
+// utility
+#include <everything/node/GroupCreate.h>
 
 namespace itt
 {
@@ -22,6 +26,7 @@ namespace itt
 void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
 {
     auto type = front.get_type();
+    // manipulate
     if (type == rttr::type::get<node::Transform>())
     {
         auto& src = static_cast<const node::Transform&>(front);
@@ -31,6 +36,21 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         trans.SetScale(src.scale);
         trans.SetShear(src.shear);
     }
+    // polygon
+    else if (type == rttr::type::get<node::PolyExtrude>())
+    {
+        auto& src = static_cast<const node::PolyExtrude&>(front);
+        auto& ext = static_cast<evt::node::PolyExtrude&>(back);
+
+        std::shared_ptr<model::BrushModel::BrushGroup> group = nullptr;
+        if (!src.group_name.empty())
+        {
+
+        }
+        ext.SetGroup(group);
+        ext.SetDistance(src.distance);
+    }
+    // primitive
     else if (type == rttr::type::get<node::Box>())
     {
         auto& src = static_cast<const node::Box&>(front);
@@ -39,6 +59,21 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         box.SetSize(src.size);
         box.SetCenter(src.center);
         box.SetScale(sm::vec3(src.scale, src.scale, src.scale));
+    }
+    // utility
+    else if (type == rttr::type::get<node::GroupCreate>())
+    {
+        auto& src = static_cast<const node::GroupCreate&>(front);
+        auto& gc = static_cast<evt::node::GroupCreate&>(back);
+
+        gc.SetName(src.name);
+        gc.SetType(src.type);
+
+        if (src.keep_by_normals) {
+            gc.EnableKeepByNormals(src.direction, src.spread_angle);
+        } else {
+            gc.DisableKeepByNormals();
+        }
     }
 }
 

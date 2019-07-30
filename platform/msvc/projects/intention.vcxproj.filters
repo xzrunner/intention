@@ -55,6 +55,9 @@
     <ClInclude Include="..\..\..\include\intention\WxStageCanvas.h">
       <Filter>view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\RenderSystem.h">
+      <Filter>view</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -83,6 +86,9 @@
       <Filter>tools\eval</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxStageCanvas.cpp">
+      <Filter>view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\RenderSystem.cpp">
       <Filter>view</Filter>
     </ClCompile>
   </ItemGroup>
