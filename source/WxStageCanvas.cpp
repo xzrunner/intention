@@ -1,22 +1,12 @@
 #include "intention/WxStageCanvas.h"
-#include "intention/Node.h"
+#include "intention/RenderSystem.h"
+#include "intention/Evaluator.h"
 
-#include <ee0/WxStagePage.h>
-#include <ee0/MsgHelper.h>
-#include <blueprint/Node.h>
-#include <blueprint/CompNode.h>
-#include <intention/Evaluator.h>
-#include <intention/Node.h>
-
-#include <node0/SceneNode.h>
-#include <node0/CompComplex.h>
-#include <node3/RenderSystem.h>
+#include <painting2/RenderSystem.h>
 #include <painting3/MaterialMgr.h>
 #include <painting3/Blackboard.h>
 #include <painting3/WindowContext.h>
 #include <painting3/PerspCam.h>
-#include <everything/Evaluator.h>
-#include <everything/Node.h>
 
 namespace itt
 {
@@ -77,42 +67,15 @@ void WxStageCanvas::DrawForeground3D() const
         pt0::RenderVariant(wc->GetProjMat())
     );
 
+    auto cam_mat = m_camera->GetProjectionMat() * m_camera->GetViewMat();
+    RenderSystem rs(GetViewport(), cam_mat);
+
     auto& nodes = m_eval->GetAllNodes();
-    for (auto& n : nodes)
-    {
-        auto bp_node = n.first;
-        if (!bp_node->get_type().is_derived_from<itt::Node>()) {
-            continue;
-        }
-
-        auto itt_node = static_cast<const Node*>(bp_node);
-        if (!itt_node->GetDisplay()) {
-            continue;
-        }
-
-        auto evt_node = n.second;
-        if (!evt_node) {
-            continue;
-        }
-
-        auto sn = evt_node->GetSceneNode();
-        if (!sn) {
-            continue;
-        }
-
-        pt3::RenderParams rp;
-
-        if (itt_node->GetDisplay())
-        {
-            // draw face
-            rp.type = pt3::RenderParams::DRAW_MESH;
-            n3::RenderSystem::Draw(*sn, rp, rc);
-        }
-
-        // draw edge
-        rp.type = pt3::RenderParams::DRAW_BORDER_MESH;
-        n3::RenderSystem::Draw(*sn, rp, rc);
+    for (auto& n : nodes) {
+        rs.DrawNode(rc, *n.second, *n.first);
     }
+
+    pt2::RenderSystem::DrawPainter(rs.GetPainter());
 }
 
 }
