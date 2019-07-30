@@ -23,7 +23,7 @@ namespace itt
 
 WxStageCanvas::WxStageCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
                              const ee0::RenderContext& rc)
-    : ee3::WxStageCanvas(stage, ECS_WORLD_VAR &rc)
+    : ee3::WxStageCanvas(stage, ECS_WORLD_VAR &rc, nullptr, true)
 {
 }
 
