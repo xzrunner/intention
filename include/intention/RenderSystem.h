@@ -6,7 +6,7 @@
 namespace evt { class Node; }
 namespace bp { class Node; }
 namespace pt3 { class Viewport; }
-namespace pm3 { struct BrushFace; }
+namespace pm3 { struct Brush; struct BrushFace; }
 
 namespace itt
 {
@@ -22,7 +22,8 @@ public:
     auto& GetPainter() const { return m_pt; }
 
 private:
-    void DrawFace(const pm3::BrushFace& face, uint32_t color, const sm::mat4& cam_mat) const;
+    void DrawFace(const pm3::Brush& brush, const pm3::BrushFace& face,
+        uint32_t color, const sm::mat4& cam_mat) const;
 
 private:
     const pt3::Viewport& m_vp;

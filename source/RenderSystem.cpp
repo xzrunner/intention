@@ -64,17 +64,18 @@ void RenderSystem::DrawNode(const pt0::RenderContext& rc,
         auto& gc = static_cast<const evt::node::GroupCreate&>(back);
         auto group = gc.GetGroup();
         for (auto& f : group->part.faces) {
-            DrawFace(*f, LIGHT_SELECT_COLOR, m_cam_mat);
+            DrawFace(*group->part.parent, *f, LIGHT_SELECT_COLOR, m_cam_mat);
         }
     }
 }
 
-void RenderSystem::DrawFace(const pm3::BrushFace& face, uint32_t color, const sm::mat4& cam_mat) const
+void RenderSystem::DrawFace(const pm3::Brush& brush, const pm3::BrushFace& face,
+                            uint32_t color, const sm::mat4& cam_mat) const
 {
 	std::vector<sm::vec2> polygon;
 	polygon.reserve(face.vertices.size());
 	for (auto& v : face.vertices) {
-		auto p3 = v->pos * model::BrushBuilder::VERTEX_SCALE;
+		auto p3 = brush.vertices[v] * model::BrushBuilder::VERTEX_SCALE;
 		polygon.push_back(m_vp.TransPosProj3ToProj2(p3, cam_mat));
 	}
 	m_pt.AddPolygonFilled(polygon.data(), polygon.size(), color);
