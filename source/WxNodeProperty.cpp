@@ -1,6 +1,7 @@
 #include "intention/WxNodeProperty.h"
 #include "intention/ReflectPropTypes.h"
 #include "intention/PinType.h"
+#include "intention/RegistNodes.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/ReflectPropTypes.h>
@@ -8,6 +9,7 @@
 #include <ee0/WxPropHelper.h>
 #include <blueprint/Node.h>
 #include <blueprint/MessageID.h>
+#include <blueprint/TreeHelper.h>
 #include <blueprint/node/Input.h>
 #include <blueprint/node/Output.h>
 
@@ -81,18 +83,30 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     }
 
     auto prop_type = prop.get_type();
-  //  if (prop_type == rttr::type::get<ClearType>())
-  //  {
-  //      const wxChar* CLEAR_TYPES[] = { wxT("Color"), wxT("Depth"), wxT("Stencil"), NULL };
-		//const long    CLEAR_VALUES[] = {
-  //          ClearType::CLEAR_COLOR,
-  //          ClearType::CLEAR_DEPTH,
-  //          ClearType::CLEAR_STENCIL
-		//};
-		//auto channels = prop.get_value(node).get_value<ClearType>().type;
-		//m_pg->Append(new wxFlagsProperty(ui_info.desc, wxPG_LABEL, CLEAR_TYPES, CLEAR_VALUES, channels));
-  //  }
-  //  else
+    if (prop_type == rttr::type::get<GroupName>())
+    {
+        std::vector<const bp::Node*> group_nodes;
+        QueryPrevNodeType(*node, rttr::type::get<node::GroupCreate>(), group_nodes);
+        if (!group_nodes.empty())
+        {
+            int idx = -1;
+            auto group_name = prop.get_value(node).get_value<GroupName>().str;
+
+            wxArrayString group_names;
+            for (auto& n : group_nodes)
+            {
+                auto& name = static_cast<const node::GroupCreate*>(n)->name;
+                if (name == group_name) {
+                    idx = group_names.size();
+                }
+                group_names.push_back(name);
+            }
+            auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, group_names);
+            type_prop->SetValue(idx);
+            m_pg->Append(type_prop);
+        }
+    }
+    else
     {
         ret = false;
     }
@@ -123,16 +137,35 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     }
 
     auto prop_type = prop.get_type();
-    //if (prop_type == rttr::type::get<ClearType>() && key == ui_info.desc)
-    //{
-    //    prop.set_value(m_node, static_cast<ClearType>(wxANY_AS(val, int)));
-    //}
-    //else
+    if (prop_type == rttr::type::get<GroupName>() && key == ui_info.desc)
+    {
+        std::vector<const bp::Node*> group_nodes;
+        QueryPrevNodeType(*m_node, rttr::type::get<node::GroupCreate>(), group_nodes);
+        if (!group_nodes.empty())
+        {
+            auto node = group_nodes[wxANY_AS(val, int)];
+            auto& name = static_cast<const node::GroupCreate*>(node)->name;
+            prop.set_value(m_node, GroupName({ name }));
+        }
+    }
+    else
     {
         ret = false;
     }
 
     return ret;
+}
+
+void WxNodeProperty::QueryPrevNodeType(const bp::Node& root, rttr::type type,
+                                       std::vector<const bp::Node*>& result)
+{
+    std::set<const bp::Node*> prevs;
+    bp::TreeHelper::GetPrecursorNodes(root, prevs);
+    for (auto& p : prevs) {
+        if (p->get_type() == type) {
+            result.push_back(p);
+        }
+    }
 }
 
 }

@@ -43,7 +43,7 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         auto& ext = static_cast<evt::node::PolyExtrude&>(back);
 
         std::shared_ptr<model::BrushModel::BrushGroup> group = nullptr;
-        if (!src.group_name.empty())
+        if (!src.group_name.str.empty())
         {
 
         }

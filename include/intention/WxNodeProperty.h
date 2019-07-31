@@ -14,6 +14,10 @@ protected:
     virtual bool InitView(const rttr::property& prop, const bp::NodePtr& node) override;
     virtual bool UpdateView(const rttr::property& prop, const wxPGProperty& wx_prop) override;
 
+private:
+    static void QueryPrevNodeType(const bp::Node& root, rttr::type type,
+        std::vector<const bp::Node*>& result);
+
 }; // WxNodeProperty
 
 }
