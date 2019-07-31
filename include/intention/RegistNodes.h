@@ -42,7 +42,7 @@ ITT_DEFINE_NODE(Transform,                  \
 // polygon
 ITT_DEFINE_NODE(PolyExtrude, \
     std::string group_name;  \
-    float distance = 1.0f;   \
+    float distance = 0;      \
 )
 
 // primitive
