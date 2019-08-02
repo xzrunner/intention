@@ -29,7 +29,12 @@ public:
     void OnDisconnecting(const bp::Connecting& conn);
     void OnRebuildConnection();
 
+    // update context
+    void UpdateContext();
+
     auto& GetAllNodes() const { return m_nodes_map; }
+
+    evt::NodePtr QueryBackNode(const bp::Node& front_node) const;
 
 private:
     std::unordered_map<const bp::Node*, evt::NodePtr> m_nodes_map;

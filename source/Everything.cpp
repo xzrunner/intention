@@ -3,6 +3,7 @@
 #include "intention/Evaluator.h"
 #include "intention/Node.h"
 #include "intention/RegistNodes.h"
+#include "intention/NodeHelper.h"
 
 #include <blueprint/Pin.h>
 #include <blueprint/Node.h>
@@ -42,12 +43,7 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         auto& src = static_cast<const node::PolyExtrude&>(front);
         auto& ext = static_cast<evt::node::PolyExtrude&>(back);
 
-        std::shared_ptr<model::BrushModel::BrushGroup> group = nullptr;
-        if (!src.group_name.str.empty())
-        {
-
-        }
-        ext.SetGroup(group);
+        ext.SetGroupName(src.group_name.str);
         ext.SetDistance(src.distance);
     }
     // primitive

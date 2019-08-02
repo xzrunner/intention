@@ -2,6 +2,7 @@
 #include "intention/ReflectPropTypes.h"
 #include "intention/PinType.h"
 #include "intention/RegistNodes.h"
+#include "intention/NodeHelper.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/ReflectPropTypes.h>
@@ -47,6 +48,8 @@ int PinTypeToIdx(int type)
     assert(0);
     return -1;
 }
+
+const char* STR_GROUP_NULL = "null";
 
 }
 
@@ -101,6 +104,8 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
                 }
                 group_names.push_back(name);
             }
+            group_names.push_back(STR_GROUP_NULL);
+
             auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, group_names);
             type_prop->SetValue(idx);
             m_pg->Append(type_prop);
@@ -143,9 +148,17 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         NodeHelper::QueryPrevGroupCreateNodes(*m_node, group_nodes);
         if (!group_nodes.empty())
         {
-            auto node = group_nodes[wxANY_AS(val, int)];
-            auto& name = static_cast<const node::GroupCreate*>(node)->name;
-            prop.set_value(m_node, GroupName({ name }));
+            const int idx = wxANY_AS(val, int);
+            if (idx >= 0 && idx < static_cast<int>(group_nodes.size()))
+            {
+                auto node = group_nodes[idx];
+                auto& name = static_cast<const node::GroupCreate*>(node)->name;
+                prop.set_value(m_node, GroupName({ name }));
+            }
+            else
+            {
+                prop.set_value(m_node, GroupName());
+            }
         }
     }
     else

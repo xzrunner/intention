@@ -7,6 +7,7 @@
 #include <blueprint/Connecting.h>
 
 #include <everything/Node.h>
+#include <everything/TreeContext.h>
 
 #include <queue>
 
@@ -52,6 +53,11 @@ void Evaluator::OnRemoveNode(const bp::Node& node)
         }
     }
 
+    m_nodes_map.erase(itr);
+
+    // update context
+    UpdateContext();
+
     // execute
     for (auto& c : children) {
         c->Execute(false);
@@ -70,10 +76,12 @@ void Evaluator::OnNodePropChanged(const bp::NodePtr& node)
     assert(itr != m_nodes_map.end());
     Everything::UpdatePropBackFromFront(*node, *itr->second);
 
+    // update context
+    UpdateContext();
+
     // execute
     std::queue<const bp::Node*> buf;
     buf.push(node.get());
-
     while (!buf.empty())
     {
         auto n = buf.front(); buf.pop();
@@ -103,6 +111,8 @@ void Evaluator::OnConnected(const bp::Connecting& conn)
         { t_itr->second, t_pin->GetPosIdx() }
     );
 
+    UpdateContext();
+
     t_itr->second->Execute(false);
 }
 
@@ -115,11 +125,16 @@ void Evaluator::OnDisconnecting(const bp::Connecting& conn)
     auto t_itr = m_nodes_map.find(&t_pin->GetParent());
     assert(f_itr != m_nodes_map.end() && t_itr != m_nodes_map.end());
 
+    // update connections
     evt::disconnect(
         { f_itr->second, f_pin->GetPosIdx() },
         { t_itr->second, t_pin->GetPosIdx() }
     );
 
+    // update context
+    UpdateContext();
+
+    // execute
     t_itr->second->Execute(false);
 }
 
@@ -148,6 +163,9 @@ void Evaluator::OnRebuildConnection()
         }
     }
 
+    // update context
+    UpdateContext();
+
     // execute
     std::vector<const bp::Node*> bp_nodes;
     bp_nodes.reserve(m_nodes_map.size());
@@ -163,6 +181,33 @@ void Evaluator::OnRebuildConnection()
         assert(itr != m_nodes_map.end());
         itr->second->Execute(true);
     }
+}
+
+void Evaluator::UpdateContext()
+{
+    for (auto& itr : m_nodes_map) {
+        itr.second->BeforeUpdateContext();
+    }
+
+    for (auto& itr : m_nodes_map)
+    {
+        bool is_root = true;
+        auto inputs = itr.second->GetImports();
+        for (auto& i : inputs) {
+            if (!i.conns.empty()) {
+                is_root = false;
+            }
+        }
+        if (is_root) {
+            itr.second->UpdateContext(evt::TreeContext());
+        }
+    }
+}
+
+evt::NodePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
+{
+    auto itr = m_nodes_map.find(&front_node);
+    return itr == m_nodes_map.end() ? nullptr : itr->second;
 }
 
 }
