@@ -58,6 +58,9 @@
     <ClInclude Include="..\..\..\include\intention\RenderSystem.h">
       <Filter>view</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\NodeHelper.h">
+      <Filter>tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -90,6 +93,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\RenderSystem.cpp">
       <Filter>view</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\NodeHelper.cpp">
+      <Filter>tools</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -86,7 +86,7 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     if (prop_type == rttr::type::get<GroupName>())
     {
         std::vector<const bp::Node*> group_nodes;
-        QueryPrevNodeType(*node, rttr::type::get<node::GroupCreate>(), group_nodes);
+        NodeHelper::QueryPrevGroupCreateNodes(*node, group_nodes);
         if (!group_nodes.empty())
         {
             int idx = -1;
@@ -140,7 +140,7 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     if (prop_type == rttr::type::get<GroupName>() && key == ui_info.desc)
     {
         std::vector<const bp::Node*> group_nodes;
-        QueryPrevNodeType(*m_node, rttr::type::get<node::GroupCreate>(), group_nodes);
+        NodeHelper::QueryPrevGroupCreateNodes(*m_node, group_nodes);
         if (!group_nodes.empty())
         {
             auto node = group_nodes[wxANY_AS(val, int)];
@@ -154,18 +154,6 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     }
 
     return ret;
-}
-
-void WxNodeProperty::QueryPrevNodeType(const bp::Node& root, rttr::type type,
-                                       std::vector<const bp::Node*>& result)
-{
-    std::set<const bp::Node*> prevs;
-    bp::TreeHelper::GetPrecursorNodes(root, prevs);
-    for (auto& p : prevs) {
-        if (p->get_type() == type) {
-            result.push_back(p);
-        }
-    }
 }
 
 }
