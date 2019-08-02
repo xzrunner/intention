@@ -14,6 +14,7 @@
     <ClInclude Include="..\..\..\include\intention\Evaluator.h" />
     <ClInclude Include="..\..\..\include\intention\Everything.h" />
     <ClInclude Include="..\..\..\include\intention\Intention.h" />
+    <ClInclude Include="..\..\..\include\intention\MessageID.h" />
     <ClInclude Include="..\..\..\include\intention\Node.h" />
     <ClInclude Include="..\..\..\include\intention\NodeHelper.h" />
     <ClInclude Include="..\..\..\include\intention\PinCallback.h" />

@@ -3,6 +3,7 @@
 #include "intention/PinType.h"
 #include "intention/RegistNodes.h"
 #include "intention/NodeHelper.h"
+#include "intention/MessageID.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/ReflectPropTypes.h>
@@ -138,6 +139,17 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
             (node_type == rttr::type::get<bp::node::Output>() && ui_info.desc == bp::node::Output::STR_TYPE)))
     {
         prop.set_value(m_node, PIN_IDX_TO_TYPE[wxANY_AS(val, int)]);
+        return true;
+    }
+
+    if (key == Node::STR_PROP_DISPLAY && key == ui_info.desc)
+    {
+        const bool display = wxANY_AS(val, bool);
+        if (display)
+        {
+            m_sub_mgr->NotifyObservers(MSG_CLEAR_NODE_DISPLAY_TAG);
+            prop.set_value(m_node, true);
+        }
         return true;
     }
 

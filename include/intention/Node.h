@@ -29,6 +29,9 @@ public:
         std::string name;
     };
 
+public:
+    static const char* STR_PROP_DISPLAY;
+
 protected:
     void InitPins(const std::vector<PinDesc>& input,
         const std::vector<PinDesc>& output);
@@ -43,7 +46,7 @@ private:
     bool m_lock   = false;
 
     bool m_template = false;
-    bool m_display  = true;
+    bool m_display  = false;
 
     RTTR_ENABLE(bp::Node)
 

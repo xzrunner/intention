@@ -8,6 +8,8 @@
 namespace itt
 {
 
+const char* Node::STR_PROP_DISPLAY = "Display";
+
 Node::Node(const std::string& title)
     : bp::Node(title)
 {
