@@ -22,7 +22,7 @@ public:
     auto& GetPainter() const { return m_pt; }
 
 private:
-    void DrawFace(const pm3::Brush& brush, const pm3::BrushFace& face,
+    void DrawFace(const pm3::Brush& brush, size_t face_idx,
         uint32_t color, const sm::mat4& cam_mat) const;
 
 private:

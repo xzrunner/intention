@@ -1,9 +1,12 @@
 #include "intention/RenderSystem.h"
 #include "intention/Node.h"
 #include "intention/RegistNodes.h"
+#include "intention/NodeHelper.h"
 
 #include <polymesh3/Brush.h>
 #include <everything/Node.h>
+#include <everything/BrushGroup.h>
+#include <everything/NodeHelper.h>
 #include <everything/node/GroupCreate.h>
 #include <painting3/RenderSystem.h>
 #include <painting3/Viewport.h>
@@ -63,18 +66,24 @@ void RenderSystem::DrawNode(const pt0::RenderContext& rc,
     {
         auto& gc = static_cast<const evt::node::GroupCreate&>(back);
         auto group = gc.GetGroup();
-        for (auto& f : group->part.faces) {
-            DrawFace(*group->part.parent, *f, LIGHT_SELECT_COLOR, m_cam_mat);
+        if (!group->faces.empty())
+        {
+            auto brush = evt::NodeHelper::GetBrush(sn);
+            assert(brush);
+            for (auto& f : group->faces) {
+                DrawFace(*brush, f, LIGHT_SELECT_COLOR, m_cam_mat);
+            }
         }
     }
 }
 
-void RenderSystem::DrawFace(const pm3::Brush& brush, const pm3::BrushFace& face,
+void RenderSystem::DrawFace(const pm3::Brush& brush, size_t face_idx,
                             uint32_t color, const sm::mat4& cam_mat) const
 {
 	std::vector<sm::vec2> polygon;
-	polygon.reserve(face.vertices.size());
-	for (auto& v : face.vertices) {
+    auto& face = brush.faces[face_idx];
+	polygon.reserve(face->vertices.size());
+	for (auto& v : face->vertices) {
 		auto p3 = brush.vertices[v] * model::BrushBuilder::VERTEX_SCALE;
 		polygon.push_back(m_vp.TransPosProj3ToProj2(p3, cam_mat));
 	}
