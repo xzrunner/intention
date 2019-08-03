@@ -21,6 +21,7 @@
 // utility
 #include <everything/node/Blast.h>
 #include <everything/node/GroupCreate.h>
+#include <everything/node/Merge.h>
 
 namespace itt
 {

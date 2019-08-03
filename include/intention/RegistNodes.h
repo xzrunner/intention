@@ -67,6 +67,7 @@ ITT_DEFINE_NODE(GroupCreate,                                      \
     sm::vec3 direction        = sm::vec3(0, 0, 1);                \
     float    spread_angle     = 180;                              \
 )
+ITT_DEFINE_NODE(Merge, ITT_NODE_PROP)
 
 }
 

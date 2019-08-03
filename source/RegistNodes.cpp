@@ -109,6 +109,7 @@ REGIST_NODE_RTTI(GroupCreate,                                              \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SpreadAngle"))   \
 )                                                                          \
 )
+REGIST_NODE_RTTI_DEFAULT(Merge)
 
 }
 
