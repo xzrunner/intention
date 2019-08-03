@@ -20,6 +20,7 @@
 #include <everything/node/Box.h>
 // utility
 #include <everything/node/Blast.h>
+#include <everything/node/CopyToPoints.h>
 #include <everything/node/GroupCreate.h>
 #include <everything/node/Merge.h>
 

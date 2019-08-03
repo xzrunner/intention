@@ -60,6 +60,7 @@ ITT_DEFINE_NODE(Blast,                                                  \
     evt::node::GroupType group_type = evt::node::GroupType::Primitives; \
     bool delete_non_selected = false;                                   \
 )
+ITT_DEFINE_NODE(CopyToPoints, ITT_NODE_PROP)
 ITT_DEFINE_NODE(GroupCreate,                                      \
     std::string name;                                             \
     evt::node::GroupType type = evt::node::GroupType::Primitives; \

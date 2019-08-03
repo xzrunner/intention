@@ -87,6 +87,7 @@ REGIST_NODE_RTTI(Blast,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DelNonSelected")) \
 )
 )
+REGIST_NODE_RTTI_DEFAULT(CopyToPoints)
 REGIST_NODE_RTTI(GroupCreate,                                              \
 .property("name", &itt::node::GroupCreate::name)                           \
 (                                                                          \
