@@ -32,30 +32,31 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
     if (type == rttr::type::get<node::Transform>())
     {
         auto& src = static_cast<const node::Transform&>(front);
-        auto& trans = static_cast<evt::node::Transform&>(back);
-        trans.SetTranslate(src.translate);
-        trans.SetRotate(src.rotate);
-        trans.SetScale(src.scale);
-        trans.SetShear(src.shear);
+        auto& dst = static_cast<evt::node::Transform&>(back);
+
+        dst.SetTranslate(src.translate);
+        dst.SetRotate(src.rotate);
+        dst.SetScale(src.scale);
+        dst.SetShear(src.shear);
     }
     // polygon
     else if (type == rttr::type::get<node::PolyExtrude>())
     {
         auto& src = static_cast<const node::PolyExtrude&>(front);
-        auto& ext = static_cast<evt::node::PolyExtrude&>(back);
+        auto& dst = static_cast<evt::node::PolyExtrude&>(back);
 
-        ext.SetGroupName(src.group_name.str);
-        ext.SetDistance(src.distance);
+        dst.SetGroupName(src.group_name.str);
+        dst.SetDistance(src.distance);
     }
     // primitive
     else if (type == rttr::type::get<node::Box>())
     {
         auto& src = static_cast<const node::Box&>(front);
-        auto& box = static_cast<evt::node::Box&>(back);
+        auto& dst = static_cast<evt::node::Box&>(back);
 
-        box.SetSize(src.size);
-        box.SetCenter(src.center);
-        box.SetScale(sm::vec3(src.scale, src.scale, src.scale));
+        dst.SetSize(src.size);
+        dst.SetCenter(src.center);
+        dst.SetScale(sm::vec3(src.scale, src.scale, src.scale));
     }
     // utility
     else if (type == rttr::type::get<node::Blast>())
@@ -70,15 +71,15 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
     else if (type == rttr::type::get<node::GroupCreate>())
     {
         auto& src = static_cast<const node::GroupCreate&>(front);
-        auto& gc = static_cast<evt::node::GroupCreate&>(back);
+        auto& dst = static_cast<evt::node::GroupCreate&>(back);
 
-        gc.SetName(src.name);
-        gc.SetType(src.type);
+        dst.SetName(src.name);
+        dst.SetType(src.type);
 
         if (src.keep_by_normals) {
-            gc.EnableKeepByNormals(src.direction, src.spread_angle);
+            dst.EnableKeepByNormals(src.direction, src.spread_angle);
         } else {
-            gc.DisableKeepByNormals();
+            dst.DisableKeepByNormals();
         }
     }
 }
