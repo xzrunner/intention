@@ -67,7 +67,7 @@ void RenderSystem::DrawNode(const pt0::RenderContext& rc,
         auto& gc = static_cast<const evt::node::GroupCreate&>(back);
         auto group = gc.GetGroup();
 
-        auto brush_model = evt::NodeHelper::GetBrushModel(sn);
+        auto brush_model = evt::NodeHelper::GetBrushModel(*sn);
         auto& brushes = brush_model->GetBrushes();
 
         assert(group->parts.size() == brushes.size());
