@@ -55,6 +55,11 @@ ITT_DEFINE_NODE(Sphere, ITT_NODE_PROP)
 ITT_DEFINE_NODE(Curve, ITT_NODE_PROP)
 
 // utility
+ITT_DEFINE_NODE(Blast,                                                  \
+    GroupName group_name;                                               \
+    evt::node::GroupType group_type = evt::node::GroupType::Primitives; \
+    bool delete_non_selected = false;                                   \
+)
 ITT_DEFINE_NODE(GroupCreate,                                      \
     std::string name;                                             \
     evt::node::GroupType type = evt::node::GroupType::Primitives; \

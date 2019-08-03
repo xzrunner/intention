@@ -73,6 +73,20 @@ REGIST_NODE_RTTI_DEFAULT(Sphere)
 REGIST_NODE_RTTI_DEFAULT(Curve)
 
 // utility
+REGIST_NODE_RTTI(Blast,
+.property("group_name", &itt::node::Blast::group_name)                      \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))      \
+)                                                                           \
+.property("group_type", &itt::node::Blast::group_type)                      \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType"))      \
+)                                                                           \
+.property("delete_non_selected", &itt::node::Blast::delete_non_selected)    \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DelNonSelected")) \
+)
+)
 REGIST_NODE_RTTI(GroupCreate,                                              \
 .property("name", &itt::node::GroupCreate::name)                           \
 (                                                                          \

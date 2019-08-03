@@ -19,6 +19,7 @@
 // primitive
 #include <everything/node/Box.h>
 // utility
+#include <everything/node/Blast.h>
 #include <everything/node/GroupCreate.h>
 
 namespace itt
@@ -57,6 +58,15 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         box.SetScale(sm::vec3(src.scale, src.scale, src.scale));
     }
     // utility
+    else if (type == rttr::type::get<node::Blast>())
+    {
+        auto& src = static_cast<const node::Blast&>(front);
+        auto& dst = static_cast<evt::node::Blast&>(back);
+
+        dst.SetGroupName(src.group_name.str);
+        dst.SetGroupType(src.group_type);
+        dst.SetDeleteNonSelected(src.delete_non_selected);
+    }
     else if (type == rttr::type::get<node::GroupCreate>())
     {
         auto& src = static_cast<const node::GroupCreate&>(front);
