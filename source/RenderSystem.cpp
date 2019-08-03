@@ -66,12 +66,16 @@ void RenderSystem::DrawNode(const pt0::RenderContext& rc,
     {
         auto& gc = static_cast<const evt::node::GroupCreate&>(back);
         auto group = gc.GetGroup();
-        if (!group->faces.empty())
-        {
-            auto brush = evt::NodeHelper::GetBrush(sn);
-            assert(brush);
-            for (auto& f : group->faces) {
-                DrawFace(*brush, f, LIGHT_SELECT_COLOR, m_cam_mat);
+
+        auto brush_model = evt::NodeHelper::GetBrushModel(sn);
+        auto& brushes = brush_model->GetBrushes();
+
+        assert(group->parts.size() == brushes.size());
+        for (int i = 0, n = brushes.size(); i < n; ++i) {
+            for (auto& part : group->parts) {
+                for (auto& f : part.faces) {
+                    DrawFace(*brushes[i].impl, f, LIGHT_SELECT_COLOR, m_cam_mat);
+                }
             }
         }
     }
