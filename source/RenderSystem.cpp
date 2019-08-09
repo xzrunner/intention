@@ -88,8 +88,7 @@ void RenderSystem::DrawFace(const pm3::Brush& brush, size_t face_idx,
     auto& face = brush.faces[face_idx];
 	polygon.reserve(face->vertices.size());
 	for (auto& v : face->vertices) {
-		auto p3 = brush.vertices[v] * model::BrushBuilder::VERTEX_SCALE;
-		polygon.push_back(m_vp.TransPosProj3ToProj2(p3, cam_mat));
+		polygon.push_back(m_vp.TransPosProj3ToProj2(brush.vertices[v], cam_mat));
 	}
 	m_pt.AddPolygonFilled(polygon.data(), polygon.size(), color);
 }
