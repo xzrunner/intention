@@ -5,7 +5,7 @@
 
 #include <blueprint/Pin.h>
 
-#include <everything/node/typedef.h>
+#include <polymesh3/Geometry.h>
 
 namespace itt
 {
@@ -55,18 +55,18 @@ ITT_DEFINE_NODE(Sphere, ITT_NODE_PROP)
 ITT_DEFINE_NODE(Curve, ITT_NODE_PROP)
 
 // utility
-ITT_DEFINE_NODE(Blast,                                                  \
-    GroupName group_name;                                               \
-    evt::node::GroupType group_type = evt::node::GroupType::Primitives; \
-    bool delete_non_selected = false;                                   \
+ITT_DEFINE_NODE(Blast,                                \
+    GroupName group_name;                             \
+    pm3::GroupType group_type = pm3::GroupType::Face; \
+    bool delete_non_selected = false;                 \
 )
 ITT_DEFINE_NODE(CopyToPoints, ITT_NODE_PROP)
-ITT_DEFINE_NODE(GroupCreate,                                      \
-    std::string name;                                             \
-    evt::node::GroupType type = evt::node::GroupType::Primitives; \
-    bool     keep_by_normals  = false;                            \
-    sm::vec3 direction        = sm::vec3(0, 0, 1);                \
-    float    spread_angle     = 180;                              \
+ITT_DEFINE_NODE(GroupCreate,                       \
+    std::string name;                              \
+    pm3::GroupType type = pm3::GroupType::Face;    \
+    bool     keep_by_normals  = false;             \
+    sm::vec3 direction        = sm::vec3(0, 0, 1); \
+    float    spread_angle     = 180;               \
 )
 ITT_DEFINE_NODE(Merge, ITT_NODE_PROP)
 
