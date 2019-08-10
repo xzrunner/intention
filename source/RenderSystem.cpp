@@ -3,7 +3,7 @@
 #include "intention/RegistNodes.h"
 #include "intention/NodeHelper.h"
 
-#include <polymesh3/Brush.h>
+#include <polymesh3/Geometry.h>
 #include <everything/Node.h>
 #include <everything/BrushGroup.h>
 #include <everything/NodeHelper.h>
@@ -81,14 +81,14 @@ void RenderSystem::DrawNode(const pt0::RenderContext& rc,
     }
 }
 
-void RenderSystem::DrawFace(const pm3::Brush& brush, size_t face_idx,
+void RenderSystem::DrawFace(const pm3::Polytope& poly, size_t face_idx,
                             uint32_t color, const sm::mat4& cam_mat) const
 {
 	std::vector<sm::vec2> polygon;
-    auto& face = brush.faces[face_idx];
-	polygon.reserve(face->vertices.size());
-	for (auto& v : face->vertices) {
-		polygon.push_back(m_vp.TransPosProj3ToProj2(brush.vertices[v], cam_mat));
+    auto& face = poly.Faces()[face_idx];
+	polygon.reserve(face->points.size());
+	for (auto& v : face->points) {
+		polygon.push_back(m_vp.TransPosProj3ToProj2(poly.Points()[v], cam_mat));
 	}
 	m_pt.AddPolygonFilled(polygon.data(), polygon.size(), color);
 }
