@@ -15,6 +15,8 @@
 // manipulate
 #include <everything/node/Transform.h>
 // polygon
+#include <everything/node/Boolean.h>
+#include <everything/node/Knife.h>
 #include <everything/node/PolyExtrude.h>
 // primitive
 #include <everything/node/Box.h>
@@ -42,6 +44,53 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         dst.SetShear(src.shear);
     }
     // polygon
+    else if (type == rttr::type::get<node::Boolean>())
+    {
+        auto& src = static_cast<const node::Boolean&>(front);
+        auto& dst = static_cast<evt::node::Boolean&>(back);
+
+        evt::node::Boolean::Operator op;
+        switch (src.op)
+        {
+        case BooleanOperator::Union:
+            op = evt::node::Boolean::Operator::Union;
+            break;
+        case BooleanOperator::Intersect:
+            op = evt::node::Boolean::Operator::Intersect;
+            break;
+        case BooleanOperator::Subtract:
+            op = evt::node::Boolean::Operator::Subtract;
+            break;
+        default:
+            assert(0);
+        }
+        dst.SetOperator(op);
+    }
+    else if (type == rttr::type::get<node::Knife>())
+    {
+        auto& src = static_cast<const node::Knife&>(front);
+        auto& dst = static_cast<evt::node::Knife&>(back);
+
+        dst.SetOrigin(src.origin);
+        dst.SetDirection(src.direction);
+
+        evt::node::Knife::KeepType keep;
+        switch (src.keep)
+        {
+        case KnifeKeep::KeepAbove:
+            keep = evt::node::Knife::KeepType::KeepAbove;
+            break;
+        case KnifeKeep::KeepBelow:
+            keep = evt::node::Knife::KeepType::KeepBelow;
+            break;
+        case KnifeKeep::KeepAll:
+            keep = evt::node::Knife::KeepType::KeepAll;
+            break;
+        default:
+            assert(0);
+        }
+        dst.SetKeepType(keep);
+    }
     else if (type == rttr::type::get<node::PolyExtrude>())
     {
         auto& src = static_cast<const node::PolyExtrude&>(front);

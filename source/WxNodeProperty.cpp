@@ -112,6 +112,22 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
             m_pg->Append(type_prop);
         }
     }
+    else if (prop_type == rttr::type::get<BooleanOperator>())
+    {
+        const wxChar* OPS[] = { wxT("Union"), wxT("Intersect"), wxT("Subtract"), NULL };
+        auto op_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, OPS);
+        auto op = prop.get_value(node).get_value<BooleanOperator>();
+        op_prop->SetValue(static_cast<int>(op));
+        m_pg->Append(op_prop);
+    }
+    else if (prop_type == rttr::type::get<KnifeKeep>())
+    {
+        const wxChar* KEEPS[] = { wxT("KeepAbove"), wxT("KeepBelow"), wxT("KeepAll"), NULL };
+        auto keep_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, KEEPS);
+        auto keep = prop.get_value(node).get_value<KnifeKeep>();
+        keep_prop->SetValue(static_cast<int>(keep));
+        m_pg->Append(keep_prop);
+    }
     else
     {
         ret = false;
@@ -172,6 +188,14 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
                 prop.set_value(m_node, GroupName());
             }
         }
+    }
+    else if (prop_type == rttr::type::get<BooleanOperator>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, BooleanOperator(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<KnifeKeep>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, KnifeKeep(wxANY_AS(val, int)));
     }
     else
     {

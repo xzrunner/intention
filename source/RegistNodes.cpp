@@ -43,6 +43,27 @@ REGIST_NODE_RTTI(Transform,
 )
 
 // polygon
+REGIST_NODE_RTTI(Boolean,
+.property("operator", &itt::node::Boolean::op)                        \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Operator")) \
+)                                                                     \
+)
+
+REGIST_NODE_RTTI(Knife,
+.property("origin", &itt::node::Knife::origin)                         \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Origin"))    \
+)                                                                      \
+.property("direction", &itt::node::Knife::direction)                   \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Direction")) \
+)                                                                      \
+.property("keep", &itt::node::Knife::keep)                             \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Keep"))      \
+)
+)
 REGIST_NODE_RTTI(PolyExtrude,
 .property("group_name", &itt::node::PolyExtrude::group_name)           \
 (                                                                      \
