@@ -42,7 +42,12 @@ void RenderSystem::DrawNode(const pt0::RenderContext& rc,
         return;
     }
 
-    auto sn = back.GetSceneNode();
+    auto geo = back.GetGeometry();
+    if (!geo) {
+        return;
+    }
+
+    auto sn = geo->GetNode();
     if (!sn) {
         return;
     }
@@ -65,11 +70,11 @@ void RenderSystem::DrawNode(const pt0::RenderContext& rc,
     {
         auto& gc = static_cast<const evt::node::GroupCreate&>(back);
 
-        auto brush_model = evt::NodeHelper::GetBrushModel(*sn);
+        auto brush_model = geo->GetBrushModel();
         auto& brushes = brush_model->GetBrushes();
         assert(brushes.size() == 1);
         auto& brush = brushes[0];
-        auto group = brush.impl->QueryGroup(gc.GetName());
+        auto group = geo->QueryGroup(gc.GetName());
         if (group) {
             for (auto& f : group->items) {
                 DrawFace(*brush.impl, f, LIGHT_SELECT_COLOR, m_cam_mat);
