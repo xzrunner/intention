@@ -52,6 +52,9 @@ void RenderSystem::DrawNode(const pt0::RenderContext& rc,
     }
 
     pt3::RenderParams rp;
+    rp.painter  = &m_pt;
+    rp.viewport = &m_vp;
+    rp.cam_mat  = &m_cam_mat;
 
     if (itt_node.GetDisplay())
     {
