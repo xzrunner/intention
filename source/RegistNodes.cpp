@@ -22,7 +22,29 @@ rttr::registration::class_<itt::Node>("itt::node")
 )
 ;
 
+// attribute
+REGIST_NODE_RTTI(Sort,
+.property("key", &itt::node::Sort::key)                          \
+(                                                                \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Key")) \
+)                                                                \
+)
+
 // manipulate
+REGIST_NODE_RTTI(Delete,
+.property("delete_non_selected", &itt::node::Delete::delete_non_selected)   \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DelNonSelected")) \
+)                                                                           \
+.property("entity_type", &itt::node::Delete::entity_type)                   \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("EntityType"))     \
+)                                                                           \
+.property("filter_exp", &itt::node::Delete::filter_exp)                     \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FilterExp"))      \
+)                                                                           \
+)
 REGIST_NODE_RTTI(Transform,
 .property("translate", &itt::node::Transform::translate)               \
 (                                                                      \
@@ -42,14 +64,39 @@ REGIST_NODE_RTTI(Transform,
 )                                                                      \
 )
 
+// NURBs
+REGIST_NODE_RTTI(Carve,
+.property("first_u", &itt::node::Carve::first_u)                     \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FirstU"))  \
+)                                                                    \
+.property("second_u", &itt::node::Carve::second_u)                   \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SecondU")) \
+)                                                                    \
+.property("first_v", &itt::node::Carve::first_v)                     \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FirstV"))  \
+)                                                                    \
+.property("second_v", &itt::node::Carve::second_v)                   \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SecondV")) \
+)                                                                    \
+)
+
 // polygon
+REGIST_NODE_RTTI(Add,
+.property("points", &itt::node::Add::points)                        \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Points")) \
+)                                                                   \
+)
 REGIST_NODE_RTTI(Boolean,
 .property("operator", &itt::node::Boolean::op)                        \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Operator")) \
 )                                                                     \
 )
-
 REGIST_NODE_RTTI(Knife,
 .property("origin", &itt::node::Knife::origin)                         \
 (                                                                      \
@@ -90,8 +137,31 @@ REGIST_NODE_RTTI(Box,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))  \
 )
 )
+REGIST_NODE_RTTI(Curve,
+.property("vertices", &itt::node::Curve::vertices)                        \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vertices")) \
+)                                                                     \
+)
+REGIST_NODE_RTTI(Line,
+.property("origin", &itt::node::Line::origin)                          \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Origin"))    \
+)                                                                      \
+.property("direction", &itt::node::Line::direction)                    \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Direction")) \
+)                                                                      \
+.property("length", &itt::node::Line::length)                          \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Length"))    \
+)                                                                      \
+.property("points", &itt::node::Line::points)                          \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Points"))    \
+)                                                                      \
+)
 REGIST_NODE_RTTI_DEFAULT(Sphere)
-REGIST_NODE_RTTI_DEFAULT(Curve)
 
 // utility
 REGIST_NODE_RTTI(Blast,

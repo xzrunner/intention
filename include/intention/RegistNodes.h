@@ -31,7 +31,17 @@ public:                                      \
 
 #define ITT_NODE_PROP
 
+// attribute
+ITT_DEFINE_NODE(Sort,                \
+    SortKey key = SortKey::NoChange; \
+)
+
 // manipulate
+ITT_DEFINE_NODE(Delete,                                      \
+    bool             delete_non_selected = false;            \
+    DeleteEntityType entity_type = DeleteEntityType::Points; \
+    std::string      filter_exp;                             \
+)
 ITT_DEFINE_NODE(Transform,                  \
     sm::vec3 translate = sm::vec3(0, 0, 0); \
     sm::vec3 rotate    = sm::vec3(0, 0, 0); \
@@ -39,7 +49,18 @@ ITT_DEFINE_NODE(Transform,                  \
     sm::vec3 shear     = sm::vec3(0, 0, 0); \
 )
 
+// NURBs
+ITT_DEFINE_NODE(Carve,  \
+    float first_u  = 0; \
+    float second_u = 1; \
+    float first_v  = 0; \
+    float second_v = 1; \
+)
+
 // polygon
+ITT_DEFINE_NODE(Add,              \
+    std::vector<sm::vec3> points; \
+)
 ITT_DEFINE_NODE(Boolean,                             \
     BooleanOperator op = BooleanOperator::Intersect; \
 )
@@ -59,8 +80,16 @@ ITT_DEFINE_NODE(Box,                     \
     sm::vec3 center = sm::vec3(0, 0, 0); \
     float scale     = 1.0f;              \
 )
+ITT_DEFINE_NODE(Curve,              \
+    std::vector<sm::vec3> vertices; \
+)
+ITT_DEFINE_NODE(Line,                       \
+    sm::vec3 origin    = sm::vec3(0, 0, 0); \
+    sm::vec3 direction = sm::vec3(0, 0, 1); \
+    float    length = 1;                    \
+    size_t   points = 2;                    \
+)
 ITT_DEFINE_NODE(Sphere, ITT_NODE_PROP)
-ITT_DEFINE_NODE(Curve, ITT_NODE_PROP)
 
 // utility
 ITT_DEFINE_NODE(Blast,                                                    \

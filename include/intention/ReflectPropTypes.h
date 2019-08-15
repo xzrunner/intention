@@ -25,6 +25,21 @@ enum class KnifeKeep
     KeepAll,
 };
 
+enum class SortKey
+{
+    NoChange,
+    X,
+    Y,
+    Z
+};
+
+enum class DeleteEntityType
+{
+    Points,
+    Edges,
+    Faces,
+};
+
 void prop_types_regist_rttr();
 
 }

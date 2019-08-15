@@ -12,14 +12,23 @@
 #include <blueprint/node/Input.h>
 #include <blueprint/node/Output.h>
 
+// attribute
+#include <everything/node/Sort.h>
 // manipulate
+#include <everything/node/Delete.h>
 #include <everything/node/Transform.h>
+// nurbs
+#include <everything/node/Carve.h>
 // polygon
+#include <everything/node/Add.h>
 #include <everything/node/Boolean.h>
 #include <everything/node/Knife.h>
 #include <everything/node/PolyExtrude.h>
 // primitive
 #include <everything/node/Box.h>
+#include <everything/node/Curve.h>
+#include <everything/node/Line.h>
+#include <everything/node/Sphere.h>
 // utility
 #include <everything/node/Blast.h>
 #include <everything/node/CopyToPoints.h>
@@ -32,8 +41,60 @@ namespace itt
 void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
 {
     auto type = front.get_type();
+    // attribute
+    if (type == rttr::type::get<node::Sort>())
+    {
+        auto& src = static_cast<const node::Sort&>(front);
+        auto& dst = static_cast<evt::node::Sort&>(back);
+
+        evt::node::Sort::Key key;
+        switch (src.key)
+        {
+        case SortKey::NoChange:
+            key = evt::node::Sort::Key::NoChange;
+            break;
+        case SortKey::X:
+            key = evt::node::Sort::Key::X;
+            break;
+        case SortKey::Y:
+            key = evt::node::Sort::Key::Y;
+            break;
+        case SortKey::Z:
+            key = evt::node::Sort::Key::Z;
+            break;
+        default:
+            assert(0);
+        }
+        dst.SetKey(key);
+    }
     // manipulate
-    if (type == rttr::type::get<node::Transform>())
+    else if (type == rttr::type::get<node::Delete>())
+    {
+        auto& src = static_cast<const node::Delete&>(front);
+        auto& dst = static_cast<evt::node::Delete&>(back);
+
+        dst.SetDelNonSelected(src.delete_non_selected);
+
+        evt::node::Delete::EntityType type;
+        switch (src.entity_type)
+        {
+        case DeleteEntityType::Points:
+            type = evt::node::Delete::EntityType::Points;
+            break;
+        case DeleteEntityType::Edges:
+            type = evt::node::Delete::EntityType::Edges;
+            break;
+        case DeleteEntityType::Faces:
+            type = evt::node::Delete::EntityType::Faces;
+            break;
+        default:
+            assert(0);
+        }
+        dst.SetEntityType(type);
+
+        dst.SetFilterExp(src.filter_exp);
+    }
+    else if (type == rttr::type::get<node::Transform>())
     {
         auto& src = static_cast<const node::Transform&>(front);
         auto& dst = static_cast<evt::node::Transform&>(back);
@@ -42,6 +103,23 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         dst.SetRotate(src.rotate);
         dst.SetScale(src.scale);
         dst.SetShear(src.shear);
+    }
+    // NURBs
+    else if (type == rttr::type::get<node::Carve>())
+    {
+        auto& src = static_cast<const node::Carve&>(front);
+        auto& dst = static_cast<evt::node::Carve&>(back);
+
+        dst.SetFirstU(src.first_u);
+        dst.SetSecondU(src.second_u);
+        dst.SetFirstV(src.first_v);
+        dst.SetSecondV(src.second_v);
+    }
+    else if (type == rttr::type::get<node::Add>())
+    {
+        auto& src = static_cast<const node::Add&>(front);
+        auto& dst = static_cast<evt::node::Add&>(back);
+        dst.SetPoints(src.points);
     }
     // polygon
     else if (type == rttr::type::get<node::Boolean>())
@@ -108,6 +186,22 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         dst.SetSize(src.size);
         dst.SetCenter(src.center);
         dst.SetScale(sm::vec3(src.scale, src.scale, src.scale));
+    }
+    else if (type == rttr::type::get<node::Curve>())
+    {
+        auto& src = static_cast<const node::Curve&>(front);
+        auto& dst = static_cast<evt::node::Curve&>(back);
+        dst.SetVertices(src.vertices);
+    }
+    else if (type == rttr::type::get<node::Line>())
+    {
+        auto& src = static_cast<const node::Line&>(front);
+        auto& dst = static_cast<evt::node::Line&>(back);
+
+        dst.SetOrigin(src.origin);
+        dst.SetDirection(src.direction);
+        dst.SetLength(src.length);
+        dst.SetPoints(src.points);
     }
     // utility
     else if (type == rttr::type::get<node::Blast>())

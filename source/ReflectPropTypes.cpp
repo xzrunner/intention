@@ -23,6 +23,21 @@ rttr::registration::enumeration<itt::KnifeKeep>("itt_knife_keep")
     rttr::value("all",   itt::KnifeKeep::KeepAll)
 );
 
+rttr::registration::enumeration<itt::SortKey>("itt_sort_key")
+(
+	rttr::value("no_change", itt::SortKey::NoChange),
+	rttr::value("x", itt::SortKey::X),
+    rttr::value("y", itt::SortKey::Y),
+    rttr::value("z", itt::SortKey::Z)
+);
+
+rttr::registration::enumeration<itt::DeleteEntityType>("itt_delete_entity_type")
+(
+	rttr::value("points", itt::DeleteEntityType::Points),
+	rttr::value("edges",  itt::DeleteEntityType::Edges),
+    rttr::value("faces",  itt::DeleteEntityType::Faces)
+);
+
 }
 
 namespace itt
