@@ -5,6 +5,7 @@
 
 #include <polymesh3/Geometry.h>
 #include <everything/Node.h>
+#include <everything/Geometry.h>
 #include <everything/node/GroupCreate.h>
 #include <painting3/RenderSystem.h>
 #include <painting3/Viewport.h>

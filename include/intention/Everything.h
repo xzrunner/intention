@@ -1,7 +1,7 @@
 #pragma once
 
 #include <everything/typedef.h>
-#include <everything/Node.h>
+#include <everything/NodeVar.h>
 
 namespace bp { class Node; class Pin; }
 
@@ -17,8 +17,8 @@ public:
 
     static evt::NodePtr CreateBackFromFront(const bp::Node& front);
 
-    static int TypeBackToFront(evt::VariableType type);
-    static evt::VariableType TypeFrontToBack(int pin_type);
+    static int TypeBackToFront(evt::NodeVarType type);
+    static evt::NodeVarType TypeFrontToBack(int pin_type);
 
 }; // Everything
 

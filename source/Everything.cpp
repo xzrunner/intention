@@ -266,19 +266,19 @@ evt::NodePtr Everything::CreateBackFromFront(const bp::Node& node)
     return dst;
 }
 
-int Everything::TypeBackToFront(evt::VariableType type)
+int Everything::TypeBackToFront(evt::NodeVarType type)
 {
     int ret = -1;
 
     switch (type)
     {
-    case evt::VariableType::Any:
+    case evt::NodeVarType::Any:
         ret = bp::PIN_ANY_VAR;
         break;
-    case evt::VariableType::Port:
+    case evt::NodeVarType::Port:
         ret = bp::PIN_PORT;
         break;
-    case evt::VariableType::Primitive:
+    case evt::NodeVarType::Primitive:
         ret = PIN_PRIMITIVE;
         break;
     }
@@ -286,20 +286,20 @@ int Everything::TypeBackToFront(evt::VariableType type)
     return ret;
 }
 
-evt::VariableType Everything::TypeFrontToBack(int pin_type)
+evt::NodeVarType Everything::TypeFrontToBack(int pin_type)
 {
-    evt::VariableType ret = evt::VariableType::Any;
+    evt::NodeVarType ret = evt::NodeVarType::Any;
 
     switch (pin_type)
     {
     case bp::PIN_ANY_VAR:
-        ret = evt::VariableType::Any;
+        ret = evt::NodeVarType::Any;
         break;
     case bp::PIN_PORT:
-        ret = evt::VariableType::Port;
+        ret = evt::NodeVarType::Port;
         break;
     case PIN_PRIMITIVE:
-        ret = evt::VariableType::Primitive;
+        ret = evt::NodeVarType::Primitive;
         break;
     }
 

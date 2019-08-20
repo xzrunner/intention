@@ -5,7 +5,7 @@
 
 #include <blueprint/Pin.h>
 
-#include <everything/Geometry.h>
+#include <everything/Group.h>
 
 namespace itt
 {
@@ -92,18 +92,18 @@ ITT_DEFINE_NODE(Line,                       \
 ITT_DEFINE_NODE(Sphere, ITT_NODE_PROP)
 
 // utility
-ITT_DEFINE_NODE(Blast,                                                    \
-    GroupName group_name;                                                 \
-    evt::Geometry::GroupType group_type = evt::Geometry::GroupType::Face; \
-    bool delete_non_selected = false;                                     \
+ITT_DEFINE_NODE(Blast,                                      \
+    GroupName group_name;                                   \
+    evt::GroupType group_type = evt::GroupType::Primitives; \
+    bool delete_non_selected = false;                       \
 )
 ITT_DEFINE_NODE(CopyToPoints, ITT_NODE_PROP)
-ITT_DEFINE_NODE(GroupCreate,                                        \
-    std::string name;                                               \
-    evt::Geometry::GroupType type = evt::Geometry::GroupType::Face; \
-    bool     keep_by_normals  = false;                              \
-    sm::vec3 direction        = sm::vec3(0, 0, 1);                  \
-    float    spread_angle     = 180;                                \
+ITT_DEFINE_NODE(GroupCreate,                          \
+    std::string name;                                 \
+    evt::GroupType type = evt::GroupType::Primitives; \
+    bool     keep_by_normals  = false;                \
+    sm::vec3 direction        = sm::vec3(0, 0, 1);    \
+    float    spread_angle     = 180;                  \
 )
 ITT_DEFINE_NODE(Merge, ITT_NODE_PROP)
 
