@@ -32,7 +32,7 @@ bool WxStageCanvas::OnUpdate()
     return false;
 }
 
-void WxStageCanvas::DrawBackground2D() const
+void WxStageCanvas::DrawBackground3D() const
 {
     ee3::WxStageCanvas::DrawBackgroundGrids(10.0f, 0.2f);
 //    ee3::WxStageCanvas::DrawBackgroundCross();
