@@ -33,7 +33,7 @@
 #include <everything/node/Blast.h>
 #include <everything/node/CopyToPoints.h>
 #include <everything/node/GroupCreate.h>
-#include <everything/node/Merge.h>
+#include <everything/node/Switch.h>
 
 namespace itt
 {
@@ -226,6 +226,12 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         } else {
             dst.DisableKeepByNormals();
         }
+    }
+    else if (type == rttr::type::get<node::Switch>())
+    {
+        auto& src = static_cast<const node::Switch&>(front);
+        auto& dst = static_cast<evt::node::Switch&>(back);
+        dst.SetSelected(src.selected);
     }
 }
 

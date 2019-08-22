@@ -29,6 +29,26 @@ public:                                      \
 	RTTR_ENABLE(Node)                        \
 };
 
+#define ITT_DEFINE_IMPORT_EXT_NODE(name, prop)                       \
+class name : public Node                                             \
+{                                                                    \
+public:                                                              \
+	name()                                                           \
+		: Node(#name)                                                \
+	{                                                                \
+		InitPins(#name);                                             \
+        SetExtensibleInputPorts(true);                               \
+	}                                                                \
+private:                                                             \
+    virtual std::string GenInputPinName(size_t idx) const override { \
+        return "in" + std::to_string(idx);                           \
+    }                                                                \
+                                                                     \
+public:                                                              \
+	prop                                                             \
+	RTTR_ENABLE(Node)                                                \
+};
+
 #define ITT_NODE_PROP
 
 // attribute
@@ -105,7 +125,10 @@ ITT_DEFINE_NODE(GroupCreate,                          \
     sm::vec3 direction        = sm::vec3(0, 0, 1);    \
     float    spread_angle     = 180;                  \
 )
-ITT_DEFINE_NODE(Merge, ITT_NODE_PROP)
+ITT_DEFINE_IMPORT_EXT_NODE(Merge, ITT_NODE_PROP)
+ITT_DEFINE_IMPORT_EXT_NODE(Switch, \
+    size_t selected = 0;           \
+)
 
 }
 

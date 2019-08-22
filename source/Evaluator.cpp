@@ -61,6 +61,10 @@ void Evaluator::OnConnected(const bp::Connecting& conn)
     auto t_itr = m_nodes_map.find(&t_pin->GetParent());
     assert(f_itr != m_nodes_map.end() && t_itr != m_nodes_map.end());
 
+    if (t_itr->first->GetAllInput().size() > t_itr->second->GetImports().size()) {
+        t_itr->second->AddInputPorts(t_itr->first->GetAllInput().size() - t_itr->first->GetAllOutput().size());
+    }
+
     m_eval.Connect(
         { f_itr->second, f_pin->GetPosIdx() },
         { t_itr->second, t_pin->GetPosIdx() }
@@ -103,6 +107,10 @@ void Evaluator::OnRebuildConnection()
                 auto f_itr = m_nodes_map.find(&f_pin->GetParent());
                 auto t_itr = m_nodes_map.find(&t_pin->GetParent());
                 assert(f_itr != m_nodes_map.end() && t_itr != m_nodes_map.end());
+
+                if (t_itr->first->GetAllInput().size() > t_itr->second->GetImports().size()) {
+                    t_itr->second->AddInputPorts(t_itr->first->GetAllInput().size() - t_itr->first->GetAllOutput().size());
+                }
 
                 conns.push_back({
                     { f_itr->second, f_pin->GetPosIdx() },

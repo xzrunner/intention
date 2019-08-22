@@ -202,6 +202,12 @@ REGIST_NODE_RTTI(GroupCreate,                                              \
 )                                                                          \
 )
 REGIST_NODE_RTTI_DEFAULT(Merge)
+REGIST_NODE_RTTI(Switch,
+.property("selected", &itt::node::Switch::selected)                   \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Selected")) \
+)                                                                     \
+)
 
 }
 
