@@ -118,6 +118,8 @@ ITT_DEFINE_NODE(Blast,                                      \
     bool delete_non_selected = false;                       \
 )
 ITT_DEFINE_NODE(CopyToPoints, ITT_NODE_PROP)
+ITT_DEFINE_NODE(ForeachPrimBegin, ITT_NODE_PROP)
+ITT_DEFINE_NODE(ForeachPrimEnd, ITT_NODE_PROP)
 ITT_DEFINE_NODE(GroupCreate,                          \
     std::string name;                                 \
     evt::GroupType type = evt::GroupType::Primitives; \

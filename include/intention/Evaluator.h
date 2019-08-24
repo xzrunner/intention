@@ -37,6 +37,9 @@ public:
     evt::NodePtr QueryBackNode(const bp::Node& front_node) const;
 
 private:
+    void Update();
+
+private:
     evt::Evaluator m_eval;
 
     std::unordered_map<const bp::Node*, evt::NodePtr> m_nodes_map;

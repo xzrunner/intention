@@ -179,6 +179,8 @@ REGIST_NODE_RTTI(Blast,
 )
 )
 REGIST_NODE_RTTI_DEFAULT(CopyToPoints)
+REGIST_NODE_RTTI_DEFAULT(ForeachPrimBegin)
+REGIST_NODE_RTTI_DEFAULT(ForeachPrimEnd)
 REGIST_NODE_RTTI(GroupCreate,                                              \
 .property("name", &itt::node::GroupCreate::name)                           \
 (                                                                          \

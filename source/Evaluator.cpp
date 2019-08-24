@@ -1,9 +1,12 @@
 #include "intention/Evaluator.h"
 #include "intention/Everything.h"
+#include "intention/RegistNodes.h"
 
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
 #include <blueprint/Connecting.h>
+
+#include <queue>
 
 namespace itt
 {
@@ -18,19 +21,21 @@ void Evaluator::OnAddNode(const bp::Node& node)
 
         Everything::UpdatePropBackFromFront(node, *back);
 
-        m_eval.Update();
+        Update();
     }
 }
 
 void Evaluator::OnRemoveNode(const bp::Node& node)
 {
     auto itr = m_nodes_map.find(&node);
-    assert(itr != m_nodes_map.end());
+    if (itr == m_nodes_map.end()) {
+        return;
+    }
 
     m_eval.RemoveNode(itr->second);
     m_nodes_map.erase(itr);
 
-    m_eval.Update();
+    Update();
 }
 
 void Evaluator::OnClearAllNodes()
@@ -38,7 +43,7 @@ void Evaluator::OnClearAllNodes()
     m_eval.ClearAllNodes();
     m_nodes_map.clear();
 
-    m_eval.Update();
+    Update();
 }
 
 void Evaluator::OnNodePropChanged(const bp::NodePtr& node)
@@ -49,7 +54,7 @@ void Evaluator::OnNodePropChanged(const bp::NodePtr& node)
 
     m_eval.PropChanged(itr->second);
 
-    m_eval.Update();
+    Update();
 }
 
 void Evaluator::OnConnected(const bp::Connecting& conn)
@@ -59,7 +64,9 @@ void Evaluator::OnConnected(const bp::Connecting& conn)
 
     auto f_itr = m_nodes_map.find(&f_pin->GetParent());
     auto t_itr = m_nodes_map.find(&t_pin->GetParent());
-    assert(f_itr != m_nodes_map.end() && t_itr != m_nodes_map.end());
+    if (f_itr == m_nodes_map.end() || t_itr == m_nodes_map.end()) {
+        return;
+    }
 
     if (t_itr->first->GetAllInput().size() > t_itr->second->GetImports().size()) {
         t_itr->second->AddInputPorts(t_itr->first->GetAllInput().size() - t_itr->first->GetAllOutput().size());
@@ -70,7 +77,7 @@ void Evaluator::OnConnected(const bp::Connecting& conn)
         { t_itr->second, t_pin->GetPosIdx() }
     );
 
-    m_eval.Update();
+    Update();
 }
 
 void Evaluator::OnDisconnecting(const bp::Connecting& conn)
@@ -80,14 +87,16 @@ void Evaluator::OnDisconnecting(const bp::Connecting& conn)
 
     auto f_itr = m_nodes_map.find(&f_pin->GetParent());
     auto t_itr = m_nodes_map.find(&t_pin->GetParent());
-    assert(f_itr != m_nodes_map.end() && t_itr != m_nodes_map.end());
+    if (f_itr == m_nodes_map.end() || t_itr == m_nodes_map.end()) {
+        return;
+    }
 
     m_eval.Disconnect(
         { f_itr->second, f_pin->GetPosIdx() },
         { t_itr->second, t_pin->GetPosIdx() }
     );
 
-    m_eval.Update();
+    Update();
 }
 
 void Evaluator::OnRebuildConnection()
@@ -106,7 +115,9 @@ void Evaluator::OnRebuildConnection()
 
                 auto f_itr = m_nodes_map.find(&f_pin->GetParent());
                 auto t_itr = m_nodes_map.find(&t_pin->GetParent());
-                assert(f_itr != m_nodes_map.end() && t_itr != m_nodes_map.end());
+                if (f_itr == m_nodes_map.end() || t_itr == m_nodes_map.end()) {
+                    continue;
+                }
 
                 if (t_itr->first->GetAllInput().size() > t_itr->second->GetImports().size()) {
                     t_itr->second->AddInputPorts(t_itr->first->GetAllInput().size() - t_itr->first->GetAllOutput().size());
@@ -122,13 +133,18 @@ void Evaluator::OnRebuildConnection()
 
     m_eval.RebuildConnections(conns);
 
-    m_eval.Update();
+    Update();
 }
 
 evt::NodePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
 {
     auto itr = m_nodes_map.find(&front_node);
     return itr == m_nodes_map.end() ? nullptr : itr->second;
+}
+
+void Evaluator::Update()
+{
+    m_eval.Update();
 }
 
 }
