@@ -92,7 +92,7 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         }
         dst.SetEntityType(type);
 
-        dst.SetFilterExp(src.filter_exp);
+        dst.SetFilterExpr(src.filter_exp);
     }
     else if (type == rttr::type::get<node::Transform>())
     {
