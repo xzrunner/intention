@@ -24,6 +24,7 @@
 
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/trim.hpp>
 
 namespace
 {
@@ -87,7 +88,16 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     }
 
     auto prop_type = prop.get_type();
-    if (prop_type == rttr::type::get<GroupName>())
+    if (prop_type == rttr::type::get<StrVec3>())
+    {
+        auto v = prop.get_value(node).get_value<StrVec3>();
+        wxPGProperty* pos_prop = m_pg->Append(new wxStringProperty(ui_info.desc, wxPG_LABEL, wxT("<composed>")));
+        pos_prop->SetExpanded(false);
+        m_pg->AppendIn(pos_prop, new wxStringProperty(wxT("X"), wxPG_LABEL, v.x));
+        m_pg->AppendIn(pos_prop, new wxStringProperty(wxT("Y"), wxPG_LABEL, v.y));
+        m_pg->AppendIn(pos_prop, new wxStringProperty(wxT("Z"), wxPG_LABEL, v.z));
+    }
+    else if (prop_type == rttr::type::get<GroupName>())
     {
         std::vector<const bp::Node*> group_nodes;
         NodeHelper::QueryPrevGroupCreateNodes(*node, group_nodes);
@@ -170,7 +180,25 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     }
 
     auto prop_type = prop.get_type();
-    if (prop_type == rttr::type::get<GroupName>() && key == ui_info.desc)
+    if (prop_type == rttr::type::get<StrVec3>() && key == ui_info.desc)
+    {
+        std::vector<std::string> tokens;
+        auto str = wxANY_AS(val, wxString).ToStdString();
+        cpputil::StringHelper::Split(str, ";", tokens);
+        assert(tokens.size() == 3);
+
+        for (auto& t : tokens) {
+            boost::algorithm::trim(t);
+        }
+
+        auto v = prop.get_value(m_node).get_value<StrVec3>();
+        v.x = tokens[0];
+        v.y = tokens[1];
+        v.z = tokens[2];
+
+        prop.set_value(m_node, v);
+    }
+    else if (prop_type == rttr::type::get<GroupName>() && key == ui_info.desc)
     {
         std::vector<const bp::Node*> group_nodes;
         NodeHelper::QueryPrevGroupCreateNodes(*m_node, group_nodes);

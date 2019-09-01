@@ -95,10 +95,10 @@ ITT_DEFINE_NODE(PolyExtrude, \
 )
 
 // primitive
-ITT_DEFINE_NODE(Box,                     \
-    sm::vec3 size   = sm::vec3(1, 1, 1); \
-    sm::vec3 center = sm::vec3(0, 0, 0); \
-    float scale     = 1.0f;              \
+ITT_DEFINE_NODE(Box,                         \
+    StrVec3 size   = StrVec3("1", "1", "1"); \
+    StrVec3 center = StrVec3("0", "0", "0"); \
+    float scale    = 1.0f;                   \
 )
 ITT_DEFINE_NODE(Curve,              \
     std::vector<sm::vec3> vertices; \

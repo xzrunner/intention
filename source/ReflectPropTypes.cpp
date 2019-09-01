@@ -5,6 +5,12 @@
 RTTR_REGISTRATION
 {
 
+rttr::registration::class_<itt::StrVec3>("itt_str_vec3")
+    .property("x", &itt::StrVec3::x)
+    .property("y", &itt::StrVec3::y)
+    .property("z", &itt::StrVec3::z)
+;
+
 rttr::registration::class_<itt::GroupName>("itt_group_name")
     .property("str", &itt::GroupName::str)
 ;

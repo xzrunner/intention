@@ -35,6 +35,8 @@
 #include <everything/node/GroupCreate.h>
 #include <everything/node/Switch.h>
 
+#include <boost/lexical_cast.hpp>
+
 namespace itt
 {
 
@@ -182,9 +184,44 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
     {
         auto& src = static_cast<const node::Box&>(front);
         auto& dst = static_cast<evt::node::Box&>(back);
+        auto& dst_props = const_cast<evt::NodePropsMgr&>(dst.GetProps());
 
-        dst.SetSize(src.size);
-        dst.SetCenter(src.center);
+        sm::vec3 size;
+        try {
+            size.x = boost::lexical_cast<float>(src.size.x);
+        } catch (boost::bad_lexical_cast&) {
+            dst_props.SetExpr(evt::node::Box::SIZE_X, src.size.x);
+        }
+        try {
+            size.y = boost::lexical_cast<float>(src.size.y);
+        } catch (boost::bad_lexical_cast&) {
+            dst_props.SetExpr(evt::node::Box::SIZE_Y, src.size.y);
+        }
+        try {
+            size.z = boost::lexical_cast<float>(src.size.z);
+        } catch (boost::bad_lexical_cast&) {
+            dst_props.SetExpr(evt::node::Box::SIZE_Z, src.size.z);
+        }
+        dst.SetSize(size);
+
+        sm::vec3 pos;
+        try {
+            pos.x = boost::lexical_cast<float>(src.center.x);
+        } catch (boost::bad_lexical_cast&) {
+            dst_props.SetExpr(evt::node::Box::POS_X, src.center.x);
+        }
+        try {
+            pos.y = boost::lexical_cast<float>(src.center.y);
+        } catch (boost::bad_lexical_cast&) {
+            dst_props.SetExpr(evt::node::Box::POS_Y, src.center.y);
+        }
+        try {
+            pos.z = boost::lexical_cast<float>(src.center.z);
+        } catch (boost::bad_lexical_cast&) {
+            dst_props.SetExpr(evt::node::Box::POS_Z, src.center.z);
+        }
+        dst.SetCenter(pos);
+
         dst.SetScale(sm::vec3(src.scale, src.scale, src.scale));
     }
     else if (type == rttr::type::get<node::Curve>())
