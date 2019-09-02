@@ -25,6 +25,12 @@
     <Filter Include="tools\eval">
       <UniqueIdentifier>{83f944e8-8632-4979-a49a-6e8309125bd3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="view\toolbar">
+      <UniqueIdentifier>{6e7dc0ea-4d5e-4b85-a725-0e3a4eb30e73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\stage">
+      <UniqueIdentifier>{7f05f1d0-8c59-44e6-90f1-c8ab12f71f6c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\intention\PinCallback.h">
@@ -39,9 +45,6 @@
     <ClInclude Include="..\..\..\include\intention\Everything.h">
       <Filter>tools\trans</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\WxNodeProperty.h">
-      <Filter>view</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\intention\ReflectPropTypes.h">
       <Filter>tools\rtti</Filter>
     </ClInclude>
@@ -52,17 +55,29 @@
     <ClInclude Include="..\..\..\include\intention\Evaluator.h">
       <Filter>tools\eval</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\WxStageCanvas.h">
-      <Filter>view</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\RenderSystem.h">
-      <Filter>view</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\intention\NodeHelper.h">
       <Filter>tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\intention\MessageID.h">
       <Filter>tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\WxStageCanvas.h">
+      <Filter>view\stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\RenderSystem.h">
+      <Filter>view\stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\WxNodeProperty.h">
+      <Filter>view\toolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\WxNodePropsDlg.h">
+      <Filter>view\toolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\RightPopupMenu.h">
+      <Filter>view\stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\NodeProp.h">
+      <Filter>dataset\node</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -74,9 +89,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\Everything.cpp">
       <Filter>tools\trans</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\WxNodeProperty.cpp">
-      <Filter>view</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\ReflectPropTypes.cpp">
       <Filter>tools\rtti</Filter>
@@ -91,14 +103,23 @@
     <ClCompile Include="..\..\..\source\Evaluator.cpp">
       <Filter>tools\eval</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\WxStageCanvas.cpp">
-      <Filter>view</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\RenderSystem.cpp">
-      <Filter>view</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\NodeHelper.cpp">
       <Filter>tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxStageCanvas.cpp">
+      <Filter>view\stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\RenderSystem.cpp">
+      <Filter>view\stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxNodeProperty.cpp">
+      <Filter>view\toolbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxNodePropsDlg.cpp">
+      <Filter>view\toolbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\RightPopupMenu.cpp">
+      <Filter>view\stage</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 #include "intention/RegistNodes.h"
 #include "intention/NodeHelper.h"
 #include "intention/MessageID.h"
+#include "intention/NodeProp.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/ReflectPropTypes.h>
@@ -61,6 +62,47 @@ namespace itt
 WxNodeProperty::WxNodeProperty(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr)
 	: bp::WxNodeProperty(parent, sub_mgr)
 {
+}
+
+void WxNodeProperty::LoadFromNode(const n0::SceneNodePtr& obj, const bp::NodePtr& node)
+{
+    bp::WxNodeProperty::LoadFromNode(obj, node);
+
+    if (!node->get_type().is_derived_from<itt::Node>()) {
+        return;
+    }
+
+    auto itt_node = std::static_pointer_cast<itt::Node>(node);
+    auto& props = itt_node->GetProps();
+    if (!props) {
+        return;
+    }
+
+    for (auto& p : props->props) {
+        m_pg->Append(new wxStringProperty(p.name, wxPG_LABEL, p.value));
+    }
+}
+
+void WxNodeProperty::OnPropertyGridChanged(wxPropertyGridEvent& event)
+{
+    if (!m_node || !m_node->get_type().is_derived_from<itt::Node>()) {
+        return;
+    }
+
+    auto itt_node = std::static_pointer_cast<itt::Node>(m_node);
+    auto& props = itt_node->GetProps();
+    if (!props) {
+        return;
+    }
+
+    wxPGProperty* property = event.GetProperty();
+    auto key = property->GetName();
+    wxAny val = property->GetValue();
+    for (auto& p : props->props) {
+        if (p.name == key) {
+            p.value = wxANY_AS(val, wxString).ToStdString();
+        }
+    }
 }
 
 bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& node)

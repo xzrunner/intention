@@ -29,6 +29,20 @@ public:                                      \
 	RTTR_ENABLE(Node)                        \
 };
 
+#define ITT_DEFINE_PROPS_NODE(name, prop)    \
+class name : public Node                     \
+{                                            \
+public:                                      \
+	name()                                   \
+		: Node(#name, true)                  \
+	{                                        \
+		InitPins(#name);                     \
+	}                                        \
+                                             \
+	prop                                     \
+	RTTR_ENABLE(Node)                        \
+};
+
 #define ITT_DEFINE_IMPORT_EXT_NODE(name, prop)                       \
 class name : public Node                                             \
 {                                                                    \
@@ -50,6 +64,9 @@ public:                                                              \
 };
 
 #define ITT_NODE_PROP
+
+// base
+ITT_DEFINE_PROPS_NODE(Geometry, ITT_NODE_PROP)
 
 // attribute
 ITT_DEFINE_NODE(Sort,                \

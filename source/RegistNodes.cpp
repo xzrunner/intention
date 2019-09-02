@@ -22,6 +22,8 @@ rttr::registration::class_<itt::Node>("itt::node")
 )
 ;
 
+REGIST_NODE_RTTI_DEFAULT(Geometry)
+
 // attribute
 REGIST_NODE_RTTI(Sort,
 .property("key", &itt::node::Sort::key)                          \

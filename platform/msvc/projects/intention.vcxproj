@@ -17,12 +17,15 @@
     <ClInclude Include="..\..\..\include\intention\MessageID.h" />
     <ClInclude Include="..\..\..\include\intention\Node.h" />
     <ClInclude Include="..\..\..\include\intention\NodeHelper.h" />
+    <ClInclude Include="..\..\..\include\intention\NodeProp.h" />
     <ClInclude Include="..\..\..\include\intention\PinCallback.h" />
     <ClInclude Include="..\..\..\include\intention\PinType.h" />
     <ClInclude Include="..\..\..\include\intention\ReflectPropTypes.h" />
     <ClInclude Include="..\..\..\include\intention\RegistNodes.h" />
     <ClInclude Include="..\..\..\include\intention\RenderSystem.h" />
+    <ClInclude Include="..\..\..\include\intention\RightPopupMenu.h" />
     <ClInclude Include="..\..\..\include\intention\WxNodeProperty.h" />
+    <ClInclude Include="..\..\..\include\intention\WxNodePropsDlg.h" />
     <ClInclude Include="..\..\..\include\intention\WxStageCanvas.h" />
   </ItemGroup>
   <ItemGroup>
@@ -36,7 +39,9 @@
     <ClCompile Include="..\..\..\source\RegistNodes.cpp" />
     <ClCompile Include="..\..\..\source\RegistRTTR.cpp" />
     <ClCompile Include="..\..\..\source\RenderSystem.cpp" />
+    <ClCompile Include="..\..\..\source\RightPopupMenu.cpp" />
     <ClCompile Include="..\..\..\source\WxNodeProperty.cpp" />
+    <ClCompile Include="..\..\..\source\WxNodePropsDlg.cpp" />
     <ClCompile Include="..\..\..\source\WxStageCanvas.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

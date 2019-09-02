@@ -5,19 +5,28 @@
 namespace itt
 {
 
+struct NodePropArray;
+
 class Node : public bp::Node
 {
 public:
-    Node(const std::string& title);
+    Node(const std::string& title, bool props = false);
+    Node(const Node& node);
+    Node& operator = (const Node& node);
     virtual ~Node();
 
     virtual void Draw(const n2::RenderParams& rp) const override;
+
+    virtual void StoreToJson(const std::string& dir, rapidjson::Value& val, rapidjson::MemoryPoolAllocator<>& alloc) override;
+    virtual void LoadFromJson(const std::string& dir, const rapidjson::Value& val) override;
 
     bool GetTemplate() const { return m_template; }
     void SetTemplate(bool temp) { m_template = temp; }
 
     bool GetDisplay() const { return m_display; }
     void SetDisplay(bool display) { m_display = display; }
+
+    auto& GetProps() const { return m_props; }
 
     struct PinDesc
     {
@@ -47,6 +56,8 @@ private:
 
     bool m_template = false;
     bool m_display  = false;
+
+    std::unique_ptr<NodePropArray> m_props = nullptr;
 
     RTTR_ENABLE(bp::Node)
 

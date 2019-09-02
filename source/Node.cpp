@@ -1,5 +1,6 @@
 #include "intention/Node.h"
 #include "intention/Everything.h"
+#include "intention/NodeProp.h"
 
 #include <blueprint/Pin.h>
 
@@ -10,12 +11,31 @@ namespace itt
 
 const char* Node::STR_PROP_DISPLAY = "Display";
 
-Node::Node(const std::string& title)
+Node::Node(const std::string& title, bool props)
     : bp::Node(title)
 {
+    if (props) {
+        m_props = std::make_unique<NodePropArray>();
+    }
 }
 
-Node::~Node() = default;
+Node::Node(const Node& node)
+    : bp::Node(node)
+{
+    operator = (node);
+}
+
+Node& Node::operator = (const Node& node)
+{
+    if (node.m_props) {
+        m_props = std::make_unique<NodePropArray>(*node.m_props);
+    }
+    return *this;
+}
+
+Node::~Node()
+{
+}
 
 void Node::Draw(const n2::RenderParams& rp) const
 {
@@ -27,6 +47,66 @@ void Node::Draw(const n2::RenderParams& rp) const
     //        NodePreview::Draw(*eval, *this, rp);
     //    }
     //}
+}
+
+void Node::StoreToJson(const std::string& dir, rapidjson::Value& val, rapidjson::MemoryPoolAllocator<>& alloc)
+{
+    bp::Node::StoreToJson(dir, val, alloc);
+
+    if (!m_props->props.empty())
+    {
+        rapidjson::Value val_props;
+        val_props.SetArray();
+
+        for (auto& p : m_props->props)
+        {
+            rapidjson::Value val_p;
+            val_p.SetObject();
+            val_p.AddMember("name", rapidjson::Value(p.name.c_str(), alloc), alloc);
+#ifdef EnableNodePropType
+            auto type_str = NodePropStrings[static_cast<int>(p.type)];
+            val_p.AddMember("type", rapidjson::Value(type_str, alloc), alloc);
+#endif // EnableNodePropType
+            val_p.AddMember("value", rapidjson::Value(p.value.c_str(), alloc), alloc);
+            val_props.PushBack(val_p, alloc);
+        }
+
+        val.AddMember("node_props", val_props, alloc);
+    }
+}
+
+void Node::LoadFromJson(const std::string& dir, const rapidjson::Value& val)
+{
+    bp::Node::LoadFromJson(dir, val);
+
+    if (val.HasMember("node_props"))
+    {
+        auto array = val["node_props"].GetArray();
+        m_props->props.clear();
+        m_props->props.resize(array.Size());
+        for (int i = 0, n = array.Size(); i < n; ++i)
+        {
+            auto& src = array[i];
+            auto& dst = m_props->props[i];
+
+            dst.name = src["name"].GetString();
+
+#ifdef EnableNodePropType
+            auto type = src["type"].GetString();
+            bool finded = false;
+            for (int j = 0, m = (int)NodePropType::MaxNum; j < m; ++j) {
+                if (strcmp(type, NodePropStrings[j]) == 0) {
+                    dst.type = static_cast<NodePropType>(j);
+                    finded = true;
+                    break;
+                }
+            }
+            assert(finded);
+#endif // EnableNodePropType
+
+            dst.value = src["value"].GetString();
+        }
+    }
 }
 
 void Node::InitPins(const std::vector<PinDesc>& input,
