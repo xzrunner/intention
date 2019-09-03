@@ -20,6 +20,9 @@ public:
     virtual void StoreToJson(const std::string& dir, rapidjson::Value& val, rapidjson::MemoryPoolAllocator<>& alloc) override;
     virtual void LoadFromJson(const std::string& dir, const rapidjson::Value& val) override;
 
+    auto& GetName() const { return m_name; }
+    void  SetName(const std::string& name) { m_name = name; }
+
     bool GetTemplate() const { return m_template; }
     void SetTemplate(bool temp) { m_template = temp; }
 
@@ -28,6 +31,7 @@ public:
 
     auto& GetProps() const { return m_props; }
 
+protected:
     struct PinDesc
     {
         bool operator == (const PinDesc& desc) const {
@@ -51,6 +55,8 @@ private:
         bool is_input);
 
 private:
+    std::string m_name;
+
     bool m_bypass = false;
     bool m_lock   = false;
 

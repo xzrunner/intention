@@ -19,6 +19,10 @@ void Evaluator::OnAddNode(const bp::Node& node)
         m_eval.AddNode(back);
         m_nodes_map.insert({ &node, back });
 
+        if (node.get_type().is_derived_from<Node>()) {
+            const_cast<Node&>(static_cast<const Node&>(node)).SetName(back->GetName());
+        }
+
         Everything::UpdatePropBackFromFront(node, *back);
 
         Update();
@@ -51,6 +55,17 @@ void Evaluator::OnNodePropChanged(const bp::NodePtr& node)
     auto itr = m_nodes_map.find(node.get());
     assert(itr != m_nodes_map.end());
     Everything::UpdatePropBackFromFront(*node, *itr->second);
+
+    if (node->get_type().is_derived_from<Node>())
+    {
+        auto& itt_n = std::static_pointer_cast<Node>(node);
+        if (itt_n->GetName() != itr->second->GetName()) {
+            m_eval.Rename(itr->second->GetName(), itt_n->GetName());
+            if (itr->second->GetName() != itt_n->GetName()) {
+                itt_n->SetName(itr->second->GetName());
+            }
+        }
+    }
 
     m_eval.PropChanged(itr->second);
 

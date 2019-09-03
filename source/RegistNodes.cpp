@@ -16,6 +16,10 @@ RTTR_REGISTRATION
 
 // base
 rttr::registration::class_<itt::Node>("itt::node")
+.property("name", &itt::Node::GetName, &itt::Node::SetName)
+(
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Name"))
+)
 .property("display", &itt::Node::GetDisplay, &itt::Node::SetDisplay)
 (
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo(itt::Node::STR_PROP_DISPLAY))
