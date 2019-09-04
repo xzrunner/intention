@@ -27,9 +27,18 @@ Node::Node(const Node& node)
 
 Node& Node::operator = (const Node& node)
 {
+    m_name = node.m_name;
+
+    m_bypass = node.m_bypass;
+    m_lock   = node.m_lock;
+
+    m_template = node.m_template;
+    m_display  = node.m_display;
+
     if (node.m_props) {
         m_props = std::make_unique<NodePropArray>(*node.m_props);
     }
+
     return *this;
 }
 
