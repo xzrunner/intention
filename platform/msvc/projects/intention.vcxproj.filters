@@ -31,6 +31,9 @@
     <Filter Include="view\stage">
       <UniqueIdentifier>{7f05f1d0-8c59-44e6-90f1-c8ab12f71f6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="view\blueprint">
+      <UniqueIdentifier>{37717c11-dc74-4af9-bb4e-18b0f9892744}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\intention\PinCallback.h">
@@ -73,11 +76,17 @@
     <ClInclude Include="..\..\..\include\intention\WxNodePropsDlg.h">
       <Filter>view\toolbar</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\RightPopupMenu.h">
-      <Filter>view\stage</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\intention\NodeProp.h">
       <Filter>dataset\node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\SceneTree.h">
+      <Filter>view\blueprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\RightPopupMenu.h">
+      <Filter>view\blueprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\NodeSelectOP.h">
+      <Filter>view\blueprint</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,8 +127,14 @@
     <ClCompile Include="..\..\..\source\WxNodePropsDlg.cpp">
       <Filter>view\toolbar</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\SceneTree.cpp">
+      <Filter>view\blueprint</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\source\RightPopupMenu.cpp">
-      <Filter>view\stage</Filter>
+      <Filter>view\blueprint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\NodeSelectOP.cpp">
+      <Filter>view\blueprint</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

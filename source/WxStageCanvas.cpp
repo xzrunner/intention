@@ -1,6 +1,7 @@
 #include "intention/WxStageCanvas.h"
 #include "intention/RenderSystem.h"
 #include "intention/Evaluator.h"
+#include "intention/SceneTree.h"
 
 #include <painting2/RenderSystem.h>
 #include <painting3/MaterialMgr.h>
@@ -17,16 +18,6 @@ WxStageCanvas::WxStageCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
 {
 }
 
-void WxStageCanvas::SetEval(const std::shared_ptr<itt::Evaluator>& eval)
-{
-    if (m_eval == eval) {
-        return;
-    }
-
-    m_eval = eval;
-    SetDirty(); // refresh
-}
-
 bool WxStageCanvas::OnUpdate()
 {
     return false;
@@ -40,7 +31,11 @@ void WxStageCanvas::DrawBackground3D() const
 
 void WxStageCanvas::DrawForeground3D() const
 {
-    if (!m_eval) {
+    if (!m_stree) {
+        return;
+    }
+    auto eval = m_stree->GetCurrEval();
+    if (!eval) {
         return;
     }
 
@@ -71,7 +66,7 @@ void WxStageCanvas::DrawForeground3D() const
     auto cam_mat = m_camera->GetProjectionMat() * m_camera->GetViewMat();
     RenderSystem rs(GetViewport(), cam_mat);
 
-    auto& nodes = m_eval->GetAllNodes();
+    auto& nodes = eval->GetAllNodes();
     for (auto& n : nodes) {
         rs.DrawNode(rc, *n.second, *n.first);
     }
