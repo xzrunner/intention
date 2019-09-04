@@ -37,7 +37,7 @@ void RenderSystem::DrawNode(const pt0::RenderContext& rc,
         return;
     }
 
-    auto itt_node = static_cast<const Node&>(front);
+    auto& itt_node = static_cast<const Node&>(front);
     if (!itt_node.GetDisplay()) {
         return;
     }
