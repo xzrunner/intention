@@ -8,6 +8,8 @@
 
 #include <node0/SceneNode.h>
 #include <node0/CompComplex.h>
+#include <node0/NodeFlagsHelper.h>
+#include <node0/NodeFlags.h>
 
 #include <assert.h>
 
@@ -120,6 +122,8 @@ bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
         m_path.patrs.push_back({ node, itr->second });
     }
 
+    SetupCurrNode();
+
     return true;
 }
 
@@ -130,6 +134,8 @@ bool SceneTree::SetDepth(size_t depth)
     }
 
     m_path.patrs.erase(m_path.patrs.begin() + depth + 1, m_path.patrs.end());
+
+    SetupCurrNode();
 
     return true;
 }
@@ -179,6 +185,26 @@ bool SceneTree::IsCurrChild(const n0::SceneNodePtr& node) const
         }
     }
     return false;
+}
+
+void SceneTree::SetupCurrNode()
+{
+    if (m_path.patrs.empty()) {
+        return;
+    }
+
+    auto curr = m_path.patrs.back();
+    assert(curr.node->HasSharedComp<n0::CompComplex>());
+    auto& ccomplex = curr.node->GetSharedComp<n0::CompComplex>();
+    for (auto& c : ccomplex.GetAllChildren())
+    {
+        n0::NodeFlagsHelper::SetFlag<n0::NodeNotVisible>(*c, false);
+        if (c->HasSharedComp<n0::CompComplex>()) {
+            for (auto& cc : c->GetSharedComp<n0::CompComplex>().GetAllChildren()) {
+                n0::NodeFlagsHelper::SetFlag<n0::NodeNotVisible>(*cc, true);
+            }
+        }
+    }
 }
 
 }

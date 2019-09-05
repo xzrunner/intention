@@ -32,6 +32,8 @@ private:
 
     bool IsCurrChild(const n0::SceneNodePtr& node) const;
 
+    void SetupCurrNode();
+
 private:
     struct PathPart
     {
