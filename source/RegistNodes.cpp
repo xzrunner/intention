@@ -188,13 +188,13 @@ REGIST_NODE_RTTI_DEFAULT(CopyToPoints)
 REGIST_NODE_RTTI_DEFAULT(ForeachPrimBegin)
 REGIST_NODE_RTTI_DEFAULT(ForeachPrimEnd)
 REGIST_NODE_RTTI(GroupCreate,                                              \
-.property("name", &itt::node::GroupCreate::name)                           \
+.property("group_name", &itt::node::GroupCreate::group_name)               \
 (                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Name"))          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))     \
 )                                                                          \
-.property("type", &itt::node::GroupCreate::type)                           \
+.property("group_type", &itt::node::GroupCreate::group_type)               \
 (                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Type"))          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType"))     \
 )                                                                          \
 .property("keep_by_normals", &itt::node::GroupCreate::keep_by_normals)     \
 (                                                                          \

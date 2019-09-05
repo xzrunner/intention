@@ -255,8 +255,8 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         auto& src = static_cast<const node::GroupCreate&>(front);
         auto& dst = static_cast<evt::node::GroupCreate&>(back);
 
-        dst.SetName(src.name);
-        dst.SetType(src.type);
+        dst.SetGroupName(src.group_name);
+        dst.SetGroupType(src.group_type);
 
         if (src.keep_by_normals) {
             dst.EnableKeepByNormals(src.direction, src.spread_angle);

@@ -129,7 +129,7 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
             wxArrayString group_names;
             for (auto& n : group_nodes)
             {
-                auto& name = static_cast<const node::GroupCreate*>(n)->name;
+                auto& name = static_cast<const node::GroupCreate*>(n)->group_name;
                 if (name == group_name) {
                     idx = group_names.size();
                 }
@@ -228,7 +228,7 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
             if (idx >= 0 && idx < static_cast<int>(group_nodes.size()))
             {
                 auto node = group_nodes[idx];
-                auto& name = static_cast<const node::GroupCreate*>(node)->name;
+                auto& name = static_cast<const node::GroupCreate*>(node)->group_name;
                 prop.set_value(m_node, GroupName({ name }));
             }
             else
