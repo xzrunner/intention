@@ -27,6 +27,8 @@ public:
 
     void ClearNodeDisplayTag();
 
+    n0::SceneNodePtr GetRoot() const;
+
 private:
     void SetDisplay(const bp::Node& node);
 

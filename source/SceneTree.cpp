@@ -158,6 +158,11 @@ void SceneTree::ClearNodeDisplayTag()
     }
 }
 
+n0::SceneNodePtr SceneTree::GetRoot() const
+{
+    return m_path.patrs.empty() ? nullptr : m_path.patrs.front().node;
+}
+
 void SceneTree::SetDisplay(const bp::Node& node)
 {
     if (!node.get_type().is_derived_from<Node>()) {
