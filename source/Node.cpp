@@ -62,7 +62,7 @@ void Node::StoreToJson(const std::string& dir, rapidjson::Value& val, rapidjson:
 {
     bp::Node::StoreToJson(dir, val, alloc);
 
-    if (!m_props->props.empty())
+    if (m_props && !m_props->props.empty())
     {
         rapidjson::Value val_props;
         val_props.SetArray();
@@ -90,6 +90,10 @@ void Node::LoadFromJson(const std::string& dir, const rapidjson::Value& val)
 
     if (val.HasMember("node_props"))
     {
+        if (!m_props) {
+            m_props = std::make_unique<NodePropArray>();
+        }
+
         auto array = val["node_props"].GetArray();
         m_props->props.clear();
         m_props->props.resize(array.Size());
