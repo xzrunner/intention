@@ -14,7 +14,7 @@ namespace itt
 
 NodeSelectOP::NodeSelectOP(const std::shared_ptr<pt0::Camera>& camera,
                            ee0::WxStagePage& stage)
-    : bp::NodeSelectOP(camera, stage)
+    : bp::NodeSelectOP(camera, stage, ee2::CamControlOP::DEFAULT_FLAG, false)
 {
 }
 
@@ -35,7 +35,7 @@ bool NodeSelectOP::OnMouseLeftDClick(int x, int y)
         return true;
     });
 
-    if (m_stree && m_stree->ToNextLevel(node)) 
+    if (m_stree && m_stree->ToNextLevel(node))
     {
         ee0::VariantSet vars;
         ee0::Variant var;
