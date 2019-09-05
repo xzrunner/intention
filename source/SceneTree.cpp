@@ -81,7 +81,7 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
 
 bool SceneTree::Clear()
 {
-    if (!m_path.patrs.empty()) {
+    if (m_path.patrs.empty()) {
         return false;
     }
 
