@@ -16,6 +16,11 @@
 namespace itt
 {
 
+void SceneTree::Init()
+{
+    SetupCurrNode();
+}
+
 bool SceneTree::Add(const n0::SceneNodePtr& node)
 {
     if (m_path.patrs.empty())

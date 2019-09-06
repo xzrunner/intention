@@ -15,6 +15,8 @@ class Evaluator;
 class SceneTree
 {
 public:
+    void Init();
+
     bool Add(const n0::SceneNodePtr& node);
     bool Remove(const n0::SceneNodePtr& node);
     bool Clear();
