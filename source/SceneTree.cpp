@@ -23,6 +23,8 @@ void SceneTree::Init()
 
 bool SceneTree::Add(const n0::SceneNodePtr& node)
 {
+    ClearNodeDisplayTag();
+
     if (m_path.patrs.empty())
     {
         auto eval = std::make_shared<Evaluator>();
@@ -37,10 +39,8 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
         auto& ccomplex = curr.node->GetSharedComp<n0::CompComplex>();
         ccomplex.AddChild(node);
 
-        if (node->HasUniqueComp<bp::CompNode>())
-        {
+        if (node->HasUniqueComp<bp::CompNode>()) {
             auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
-            SetDisplay(*bp_node);
             curr.eval->OnAddNode(*bp_node);
         }
     }
@@ -50,8 +50,13 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
         auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
         auto type = bp_node->get_type();
         if (type == rttr::type::get<node::Geometry>()) {
-            assert(!node->HasSharedComp<n0::CompComplex>());
-            node->AddSharedComp<n0::CompComplex>();
+            if (!node->HasSharedComp<n0::CompComplex>()) {
+                node->AddSharedComp<n0::CompComplex>();
+            }
+        }
+        if (type.is_derived_from<Node>()) {
+            auto itt_node = std::static_pointer_cast<Node>(bp_node);
+            itt_node->SetDisplay(true);
         }
     }
 
@@ -166,18 +171,6 @@ void SceneTree::ClearNodeDisplayTag()
 n0::SceneNodePtr SceneTree::GetRoot() const
 {
     return m_path.patrs.empty() ? nullptr : m_path.patrs.front().node;
-}
-
-void SceneTree::SetDisplay(const bp::Node& node)
-{
-    if (!node.get_type().is_derived_from<Node>()) {
-        return;
-    }
-
-    ClearNodeDisplayTag();
-
-    auto& itt_node = static_cast<const Node&>(node);
-    const_cast<Node&>(itt_node).SetDisplay(true);
 }
 
 bool SceneTree::IsCurrChild(const n0::SceneNodePtr& node) const

@@ -32,8 +32,6 @@ public:
     n0::SceneNodePtr GetRoot() const;
 
 private:
-    void SetDisplay(const bp::Node& node);
-
     bool IsCurrChild(const n0::SceneNodePtr& node) const;
 
     void SetupCurrNode();
