@@ -8,15 +8,48 @@
 #include <blueprint/NSCompNode.h>
 #include <blueprint/MessageID.h>
 
+#include <memmgr/LinearAllocator.h>
 #include <node0/SceneNode.h>
 #include <node0/CompComplex.h>
 #include <node2/AABBSystem.h>
 #include <node2/CompBoundingBox.h>
 #include <ns/CompFactory.h>
 #include <ns/CompSerializer.h>
+#include <ns/N0CompComplex.h>
 
 namespace itt
 {
+
+void Serializer::Init()
+{
+    ns::CompSerializer::Instance()->AddFromJsonFunc(n0::CompComplex::TYPE_NAME,
+        [](n0::NodeComp& comp, const std::string& dir, const rapidjson::Value& val)
+    {
+        auto& ccomplex = static_cast<n0::CompComplex&>(comp);
+
+        ns::N0CompComplex seri;
+        mm::LinearAllocator alloc;
+        seri.LoadFromJson(alloc, dir, val);
+        seri.StoreToMem(ccomplex);
+
+        bp::NSCompNode::LoadConnection(ccomplex.GetAllChildren(), val["nodes"]);
+    }, true);
+
+    ns::CompSerializer::Instance()->AddToJsonFunc(n0::CompComplex::TYPE_NAME,
+        [](const n0::NodeComp& comp, const std::string& dir, rapidjson::Value& val,
+            rapidjson::MemoryPoolAllocator<>& alloc, bool skip_asset)->bool
+    {
+        auto& ccomplex = static_cast<const n0::CompComplex&>(comp);
+
+        ns::N0CompComplex seri;
+        seri.LoadFromMem(ccomplex);
+        seri.StoreToJson(dir, val, alloc);
+
+        bp::NSCompNode::StoreConnection(ccomplex.GetAllChildren(), val["nodes"], alloc);
+
+        return true;
+    }, true);
+}
 
 void Serializer::LoadFromJson(ee0::WxStagePage& stage, const n0::SceneNodePtr& root,
                               const rapidjson::Value& val, const std::string& dir)
@@ -42,20 +75,18 @@ void Serializer::LoadFromJson(ee0::WxStagePage& stage, const n0::SceneNodePtr& r
     if (root->HasSharedComp<n0::CompComplex>())
     {
         auto& ccomplex = root->GetSharedComp<n0::CompComplex>();
-        auto nodes = ccomplex.GetAllChildren();
+        auto children = ccomplex.GetAllChildren();
         ccomplex.RemoveAllChildren();
-        for (auto& node : nodes) {
-            ee0::MsgHelper::InsertNode(*sub_mgr, node, false);
+        for (auto& c : children) {
+            ee0::MsgHelper::InsertNode(*sub_mgr, c, false);
         }
     }
 
-    // copy from
-    // LoadFromFileExt(filepath);
+    // connection
     bp::CommentaryNodeHelper::InsertNodeToCommentary(stage);
-    auto& ccomplex = root->GetSharedComp<n0::CompComplex>();
-    bp::NSCompNode::LoadConnection(ccomplex.GetAllChildren(), val["nodes"]);
     sub_mgr->NotifyObservers(bp::MSG_BP_CONN_REBUILD);
 
+    // aabb
 	if (root->HasUniqueComp<n2::CompBoundingBox>())
 	{
 		auto& cbb = root->GetUniqueComp<n2::CompBoundingBox>();
@@ -66,22 +97,17 @@ void Serializer::LoadFromJson(ee0::WxStagePage& stage, const n0::SceneNodePtr& r
 	sub_mgr->NotifyObservers(ee0::MSG_SET_CANVAS_DIRTY);
 }
 
-void Serializer::StoreToJson(const ee0::WxStagePage& stage, const n0::SceneNodePtr& root,
-                             const std::string& dir, rapidjson::Value& val,
-                             rapidjson::MemoryPoolAllocator<>& alloc)
+void Serializer::StoreToJson(const n0::SceneNodePtr& root, const std::string& dir,
+                             rapidjson::Value& val, rapidjson::MemoryPoolAllocator<>& alloc)
 {
-    rapidjson::Value graph_val;
+    rapidjson::Value bp_val;
 
     assert(root->HasSharedComp<n0::CompComplex>());
     ns::CompSerializer::Instance()->ToJson(
-        root->GetSharedComp<n0::CompComplex>(), dir, graph_val, alloc
+        root->GetSharedComp<n0::CompComplex>(), dir, bp_val, alloc, false
     );
 
-    // connection
-    auto& ccomplex = root->GetSharedComp<n0::CompComplex>();
-    bp::NSCompNode::StoreConnection(ccomplex.GetAllChildren(), graph_val["nodes"], alloc);
-
-    val.AddMember("graph", graph_val, alloc);
+    val.AddMember("graph", bp_val, alloc);
 }
 
 }
