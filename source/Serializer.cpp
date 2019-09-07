@@ -1,4 +1,5 @@
 #include "intention/Serializer.h"
+#include "intention/RegistNodes.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -7,6 +8,7 @@
 #include <blueprint/CommentaryNodeHelper.h>
 #include <blueprint/NSCompNode.h>
 #include <blueprint/MessageID.h>
+#include <blueprint/CompNode.h>
 
 #include <memmgr/LinearAllocator.h>
 #include <node0/SceneNode.h>
@@ -71,6 +73,9 @@ void Serializer::LoadFromJson(ee0::WxStagePage& stage, const n0::SceneNodePtr& r
     {
         casset = root->GetSharedCompPtr<n0::CompAsset>();
     }
+
+    InitParentChildren(root);
+
     // FIXME: reinsert, for send insert msg to other panel
     if (root->HasSharedComp<n0::CompComplex>())
     {
@@ -108,6 +113,42 @@ void Serializer::StoreToJson(const n0::SceneNodePtr& root, const std::string& di
     );
 
     val.AddMember("graph", bp_val, alloc);
+}
+
+void Serializer::InitParentChildren(const n0::SceneNodePtr& node)
+{
+    assert(node);
+
+    if (!node->HasSharedComp<n0::CompComplex>()) {
+        return;
+    }
+
+    std::shared_ptr<node::Geometry> parent = nullptr;
+    if (node->HasUniqueComp<bp::CompNode>()) {
+        auto& cnode = node->GetUniqueComp<bp::CompNode>();
+        auto bp_node = cnode.GetNode();
+        if (bp_node->get_type() == rttr::type::get<node::Geometry>()) {
+            parent = std::static_pointer_cast<node::Geometry>(bp_node);
+        }
+    }
+
+    auto& ccomplex = node->GetSharedComp<n0::CompComplex>();
+
+    if (parent) {
+        for (auto& c : ccomplex.GetAllChildren()) {
+            if (c->HasUniqueComp<bp::CompNode>()) {
+                auto& cnode = c->GetUniqueComp<bp::CompNode>();
+                auto bp_node = cnode.GetNode();
+                if (bp_node) {
+                    parent->children.push_back(bp_node);
+                }
+            }
+        }
+    }
+
+    for (auto& c : ccomplex.GetAllChildren()) {
+        InitParentChildren(c);
+    }
 }
 
 }

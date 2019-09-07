@@ -66,7 +66,9 @@ public:                                                              \
 #define ITT_NODE_PROP
 
 // base
-ITT_DEFINE_PROPS_NODE(Geometry, ITT_NODE_PROP)
+ITT_DEFINE_NODE(Geometry,              \
+    std::vector<bp::NodePtr> children; \
+)
 
 // attribute
 ITT_DEFINE_NODE(Sort,                \

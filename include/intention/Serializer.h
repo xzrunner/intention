@@ -19,6 +19,9 @@ public:
     static void StoreToJson(const n0::SceneNodePtr& root, const std::string& dir,
         rapidjson::Value& val, rapidjson::MemoryPoolAllocator<>& alloc);
 
+private:
+    static void InitParentChildren(const n0::SceneNodePtr& node);
+
 }; // Serializer
 
 }
