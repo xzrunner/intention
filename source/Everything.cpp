@@ -4,6 +4,7 @@
 #include "intention/Node.h"
 #include "intention/RegistNodes.h"
 #include "intention/NodeHelper.h"
+#include "intention/NodeProp.h"
 
 #include <blueprint/Pin.h>
 #include <blueprint/Node.h>
@@ -269,6 +270,29 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
         auto& src = static_cast<const node::Switch&>(front);
         auto& dst = static_cast<evt::node::Switch&>(back);
         dst.SetSelected(src.selected);
+    }
+
+    // update props
+    if (type.is_derived_from<Node>())
+    {
+        auto& src = static_cast<const Node&>(front);
+        auto& src_props = src.GetProps();
+        if (src_props)
+        {
+            auto& dst_props = const_cast<evt::NodePropsMgr&>(back.GetProps());
+            dst_props.Clear();
+            for (auto& sp : src_props->props)
+            {
+                evt::Variable d_val;
+                try {
+                    d_val.type = evt::VariableType::Float;
+                    d_val.f = boost::lexical_cast<float>(sp.value);
+                } catch (boost::bad_lexical_cast&) {
+                    continue;
+                }
+                dst_props.Add(sp.name, d_val);
+            }
+        }
     }
 }
 
