@@ -5,28 +5,34 @@
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
 #include <blueprint/Connecting.h>
+#include <blueprint/CompNode.h>
+
+#include <node0/SceneNode.h>
+#include <node0/CompComplex.h>
+#include <everything/EvalContext.h>
 
 #include <queue>
 
 namespace itt
 {
 
-void Evaluator::OnAddNode(const bp::Node& node)
+void Evaluator::OnAddNode(const bp::Node& front)
 {
-    auto back = Everything::CreateBackFromFront(node);
-    if (back)
-    {
-        m_eval.AddNode(back);
-        m_nodes_map.insert({ &node, back });
-
-        if (node.get_type().is_derived_from<Node>()) {
-            const_cast<Node&>(static_cast<const Node&>(node)).SetName(back->GetName());
-        }
-
-        Everything::UpdatePropBackFromFront(node, *back);
-
-        Update();
+    auto back = Everything::CreateBackFromFront(front);
+    if (!back) {
+        return;
     }
+
+    m_eval.AddNode(back);
+    m_nodes_map.insert({ &front, back });
+
+    if (front.get_type().is_derived_from<Node>()) {
+        const_cast<Node&>(static_cast<const Node&>(front)).SetName(back->GetName());
+    }
+
+    Everything::UpdatePropBackFromFront(front, *back, *this);
+
+    Update();
 }
 
 void Evaluator::OnRemoveNode(const bp::Node& node)
@@ -54,7 +60,7 @@ void Evaluator::OnNodePropChanged(const bp::NodePtr& node)
 {
     auto itr = m_nodes_map.find(node.get());
     assert(itr != m_nodes_map.end());
-    Everything::UpdatePropBackFromFront(*node, *itr->second);
+    Everything::UpdatePropBackFromFront(*node, *itr->second, *this);
 
     if (node->get_type().is_derived_from<Node>())
     {
