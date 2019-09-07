@@ -18,7 +18,7 @@
 namespace itt
 {
 
-void SceneTree::Init()
+void SceneTree::AfterLoadFromFile()
 {
     SetupCurrNode();
 }
