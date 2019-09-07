@@ -11,9 +11,31 @@
 #include <node0/CompComplex.h>
 #include <node0/NodeFlagsHelper.h>
 #include <node0/NodeFlags.h>
+#include <ns/NodeFactory.h>
 #include <everything/node/Geometry.h>
 
 #include <assert.h>
+
+namespace
+{
+
+void RebuildBackFromFront(std::shared_ptr<evt::node::Geometry>& dst,
+                          const std::shared_ptr<itt::node::Geometry>& src,
+                          const itt::Evaluator& eval)
+{
+    dst->ClearChildren();
+    for (auto& c : src->children)
+    {
+        auto dst_c = eval.QueryBackNode(*c);
+        assert(dst_c);
+        evt::node::Geometry::AddChild(dst, dst_c);
+
+        // calc again, for expr which need level info
+        itt::Everything::UpdatePropBackFromFront(*c, *dst_c, eval);
+    }
+}
+
+}
 
 namespace itt
 {
@@ -30,39 +52,57 @@ void SceneTree::AfterLoadFromFile()
 
 bool SceneTree::Add(const n0::SceneNodePtr& node)
 {
+    assert(!m_path.patrs.empty());
+
+    // reset flags
     ClearNodeDisplayTag();
 
-    if (m_path.patrs.empty())
-    {
-        auto eval = std::make_shared<Evaluator>();
-        m_eval_cache.insert({ node, eval });
-
-        m_path.patrs.push_back(PathPart(node, eval));
-    }
-    else
-    {
-        auto& curr = m_path.patrs.back();
-        assert(curr.node->HasSharedComp<n0::CompComplex>());
-        auto& ccomplex = curr.node->GetSharedComp<n0::CompComplex>();
-        ccomplex.AddChild(node);
-
-        if (node->HasUniqueComp<bp::CompNode>()) {
-            auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
-            curr.eval->OnAddNode(*bp_node);
-        }
-
-        AddToParent(node);
-    }
+    // update scene node
+    auto& curr = m_path.patrs.back();
+    assert(curr.node->HasSharedComp<n0::CompComplex>());
+    auto& ccomplex = curr.node->GetSharedComp<n0::CompComplex>();
+    ccomplex.AddChild(node);
 
     if (node->HasUniqueComp<bp::CompNode>())
     {
         auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
+        auto& curr = m_path.patrs.back();
+
+        // update front
+        if (curr.node->HasUniqueComp<bp::CompNode>())
+        {
+            auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
+            if (bp_parent && bp_parent->get_type() == rttr::type::get<node::Geometry>())
+            {
+                auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
+                geo->children.push_back(bp_node);
+            }
+        }
+
+        // front eval cb
+        m_path.patrs.back().eval->OnAddNode(*bp_node);
+
+        // update back
+        if (m_path.patrs.size() > 1)
+        {
+            auto& prev_eval = m_path.patrs[m_path.patrs.size() - 2].eval;
+            auto& curr_node = m_path.patrs.back().node;
+            assert(curr_node->HasUniqueComp<bp::CompNode>());
+            auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
+            auto child = m_path.patrs.back().eval->QueryBackNode(*bp_node);
+            assert(parent->get_type() == rttr::type::get<evt::node::Geometry>());
+            evt::node::Geometry::AddChild(std::static_pointer_cast<evt::node::Geometry>(parent), child);
+        }
+
+        // prepare ccomplex
         auto type = bp_node->get_type();
         if (type == rttr::type::get<node::Geometry>()) {
             if (!node->HasSharedComp<n0::CompComplex>()) {
                 node->AddSharedComp<n0::CompComplex>();
             }
         }
+
+        // update flags
         if (type.is_derived_from<Node>()) {
             auto itt_node = std::static_pointer_cast<Node>(bp_node);
             itt_node->SetDisplay(true);
@@ -84,17 +124,55 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
     }
     else
     {
+        // update scene node
         auto& curr = m_path.patrs.back();
         assert(curr.node->HasSharedComp<n0::CompComplex>());
         auto& ccomplex = curr.node->GetSharedComp<n0::CompComplex>();
         bool dirty = ccomplex.RemoveChild(node);
 
-        if (dirty && node->HasUniqueComp<bp::CompNode>()) {
+        if (dirty && node->HasUniqueComp<bp::CompNode>())
+        {
+            // update front
+            if (curr.node->HasUniqueComp<bp::CompNode>())
+            {
+                auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
+                if (bp_parent && bp_parent->get_type() == rttr::type::get<node::Geometry>())
+                {
+                    auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
+                    auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
+                    for (auto itr = geo->children.begin(); itr != geo->children.end(); )
+                    {
+                        if (*itr == bp_node) {
+                            itr = geo->children.erase(itr);
+                        } else {
+                            ++itr;
+                        }
+                    }
+                }
+            }
+
+            // front eval cb
             auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
             curr.eval->OnRemoveNode(*bp_node);
-        }
 
-        RemoveFromParent(node);
+            // update back
+            if (curr.node->HasUniqueComp<bp::CompNode>() && m_path.patrs.size() > 1)
+            {
+                auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
+                if (bp_parent && bp_parent->get_type() == rttr::type::get<node::Geometry>())
+                {
+                    auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
+
+                    auto& prev_eval = m_path.patrs[m_path.patrs.size() - 2].eval;
+                    auto& curr_node = m_path.patrs.back().node;
+                    assert(curr_node->HasUniqueComp<bp::CompNode>());
+                    auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
+                    auto child = m_path.patrs.back().eval->QueryBackNode(*bp_node);
+                    assert(parent->get_type() == rttr::type::get<evt::node::Geometry>());
+                    RebuildBackFromFront(std::static_pointer_cast<evt::node::Geometry>(parent), geo, *curr.eval);
+                }
+            }
+        }
 
         return dirty;
     }
@@ -106,16 +184,38 @@ bool SceneTree::Clear()
         return false;
     }
 
+    // update scene node
     auto& curr = m_path.patrs.back();
     assert(curr.node->HasSharedComp<n0::CompComplex>());
     auto& ccomplex = curr.node->GetSharedComp<n0::CompComplex>();
     bool dirty = !ccomplex.GetAllChildren().empty();
 	ccomplex.RemoveAllChildren();
 
+    // update front
+    if (curr.node->HasUniqueComp<bp::CompNode>())
+    {
+        auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
+        if (bp_parent && bp_parent->get_type() == rttr::type::get<node::Geometry>())
+        {
+            auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
+            geo->children.clear();
+        }
+    }
+
+    // front eval cb
     assert(curr.eval);
     curr.eval->OnClearAllNodes();
 
-    ClearParent();
+    // update back
+    if (m_path.patrs.size() > 1)
+    {
+        auto& prev_eval = m_path.patrs[m_path.patrs.size() - 2].eval;
+        auto& curr_node = m_path.patrs.back().node;
+        assert(curr_node->HasUniqueComp<bp::CompNode>());
+        auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
+        assert(parent->get_type() == rttr::type::get<evt::node::Geometry>());
+        std::static_pointer_cast<evt::node::Geometry>(parent)->ClearChildren();
+    }
 
     return dirty;
 }
@@ -155,16 +255,7 @@ bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
                     auto dst = GetCurrEval()->QueryBackNode(*src);
                     assert(dst && dst->get_type() == rttr::type::get<evt::node::Geometry>());
                     auto dst_geo = std::static_pointer_cast<evt::node::Geometry>(dst);
-                    dst_geo->ClearChildren();
-                    for (auto& c : src->children)
-                    {
-                        auto dst_c = eval->QueryBackNode(*c);
-                        assert(dst_c);
-                        evt::node::Geometry::AddChild(dst_geo, dst_c);
-
-                        // calc again, for expr which need level info
-                        Everything::UpdatePropBackFromFront(*c, *dst_c, *eval);
-                    }
+                    RebuildBackFromFront(dst_geo, src, *eval);
                 }
             }
         }
@@ -264,71 +355,6 @@ void SceneTree::SetupCurrNode()
             }
         }
     }
-}
-
-void SceneTree::AddToParent(const n0::SceneNodePtr& node)
-{
-    if (!node->HasUniqueComp<bp::CompNode>()) {
-        return;
-    }
-
-    auto& curr = m_path.patrs.back();
-    if (!curr.node->HasUniqueComp<bp::CompNode>()) {
-        return;
-    }
-
-    auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-    if (!bp_parent || bp_parent->get_type() != rttr::type::get<node::Geometry>()) {
-        return;
-    }
-
-    auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
-    auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
-    geo->children.push_back(bp_node);
-}
-
-void SceneTree::RemoveFromParent(const n0::SceneNodePtr& node)
-{
-    if (!node->HasUniqueComp<bp::CompNode>()) {
-        return;
-    }
-
-    auto& curr = m_path.patrs.back();
-    if (!curr.node->HasUniqueComp<bp::CompNode>()) {
-        return;
-    }
-
-    auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-    if (!bp_parent || bp_parent->get_type() != rttr::type::get<node::Geometry>()) {
-        return;
-    }
-
-    auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
-    auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
-    for (auto itr = geo->children.begin(); itr != geo->children.end(); )
-    {
-        if (*itr == bp_node) {
-            itr = geo->children.erase(itr);
-        } else {
-            ++itr;
-        }
-    }
-}
-
-void SceneTree::ClearParent()
-{
-    auto& curr = m_path.patrs.back();
-    if (!curr.node->HasUniqueComp<bp::CompNode>()) {
-        return;
-    }
-
-    auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-    if (!bp_parent || bp_parent->get_type() != rttr::type::get<node::Geometry>()) {
-        return;
-    }
-
-    auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
-    geo->children.clear();
 }
 
 }

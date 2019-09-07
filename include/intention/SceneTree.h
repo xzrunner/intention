@@ -40,10 +40,6 @@ private:
 
     void SetupCurrNode();
 
-    void AddToParent(const n0::SceneNodePtr& node);
-    void RemoveFromParent(const n0::SceneNodePtr& node);
-    void ClearParent();
-
 private:
     struct PathPart
     {
