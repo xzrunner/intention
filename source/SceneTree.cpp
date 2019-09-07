@@ -18,6 +18,11 @@
 namespace itt
 {
 
+SceneTree::SceneTree()
+{
+    InitDummyRoot();
+}
+
 void SceneTree::AfterLoadFromFile()
 {
     SetupCurrNode();
@@ -210,7 +215,18 @@ void SceneTree::ClearNodeDisplayTag()
 
 n0::SceneNodePtr SceneTree::GetRoot() const
 {
-    return m_path.patrs.empty() ? nullptr : m_path.patrs.front().node;
+    return m_path.patrs.size() <= 1 ? nullptr : m_path.patrs[m_path.patrs.size() - 2].node;
+}
+
+void SceneTree::InitDummyRoot()
+{
+    auto node = ns::NodeFactory::Create2D();
+    node->AddSharedComp<n0::CompComplex>();
+
+    auto eval = std::make_shared<Evaluator>();
+    m_eval_cache.insert({ node, eval });
+
+    m_path.patrs.push_back(PathPart(node, eval));
 }
 
 bool SceneTree::IsCurrChild(const n0::SceneNodePtr& node) const

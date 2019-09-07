@@ -15,6 +15,8 @@ class Evaluator;
 class SceneTree
 {
 public:
+    SceneTree();
+
     void AfterLoadFromFile();
 
     bool Add(const n0::SceneNodePtr& node);
@@ -32,6 +34,8 @@ public:
     n0::SceneNodePtr GetRoot() const;
 
 private:
+    void InitDummyRoot();
+
     bool IsCurrChild(const n0::SceneNodePtr& node) const;
 
     void SetupCurrNode();
