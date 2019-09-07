@@ -10,6 +10,7 @@
 #include <node0/CompComplex.h>
 #include <node0/NodeFlagsHelper.h>
 #include <node0/NodeFlags.h>
+#include <everything/node/Geometry.h>
 
 #include <assert.h>
 
@@ -43,6 +44,8 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
             auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
             curr.eval->OnAddNode(*bp_node);
         }
+
+        AddToParent(node);
     }
 
     if (node->HasUniqueComp<bp::CompNode>())
@@ -85,6 +88,8 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
             curr.eval->OnRemoveNode(*bp_node);
         }
 
+        RemoveFromParent(node);
+
         return dirty;
     }
 }
@@ -103,6 +108,8 @@ bool SceneTree::Clear()
 
     assert(curr.eval);
     curr.eval->OnClearAllNodes();
+
+    ClearParent();
 
     return dirty;
 }
@@ -124,14 +131,37 @@ bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
     if (itr == m_eval_cache.end())
     {
         auto eval = std::make_shared<Evaluator>();
-        if (node->HasSharedComp<n0::CompComplex>()) {
-            for (auto& c : node->GetSharedComp<n0::CompComplex>().GetAllChildren()) {
+        if (node->HasSharedComp<n0::CompComplex>())
+        {
+            auto& children = node->GetSharedComp<n0::CompComplex>().GetAllChildren();
+
+            for (auto& c : children) {
                 if (c->HasUniqueComp<bp::CompNode>()) {
                     auto& bp_node = c->GetUniqueComp<bp::CompNode>().GetNode();
                     eval->OnAddNode(*bp_node);
                 }
             }
+
+            if (node->HasUniqueComp<bp::CompNode>())
+            {
+                auto bp_parent = node->GetUniqueComp<bp::CompNode>().GetNode();
+                if (bp_parent->get_type() == rttr::type::get<node::Geometry>())
+                {
+                    auto src = std::static_pointer_cast<node::Geometry>(bp_parent);
+                    auto dst = GetCurrEval()->QueryBackNode(*src);
+                    assert(dst && dst->get_type() == rttr::type::get<evt::node::Geometry>());
+                    auto dst_geo = std::static_pointer_cast<evt::node::Geometry>(dst);
+                    dst_geo->ClearChildren();
+                    for (auto& c : src->children)
+                    {
+                        auto dst_c = eval->QueryBackNode(*c);
+                        assert(dst_c);
+                        evt::node::Geometry::AddChild(dst_geo, dst_c);
+                    }
+                }
+            }
         }
+
         m_eval_cache.insert({ node, eval });
         m_path.patrs.push_back({ node, eval });
     }
@@ -216,6 +246,71 @@ void SceneTree::SetupCurrNode()
             }
         }
     }
+}
+
+void SceneTree::AddToParent(const n0::SceneNodePtr& node)
+{
+    if (!node->HasUniqueComp<bp::CompNode>()) {
+        return;
+    }
+
+    auto& curr = m_path.patrs.back();
+    if (!curr.node->HasUniqueComp<bp::CompNode>()) {
+        return;
+    }
+
+    auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
+    if (!bp_parent || bp_parent->get_type() != rttr::type::get<node::Geometry>()) {
+        return;
+    }
+
+    auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
+    auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
+    geo->children.push_back(bp_node);
+}
+
+void SceneTree::RemoveFromParent(const n0::SceneNodePtr& node)
+{
+    if (!node->HasUniqueComp<bp::CompNode>()) {
+        return;
+    }
+
+    auto& curr = m_path.patrs.back();
+    if (!curr.node->HasUniqueComp<bp::CompNode>()) {
+        return;
+    }
+
+    auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
+    if (!bp_parent || bp_parent->get_type() != rttr::type::get<node::Geometry>()) {
+        return;
+    }
+
+    auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
+    auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
+    for (auto itr = geo->children.begin(); itr != geo->children.end(); )
+    {
+        if (*itr == bp_node) {
+            itr = geo->children.erase(itr);
+        } else {
+            ++itr;
+        }
+    }
+}
+
+void SceneTree::ClearParent()
+{
+    auto& curr = m_path.patrs.back();
+    if (!curr.node->HasUniqueComp<bp::CompNode>()) {
+        return;
+    }
+
+    auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
+    if (!bp_parent || bp_parent->get_type() != rttr::type::get<node::Geometry>()) {
+        return;
+    }
+
+    auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
+    geo->children.clear();
 }
 
 }
