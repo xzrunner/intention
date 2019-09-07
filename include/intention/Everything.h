@@ -13,7 +13,8 @@ class Evaluator;
 class Everything
 {
 public:
-    static void UpdatePropBackFromFront(const bp::Node& front, evt::Node& back);
+    static void UpdatePropBackFromFront(const bp::Node& front,
+        evt::Node& back, const Evaluator& eval);
 
     static evt::NodePtr CreateBackFromFront(const bp::Node& front);
 

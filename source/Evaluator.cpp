@@ -151,6 +151,29 @@ void Evaluator::OnRebuildConnection()
     Update();
 }
 
+float Evaluator::CalcFloat(const std::string& expr, const evt::Node& node, float expect) const
+{
+    auto var = m_eval.CalcExpr(expr, evt::EvalContext(m_eval, node));
+    switch (var.type)
+    {
+    case evt::VariableType::Bool:
+        return var.b ? 1.0f : 0.0f;
+    case evt::VariableType::Int:
+        return static_cast<float>(var.i);
+    case evt::VariableType::Float:
+        return var.f;
+    case evt::VariableType::Float3:
+    {
+        auto f3 = static_cast<const float*>(var.p);
+        return f3[0];
+    }
+    case evt::VariableType::Double:
+        return static_cast<float>(var.d);
+    default:
+        return expect;
+    }
+}
+
 evt::NodePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
 {
     auto itr = m_nodes_map.find(&front_node);

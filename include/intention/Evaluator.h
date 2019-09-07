@@ -32,6 +32,10 @@ public:
     void OnDisconnecting(const bp::Connecting& conn);
     void OnRebuildConnection();
 
+    // calc
+    float CalcFloat(const std::string& expr, const evt::Node& node,
+        float expect = 0.0f) const;
+
     auto& GetAllNodes() const { return m_nodes_map; }
 
     evt::NodePtr QueryBackNode(const bp::Node& front_node) const;

@@ -41,7 +41,8 @@
 namespace itt
 {
 
-void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
+void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
+                                         const Evaluator& eval)
 {
     auto type = front.get_type();
     // attribute
@@ -192,16 +193,19 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
             size.x = boost::lexical_cast<float>(src.size.x);
         } catch (boost::bad_lexical_cast&) {
             dst_props.SetExpr(evt::node::Box::SIZE_X, src.size.x);
+            size.x = eval.CalcFloat(src.size.x, dst, 1.0f);
         }
         try {
             size.y = boost::lexical_cast<float>(src.size.y);
         } catch (boost::bad_lexical_cast&) {
             dst_props.SetExpr(evt::node::Box::SIZE_Y, src.size.y);
+            size.y = eval.CalcFloat(src.size.y, dst, 1.0f);
         }
         try {
             size.z = boost::lexical_cast<float>(src.size.z);
         } catch (boost::bad_lexical_cast&) {
             dst_props.SetExpr(evt::node::Box::SIZE_Z, src.size.z);
+            size.z = eval.CalcFloat(src.size.z, dst, 1.0f);
         }
         dst.SetSize(size);
 
@@ -210,16 +214,19 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back)
             pos.x = boost::lexical_cast<float>(src.center.x);
         } catch (boost::bad_lexical_cast&) {
             dst_props.SetExpr(evt::node::Box::POS_X, src.center.x);
+            pos.x = eval.CalcFloat(src.center.x, dst);
         }
         try {
             pos.y = boost::lexical_cast<float>(src.center.y);
         } catch (boost::bad_lexical_cast&) {
             dst_props.SetExpr(evt::node::Box::POS_Y, src.center.y);
+            pos.y = eval.CalcFloat(src.center.y, dst);
         }
         try {
             pos.z = boost::lexical_cast<float>(src.center.z);
         } catch (boost::bad_lexical_cast&) {
             dst_props.SetExpr(evt::node::Box::POS_Z, src.center.z);
+            pos.z = eval.CalcFloat(src.center.z, dst);
         }
         dst.SetCenter(pos);
 
