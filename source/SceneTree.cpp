@@ -2,6 +2,7 @@
 #include "intention/Evaluator.h"
 #include "intention/Node.h"
 #include "intention/RegistNodes.h"
+#include "intention/Everything.h"
 
 #include <blueprint/CompNode.h>
 #include <blueprint/Node.h>
@@ -133,9 +134,7 @@ bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
         auto eval = std::make_shared<Evaluator>();
         if (node->HasSharedComp<n0::CompComplex>())
         {
-            auto& children = node->GetSharedComp<n0::CompComplex>().GetAllChildren();
-
-            for (auto& c : children) {
+            for (auto& c : node->GetSharedComp<n0::CompComplex>().GetAllChildren()) {
                 if (c->HasUniqueComp<bp::CompNode>()) {
                     auto& bp_node = c->GetUniqueComp<bp::CompNode>().GetNode();
                     eval->OnAddNode(*bp_node);
@@ -157,6 +156,9 @@ bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
                         auto dst_c = eval->QueryBackNode(*c);
                         assert(dst_c);
                         evt::node::Geometry::AddChild(dst_geo, dst_c);
+
+                        // calc again, for expr which need level info
+                        Everything::UpdatePropBackFromFront(*c, *dst_c, *eval);
                     }
                 }
             }
