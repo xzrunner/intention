@@ -16,6 +16,8 @@
 
 #include <assert.h>
 
+//#define SCENE_TREE_DUMMY_ROOT
+
 namespace
 {
 
@@ -42,7 +44,9 @@ namespace itt
 
 SceneTree::SceneTree()
 {
+#ifdef SCENE_TREE_DUMMY_ROOT
     InitDummyRoot();
+#endif // SCENE_TREE_DUMMY_ROOT
 }
 
 void SceneTree::AfterLoadFromFile()
@@ -52,6 +56,17 @@ void SceneTree::AfterLoadFromFile()
 
 bool SceneTree::Add(const n0::SceneNodePtr& node)
 {
+#ifndef SCENE_TREE_DUMMY_ROOT
+    if (m_path.patrs.empty())
+    {
+        auto eval = std::make_shared<Evaluator>();
+        m_eval_cache.insert({ node, eval });
+        m_path.patrs.push_back(PathPart(node, eval));
+
+        return true;
+    }
+#endif // SCENE_TREE_DUMMY_ROOT
+
     assert(!m_path.patrs.empty());
 
     // reset flags
@@ -306,7 +321,11 @@ void SceneTree::ClearNodeDisplayTag()
 
 n0::SceneNodePtr SceneTree::GetRoot() const
 {
+#ifdef SCENE_TREE_DUMMY_ROOT
     return m_path.patrs.size() <= 1 ? nullptr : m_path.patrs[m_path.patrs.size() - 2].node;
+#else
+    return m_path.patrs.empty() ? nullptr : m_path.patrs.front().node;
+#endif // SCENE_TREE_DUMMY_ROOT
 }
 
 void SceneTree::InitDummyRoot()
