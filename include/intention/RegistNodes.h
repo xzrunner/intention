@@ -81,11 +81,11 @@ ITT_DEFINE_NODE(Delete,                                      \
     DeleteEntityType entity_type = DeleteEntityType::Points; \
     std::string      filter_exp;                             \
 )
-ITT_DEFINE_NODE(Transform,                  \
-    sm::vec3 translate = sm::vec3(0, 0, 0); \
-    sm::vec3 rotate    = sm::vec3(0, 0, 0); \
-    sm::vec3 scale     = sm::vec3(1, 1, 1); \
-    sm::vec3 shear     = sm::vec3(0, 0, 0); \
+ITT_DEFINE_NODE(Transform,                      \
+    StrVec3 translate = StrVec3("0", "0", "0"); \
+    StrVec3 rotate    = StrVec3("0", "0", "0"); \
+    StrVec3 scale     = StrVec3("1", "1", "1"); \
+    StrVec3 shear     = StrVec3("0", "0", "0"); \
 )
 
 // NURBs

@@ -103,10 +103,17 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
         auto& src = static_cast<const node::Transform&>(front);
         auto& dst = static_cast<evt::node::Transform&>(back);
 
-        dst.SetTranslate(src.translate);
-        dst.SetRotate(src.rotate);
-        dst.SetScale(src.scale);
-        dst.SetShear(src.shear);
+        sm::ivec3 trans_idx(evt::node::Transform::TRANS_X, evt::node::Transform::TRANS_Y, evt::node::Transform::TRANS_Z);
+        dst.SetTranslate(ParseExprFloat3(src.translate, back, trans_idx, sm::vec3(0, 0, 0), eval));
+
+        sm::ivec3 rot_idx(evt::node::Transform::ROT_X, evt::node::Transform::ROT_Y, evt::node::Transform::ROT_Z);
+        dst.SetRotate(ParseExprFloat3(src.rotate, back, rot_idx, sm::vec3(0, 0, 0), eval));
+
+        sm::ivec3 scale_idx(evt::node::Transform::SCALE_X, evt::node::Transform::SCALE_Y, evt::node::Transform::SCALE_Z);
+        dst.SetScale(ParseExprFloat3(src.scale, back, scale_idx, sm::vec3(1, 1, 1), eval));
+
+        sm::ivec3 shear_idx(evt::node::Transform::SHEAR_X, evt::node::Transform::SHEAR_Y, evt::node::Transform::SHEAR_Z);
+        dst.SetShear(ParseExprFloat3(src.shear, back, shear_idx, sm::vec3(0, 0, 0), eval));
     }
     // NURBs
     else if (type == rttr::type::get<node::Carve>())
@@ -188,47 +195,11 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
         auto& dst = static_cast<evt::node::Box&>(back);
         auto& dst_props = const_cast<evt::NodePropsMgr&>(dst.GetProps());
 
-        sm::vec3 size;
-        try {
-            size.x = boost::lexical_cast<float>(src.size.x);
-        } catch (boost::bad_lexical_cast&) {
-            dst_props.SetExpr(evt::node::Box::SIZE_X, src.size.x);
-            size.x = eval.CalcFloat(src.size.x, dst, 1.0f);
-        }
-        try {
-            size.y = boost::lexical_cast<float>(src.size.y);
-        } catch (boost::bad_lexical_cast&) {
-            dst_props.SetExpr(evt::node::Box::SIZE_Y, src.size.y);
-            size.y = eval.CalcFloat(src.size.y, dst, 1.0f);
-        }
-        try {
-            size.z = boost::lexical_cast<float>(src.size.z);
-        } catch (boost::bad_lexical_cast&) {
-            dst_props.SetExpr(evt::node::Box::SIZE_Z, src.size.z);
-            size.z = eval.CalcFloat(src.size.z, dst, 1.0f);
-        }
-        dst.SetSize(size);
+        sm::ivec3 size_idx(evt::node::Box::SIZE_X, evt::node::Box::SIZE_Y, evt::node::Box::SIZE_Z);
+        dst.SetSize(ParseExprFloat3(src.size, back, size_idx, sm::vec3(1, 1, 1), eval));
 
-        sm::vec3 pos;
-        try {
-            pos.x = boost::lexical_cast<float>(src.center.x);
-        } catch (boost::bad_lexical_cast&) {
-            dst_props.SetExpr(evt::node::Box::POS_X, src.center.x);
-            pos.x = eval.CalcFloat(src.center.x, dst);
-        }
-        try {
-            pos.y = boost::lexical_cast<float>(src.center.y);
-        } catch (boost::bad_lexical_cast&) {
-            dst_props.SetExpr(evt::node::Box::POS_Y, src.center.y);
-            pos.y = eval.CalcFloat(src.center.y, dst);
-        }
-        try {
-            pos.z = boost::lexical_cast<float>(src.center.z);
-        } catch (boost::bad_lexical_cast&) {
-            dst_props.SetExpr(evt::node::Box::POS_Z, src.center.z);
-            pos.z = eval.CalcFloat(src.center.z, dst);
-        }
-        dst.SetCenter(pos);
+        sm::ivec3 pos_idx(evt::node::Box::POS_X, evt::node::Box::POS_Y, evt::node::Box::POS_Z);
+        dst.SetCenter(ParseExprFloat3(src.center, back, pos_idx, sm::vec3(0, 0, 0), eval));
 
         dst.SetScale(sm::vec3(src.scale, src.scale, src.scale));
     }
@@ -375,6 +346,35 @@ evt::NodeVarType Everything::TypeFrontToBack(int pin_type)
     case PIN_PRIMITIVE:
         ret = evt::NodeVarType::Primitive;
         break;
+    }
+
+    return ret;
+}
+
+sm::vec3 Everything::ParseExprFloat3(const StrVec3& src, const evt::Node& dst,
+                                     const sm::ivec3& idx, const sm::vec3& expect,
+                                     const Evaluator& eval)
+{
+    sm::vec3 ret;
+
+    auto& dst_props = const_cast<evt::NodePropsMgr&>(dst.GetProps());
+    try {
+        ret.x = boost::lexical_cast<float>(src.x);
+    } catch (boost::bad_lexical_cast&) {
+        dst_props.SetExpr(idx.x, src.x);
+        ret.x = eval.CalcFloat(src.x, dst, 1.0f);
+    }
+    try {
+        ret.y = boost::lexical_cast<float>(src.y);
+    } catch (boost::bad_lexical_cast&) {
+        dst_props.SetExpr(idx.y, src.y);
+        ret.y = eval.CalcFloat(src.y, dst, 1.0f);
+    }
+    try {
+        ret.z = boost::lexical_cast<float>(src.z);
+    } catch (boost::bad_lexical_cast&) {
+        dst_props.SetExpr(idx.z, src.z);
+        ret.z = eval.CalcFloat(src.z, dst, 1.0f);
     }
 
     return ret;
