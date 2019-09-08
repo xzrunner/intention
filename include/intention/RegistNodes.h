@@ -66,7 +66,7 @@ public:                                                              \
 #define ITT_NODE_PROP
 
 // base
-ITT_DEFINE_NODE(Geometry,              \
+ITT_DEFINE_PROPS_NODE(Geometry,        \
     std::vector<bp::NodePtr> children; \
 )
 
