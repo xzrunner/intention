@@ -30,7 +30,14 @@ void RebuildBackFromFront(std::shared_ptr<evt::node::Geometry>& dst,
         assert(dst_c);
         evt::node::Geometry::AddChild(dst, dst_c);
 
-        // calc again, for expr which need level info
+        //// calc again, for expr which need level info
+        //itt::Everything::UpdatePropBackFromFront(*c, *dst_c, eval);
+    }
+
+    // calc again, for expr which need level info
+    for (auto& c : src->children)
+    {
+        auto dst_c = eval.QueryBackNode(*c);
         itt::Everything::UpdatePropBackFromFront(*c, *dst_c, eval);
     }
 }
