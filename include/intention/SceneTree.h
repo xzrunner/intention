@@ -1,5 +1,7 @@
 #pragma once
 
+//#define ITT_SCENE_TREE_DUMMY_ROOT
+
 #include <node0/typedef.h>
 
 #include <vector>
