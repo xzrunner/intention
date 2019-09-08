@@ -77,7 +77,7 @@ void RenderSystem::DrawNode(const pt0::RenderContext& rc,
         auto& brushes = brush_model->GetBrushes();
         assert(brushes.size() == 1);
         auto& brush = brushes[0];
-        auto group = geo->QueryGroup(gc.GetName());
+        auto group = geo->QueryGroup(gc.GetGroupName());
         if (group) {
             for (auto& f : group->items) {
                 DrawFace(*brush.impl, f, LIGHT_SELECT_COLOR, m_cam_mat);
