@@ -210,6 +210,7 @@ REGIST_NODE_RTTI(GroupCreate,                                              \
 )                                                                          \
 )
 REGIST_NODE_RTTI_DEFAULT(Merge)
+REGIST_NODE_RTTI_DEFAULT(Null)
 REGIST_NODE_RTTI(Switch,
 .property("selected", &itt::node::Switch::selected)                   \
 (                                                                     \

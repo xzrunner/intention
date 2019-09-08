@@ -147,6 +147,7 @@ ITT_DEFINE_NODE(GroupCreate,                                \
     float    spread_angle     = 180;                        \
 )
 ITT_DEFINE_IMPORT_EXT_NODE(Merge, ITT_NODE_PROP)
+ITT_DEFINE_PROPS_NODE(Null, ITT_NODE_PROP)
 ITT_DEFINE_IMPORT_EXT_NODE(Switch, \
     size_t selected = 0;           \
 )
