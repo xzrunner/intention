@@ -277,6 +277,8 @@ bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
 
         m_eval_cache.insert({ node, eval });
         m_path.patrs.push_back({ node, eval });
+
+        eval->OnRebuildConnection();
     }
     else
     {
