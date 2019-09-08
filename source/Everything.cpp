@@ -308,6 +308,10 @@ evt::NodePtr Everything::CreateBackFromFront(const bp::Node& node)
         }
     }
 
+    if (node.get_type().is_derived_from<Node>()) {
+        dst->SetName(static_cast<const Node&>(node).GetName());
+    }
+
     return dst;
 }
 
