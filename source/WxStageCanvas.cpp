@@ -68,7 +68,26 @@ void WxStageCanvas::DrawForeground3D() const
 
     auto& nodes = eval->GetAllNodes();
     for (auto& n : nodes) {
-        rs.DrawNode(rc, *n.second, *n.first);
+        rs.DrawNode3D(rc, *n.second, *n.first);
+    }
+}
+
+void WxStageCanvas::DrawForeground2D() const
+{
+    if (!m_stree) {
+        return;
+    }
+    auto eval = m_stree->GetCurrEval();
+    if (!eval) {
+        return;
+    }
+
+    auto cam_mat = m_camera->GetProjectionMat() * m_camera->GetViewMat();
+    RenderSystem rs(GetViewport(), cam_mat);
+
+    auto& nodes = eval->GetAllNodes();
+    for (auto& n : nodes) {
+        rs.DrawNode2D(*n.second, *n.first);
     }
 
     pt2::RenderSystem::DrawPainter(rs.GetPainter());

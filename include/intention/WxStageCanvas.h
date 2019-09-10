@@ -22,6 +22,7 @@ protected:
 
     virtual void DrawBackground3D() const override;
     virtual void DrawForeground3D() const override;
+    virtual void DrawForeground2D() const override;
 
 private:
     std::shared_ptr<SceneTree> m_stree = nullptr;

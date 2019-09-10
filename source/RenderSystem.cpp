@@ -29,9 +29,9 @@ RenderSystem::RenderSystem(const pt3::Viewport& vp,
 {
 }
 
-void RenderSystem::DrawNode(const pt0::RenderContext& rc,
-                            const evt::Node& back,
-                            const bp::Node& front) const
+void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
+                              const evt::Node& back,
+                              const bp::Node& front) const
 {
     if (!front.get_type().is_derived_from<itt::Node>()) {
         return;
@@ -67,22 +67,83 @@ void RenderSystem::DrawNode(const pt0::RenderContext& rc,
     // draw edge
     rp.type = pt3::RenderParams::DRAW_BORDER_MESH;
     n3::RenderSystem::Draw(*sn, rp, rc);
+}
+
+void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) const
+{
+    auto& itt_node = static_cast<const Node&>(front);
+    if (!itt_node.GetDisplay()) {
+        return;
+    }
 
     auto type = front.get_type();
-    if (type == rttr::type::get<node::GroupCreate>())
+    if (type == rttr::type::get<node::GroupCreate>()) 
     {
-        auto& gc = static_cast<const evt::node::GroupCreate&>(back);
+        auto geo = back.GetGeometry();
+        assert(geo);
 
-        auto brush_model = geo->GetBrushModel();
+        auto& group_create = static_cast<const node::GroupCreate&>(front);
+        auto group = geo->QueryGroup(group_create.group_name);
+        if (group) {
+            DrawGroup(*group, *geo);
+        }
+    }
+    else if (type == rttr::type::get<node::GroupExpression>())
+    {
+        auto geo = back.GetGeometry();
+        assert(geo);
+
+        auto& group_expr = static_cast<const node::GroupExpression&>(front);
+        auto group0 = geo->QueryGroup(group_expr.inst0.group_name);
+        if (group0)  {
+            DrawGroup(*group0, *geo);
+        }
+        auto group1 = geo->QueryGroup(group_expr.inst1.group_name);
+        if (group1) {
+            DrawGroup(*group1, *geo);
+        }
+        auto group2 = geo->QueryGroup(group_expr.inst2.group_name);
+        if (group2) {
+            DrawGroup(*group2, *geo);
+        }
+        auto group3 = geo->QueryGroup(group_expr.inst3.group_name);
+        if (group3) {
+            DrawGroup(*group3, *geo);
+        }
+    }
+}
+
+void RenderSystem::DrawGroup(const evt::Group& group, const evt::GeometryImpl& geo) const
+{
+    switch (group.type)
+    {
+    case evt::GroupType::Points:
+    {
+        auto& points = geo.GetAttr().GetPoints();
+        for (auto& f : group.items) {
+            auto pos = m_vp.TransPosProj3ToProj2(points[f]->pos, m_cam_mat);
+            m_pt.AddCircleFilled(pos, 10, LIGHT_SELECT_COLOR);
+        }
+    }
+        break;
+    case evt::GroupType::Vertices:
+        break;
+    case evt::GroupType::Edges:
+        break;
+    case evt::GroupType::Primitives:
+    {
+        auto brush_model = geo.GetBrushModel();
         auto& brushes = brush_model->GetBrushes();
         assert(brushes.size() == 1);
         auto& brush = brushes[0];
-        auto group = geo->QueryGroup(gc.GetGroupName());
-        if (group) {
-            for (auto& f : group->items) {
-                DrawFace(*brush.impl, f, LIGHT_SELECT_COLOR, m_cam_mat);
-            }
+
+        for (auto& f : group.items) {
+            DrawFace(*brush.impl, f, LIGHT_SELECT_COLOR, m_cam_mat);
         }
+    }
+        break;
+    default:
+        assert(0);
     }
 }
 
