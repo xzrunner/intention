@@ -138,6 +138,9 @@ void RenderSystem::DrawGroup(const evt::Group& group, const evt::GeometryImpl& g
     {
         auto brush_model = geo.GetBrushModel();
         auto& brushes = brush_model->GetBrushes();
+        if (brushes.empty()) {
+            return;
+        }
         assert(brushes.size() == 1);
         auto& brush = brushes[0];
 
