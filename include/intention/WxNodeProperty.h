@@ -15,7 +15,7 @@ public:
 private:
     virtual bool InitView(const rttr::property& prop, const bp::NodePtr& node) override;
     virtual bool UpdateView(const rttr::property& prop, const wxPGProperty& wx_prop) override;
-    virtual void UpdateView(wxPropertyGridEvent& event) override;
+    virtual bool UpdateView(wxPropertyGridEvent& event) override;
 
 }; // WxNodeProperty
 

@@ -309,26 +309,36 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     return ret;
 }
 
-void WxNodeProperty::UpdateView(wxPropertyGridEvent& event)
+bool WxNodeProperty::UpdateView(wxPropertyGridEvent& event)
 {
     if (!m_node || !m_node->get_type().is_derived_from<itt::Node>()) {
-        return;
+        return false;
     }
 
     auto itt_node = std::static_pointer_cast<itt::Node>(m_node);
     auto& props = itt_node->GetProps();
     if (!props) {
-        return;
+        return false;
     }
+
+    bool dirty = false;
 
     wxPGProperty* property = event.GetProperty();
     auto key = property->GetName();
     wxAny val = property->GetValue();
-    for (auto& p : props->props) {
-        if (p.name == key) {
-            p.value = wxANY_AS(val, wxString).ToStdString();
+    for (auto& p : props->props)
+    {
+        if (p.name != key) {
+            continue;
+        }
+        std::string str = wxANY_AS(val, wxString).ToStdString();
+        if (p.value != str) {
+            p.value = str;
+            dirty = true;
         }
     }
+
+    return dirty;
 }
 
 }
