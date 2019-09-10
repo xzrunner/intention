@@ -97,18 +97,20 @@ ITT_DEFINE_NODE(Delete,                                      \
     DeleteEntityType entity_type = DeleteEntityType::Points; \
     std::string      filter_exp;                             \
 )
-ITT_DEFINE_NODE(Transform,                      \
-    StrVec3 translate = StrVec3("0", "0", "0"); \
-    StrVec3 rotate    = StrVec3("0", "0", "0"); \
-    StrVec3 scale     = StrVec3("1", "1", "1"); \
-    StrVec3 shear     = StrVec3("0", "0", "0"); \
+ITT_DEFINE_NODE(Transform,                            \
+    GroupName group_name;                             \
+    GroupType group_type = GroupType::GuessFromGroup; \
+    StrVec3 translate = StrVec3("0", "0", "0");       \
+    StrVec3 rotate = StrVec3("0", "0", "0");          \
+    StrVec3 scale = StrVec3("1", "1", "1");           \
+    StrVec3 shear = StrVec3("0", "0", "0");           \
 )
 
 // NURBs
 ITT_DEFINE_NODE(Carve,  \
-    float first_u  = 0; \
+    float first_u = 0;  \
     float second_u = 1; \
-    float first_v  = 0; \
+    float first_v = 0;  \
     float second_v = 1; \
 )
 
@@ -131,15 +133,15 @@ ITT_DEFINE_NODE(PolyExtrude, \
 
 // primitive
 ITT_DEFINE_NODE(Box,                         \
-    StrVec3 size   = StrVec3("1", "1", "1"); \
+    StrVec3 size = StrVec3("1", "1", "1");   \
     StrVec3 center = StrVec3("0", "0", "0"); \
-    float scale    = 1.0f;                   \
+    float scale = 1.0f;                      \
 )
 ITT_DEFINE_NODE(Curve,              \
     std::vector<sm::vec3> vertices; \
 )
 ITT_DEFINE_NODE(Line,                       \
-    sm::vec3 origin    = sm::vec3(0, 0, 0); \
+    sm::vec3 origin = sm::vec3(0, 0, 0);    \
     sm::vec3 direction = sm::vec3(0, 0, 1); \
     float    length = 1;                    \
     size_t   points = 2;                    \
@@ -147,10 +149,10 @@ ITT_DEFINE_NODE(Line,                       \
 ITT_DEFINE_NODE(Sphere, ITT_NODE_PROP)
 
 // utility
-ITT_DEFINE_NODE(Blast,                                      \
-    GroupName group_name;                                   \
-    evt::GroupType group_type = evt::GroupType::Primitives; \
-    bool delete_non_selected = false;                       \
+ITT_DEFINE_NODE(Blast,                            \
+    GroupName group_name;                         \
+    GroupType group_type = GroupType::Primitives; \
+    bool delete_non_selected = false;             \
 )
 ITT_DEFINE_NODE(CopyToPoints, ITT_NODE_PROP)
 ITT_DEFINE_NODE(ForeachPrimBegin, ITT_NODE_PROP)

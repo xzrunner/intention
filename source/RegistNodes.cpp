@@ -198,7 +198,7 @@ REGIST_NODE_RTTI(Box,
 )
 )
 REGIST_NODE_RTTI(Curve,
-.property("vertices", &itt::node::Curve::vertices)                        \
+.property("vertices", &itt::node::Curve::vertices)                    \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vertices")) \
 )                                                                     \
@@ -241,28 +241,6 @@ REGIST_NODE_RTTI(Blast,
 REGIST_NODE_RTTI_DEFAULT(CopyToPoints)
 REGIST_NODE_RTTI_DEFAULT(ForeachPrimBegin)
 REGIST_NODE_RTTI_DEFAULT(ForeachPrimEnd)
-REGIST_NODE_RTTI(GroupCreate,                                              \
-.property("group_name", &itt::node::GroupCreate::group_name)               \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))     \
-)                                                                          \
-.property("group_type", &itt::node::GroupCreate::group_type)               \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType"))     \
-)                                                                          \
-.property("keep_by_normals", &itt::node::GroupCreate::keep_by_normals)     \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("KeepByNormals")) \
-)                                                                          \
-.property("direction", &itt::node::GroupCreate::direction)                 \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Direction"))     \
-)                                                                          \
-.property("spread_angle", &itt::node::GroupCreate::spread_angle)           \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SpreadAngle"))   \
-)                                                                          \
-)
 REGIST_NODE_RTTI_DEFAULT(Merge)
 REGIST_NODE_RTTI_DEFAULT(Null)
 REGIST_NODE_RTTI(Switch,
