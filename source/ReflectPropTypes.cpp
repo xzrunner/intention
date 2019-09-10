@@ -15,6 +15,29 @@ rttr::registration::class_<itt::GroupName>("itt_group_name")
     .property("str", &itt::GroupName::str)
 ;
 
+rttr::registration::enumeration<itt::GroupType>("itt_group_type")
+(
+    rttr::value("guess_from_group", itt::GroupType::GuessFromGroup),
+	rttr::value("primitives",       itt::GroupType::Primitives),
+    rttr::value("points",           itt::GroupType::Points),
+    rttr::value("edges",            itt::GroupType::Edges),
+    rttr::value("vertices",         itt::GroupType::Vertices)
+);
+
+rttr::registration::enumeration<itt::MergeOP>("itt_merge_op")
+(
+	rttr::value("Replace",   itt::MergeOP::Replace),
+    rttr::value("Union",     itt::MergeOP::Union),
+    rttr::value("Intersect", itt::MergeOP::Intersect),
+    rttr::value("Subtract",  itt::MergeOP::Subtract)
+);
+
+rttr::registration::class_<itt::GroupExprInst>("itt_group_expr_inst")
+    .property("group_name", &itt::GroupExprInst::group_name)
+    .property("expr_str",   &itt::GroupExprInst::expr_str)
+    .property("merge_op",   &itt::GroupExprInst::merge_op)
+;
+
 rttr::registration::enumeration<itt::BooleanOperator>("itt_boolean_operator")
 (
 	rttr::value("union",     itt::BooleanOperator::Union),

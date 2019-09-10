@@ -142,6 +142,29 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
             m_pg->Append(type_prop);
         }
     }
+    else if (prop_type == rttr::type::get<GroupType>())
+    {
+        const wxChar* TYPES[] = { wxT("GuessFromGroup"), wxT("Primitives"), wxT("Points"), wxT("Edges"), wxT("Vertices"), NULL };
+        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
+        auto type = prop.get_value(node).get_value<GroupType>();
+        type_prop->SetValue(static_cast<int>(type));
+        m_pg->Append(type_prop);
+    }
+    else if (prop_type == rttr::type::get<GroupExprInst>())
+    {
+        auto v = prop.get_value(node).get_value<GroupExprInst>();
+
+        wxPGProperty* prop = m_pg->Append(new wxStringProperty(ui_info.desc, wxPG_LABEL, wxT("<composed>")));
+        prop->SetExpanded(false);
+
+        m_pg->AppendIn(prop, new wxStringProperty(wxT("GroupName"), wxPG_LABEL, v.group_name));
+        m_pg->AppendIn(prop, new wxStringProperty(wxT("ExprStr"),   wxPG_LABEL, v.expr_str));
+
+        const wxChar* OPS[] = { wxT("Replace"), wxT("Union"), wxT("Intersect"), wxT("Subtract"), NULL };
+        auto op_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, OPS);
+        op_prop->SetValue(static_cast<int>(v.merge_op));
+        m_pg->AppendIn(prop, op_prop);
+    }
     else if (prop_type == rttr::type::get<BooleanOperator>())
     {
         const wxChar* OPS[] = { wxT("Union"), wxT("Intersect"), wxT("Subtract"), NULL };
@@ -236,6 +259,39 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
                 prop.set_value(m_node, GroupName());
             }
         }
+    }
+    else if (prop_type == rttr::type::get<GroupType>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, GroupType(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<GroupExprInst>() && key == ui_info.desc)
+    {
+        std::vector<std::string> tokens;
+        auto str = wxANY_AS(val, wxString).ToStdString();
+        boost::split(tokens, str, boost::is_any_of(";"));
+        assert(tokens.size() == 3);
+
+        for (auto& t : tokens) {
+            boost::algorithm::trim(t);
+        }
+
+        auto v = prop.get_value(m_node).get_value<GroupExprInst>();
+        v.group_name = tokens[0];
+        v.expr_str   = tokens[1];
+        auto& op_str = tokens[2];
+        if (op_str == "Replace") {
+            v.merge_op = MergeOP::Replace;
+        } else if (op_str == "Union") {
+            v.merge_op = MergeOP::Union;
+        } else if (op_str == "Intersect") {
+            v.merge_op = MergeOP::Intersect;
+        } else if (op_str == "Subtract") {
+            v.merge_op = MergeOP::Subtract;
+        } else {
+            assert(0);
+        }
+
+        prop.set_value(m_node, v);
     }
     else if (prop_type == rttr::type::get<BooleanOperator>() && key == ui_info.desc)
     {

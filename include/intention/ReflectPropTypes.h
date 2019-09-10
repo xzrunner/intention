@@ -24,6 +24,31 @@ struct GroupName
 
 }; // GroupName
 
+enum class GroupType
+{
+    GuessFromGroup,
+    Primitives,
+    Points,
+    Edges,
+    Vertices,
+};
+
+enum class MergeOP
+{
+    Replace,
+    Union,
+    Intersect,
+    Subtract,
+};
+
+struct GroupExprInst
+{
+    std::string group_name;
+    std::string expr_str;
+    MergeOP     merge_op = MergeOP::Union;
+
+}; // GroupExprInst
+
 enum class BooleanOperator
 {
     Union,

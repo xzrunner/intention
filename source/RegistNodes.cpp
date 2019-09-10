@@ -36,6 +36,60 @@ REGIST_NODE_RTTI(Sort,
 )                                                                \
 )
 
+// group
+REGIST_NODE_RTTI(GroupCreate,                                              \
+.property("group_name", &itt::node::GroupCreate::group_name)               \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))     \
+)                                                                          \
+.property("group_type", &itt::node::GroupCreate::group_type)               \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType"))     \
+)                                                                          \
+.property("base_group", &itt::node::GroupCreate::base_group)               \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BaseGroup"))     \
+)                                                                          \
+.property("base_group_expr", &itt::node::GroupCreate::base_group_expr)     \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BaseGroupExpr")) \
+)                                                                          \
+.property("keep_by_normals", &itt::node::GroupCreate::keep_by_normals)     \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("KeepByNormals")) \
+)                                                                          \
+.property("direction", &itt::node::GroupCreate::direction)                 \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Direction"))     \
+)                                                                          \
+.property("spread_angle", &itt::node::GroupCreate::spread_angle)           \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SpreadAngle"))   \
+)                                                                          \
+)
+REGIST_NODE_RTTI(GroupExpression,                                      \
+.property("group_type", &itt::node::GroupExpression::group_type)       \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType")) \
+)                                                                      \
+.property("inst0", &itt::node::GroupExpression::inst0)                 \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Inst0"))     \
+)                                                                      \
+.property("inst1", &itt::node::GroupExpression::inst1)                 \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Inst1"))     \
+)                                                                      \
+.property("inst2", &itt::node::GroupExpression::inst2)                 \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Inst2"))     \
+)                                                                      \
+.property("inst3", &itt::node::GroupExpression::inst3)                 \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Inst3"))     \
+)                                                                      \
+)
+
 // manipulate
 REGIST_NODE_RTTI(Delete,
 .property("delete_non_selected", &itt::node::Delete::delete_non_selected)   \

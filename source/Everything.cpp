@@ -15,6 +15,9 @@
 
 // attribute
 #include <everything/node/Sort.h>
+// group
+#include <everything/node/GroupCreate.h>
+#include <everything/node/GroupExpression.h>
 // manipulate
 #include <everything/node/Delete.h>
 #include <everything/node/Transform.h>
@@ -33,10 +36,59 @@
 // utility
 #include <everything/node/Blast.h>
 #include <everything/node/CopyToPoints.h>
-#include <everything/node/GroupCreate.h>
 #include <everything/node/Switch.h>
 
 #include <boost/lexical_cast.hpp>
+
+namespace
+{
+
+evt::GroupType TransGroupType(itt::GroupType type)
+{
+    switch (type)
+    {
+    case itt::GroupType::GuessFromGroup:
+        return evt::GroupType::GuessFromGroup;
+    case itt::GroupType::Primitives:
+        return evt::GroupType::Primitives;
+    case itt::GroupType::Points:
+        return evt::GroupType::Points;
+    case itt::GroupType::Edges:
+        return evt::GroupType::Edges;
+    case itt::GroupType::Vertices:
+        return evt::GroupType::Vertices;
+    default:
+        assert(0);
+        return evt::GroupType::Primitives;
+    }
+}
+
+evt::node::GroupExpression::Instance TransGroupExprInst(const itt::GroupExprInst& src)
+{
+    evt::node::GroupExpression::Instance dst;
+    dst.group_name = src.group_name;
+    dst.expr_str   = src.expr_str;
+    switch (src.merge_op)
+    {
+    case itt::MergeOP::Replace:
+        dst.merge_op = evt::node::GroupExpression::MergeOP::Replace;
+        break;
+    case itt::MergeOP::Union:
+        dst.merge_op = evt::node::GroupExpression::MergeOP::Union;
+        break;
+    case itt::MergeOP::Intersect:
+        dst.merge_op = evt::node::GroupExpression::MergeOP::Intersect;
+        break;
+    case itt::MergeOP::Subtract:
+        dst.merge_op = evt::node::GroupExpression::MergeOP::Subtract;
+        break;
+    default:
+        assert(0);
+    }
+    return dst;
+}
+
+}
 
 namespace itt
 {
@@ -71,6 +123,47 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
         }
         dst.SetKey(key);
     }
+    // group
+    else if (type == rttr::type::get<node::GroupCreate>())
+    {
+        auto& src = static_cast<const node::GroupCreate&>(front);
+        auto& dst = static_cast<evt::node::GroupCreate&>(back);
+
+        dst.SetGroupName(src.group_name);
+        dst.SetGroupType(TransGroupType(src.group_type));
+
+        if (src.base_group) {
+            dst.EnableBaseGroup(src.base_group_expr);
+        } else {
+            dst.DisableBaseGroup();
+        }
+
+        if (src.keep_by_normals) {
+            dst.EnableKeepByNormals(src.direction, src.spread_angle);
+        } else {
+            dst.DisableKeepByNormals();
+        }
+    }
+    else if (type == rttr::type::get<node::GroupExpression>())
+    {
+        auto& src = static_cast<const node::GroupExpression&>(front);
+        auto& dst = static_cast<evt::node::GroupExpression&>(back);
+
+        dst.SetGroupType(TransGroupType(src.group_type));
+        dst.ClearInstances();
+        if (!src.inst0.group_name.empty()) {
+            dst.AddInstance(TransGroupExprInst(src.inst0));
+        }
+        if (!src.inst1.group_name.empty()) {
+            dst.AddInstance(TransGroupExprInst(src.inst1));
+        }
+        if (!src.inst2.group_name.empty()) {
+            dst.AddInstance(TransGroupExprInst(src.inst2));
+        }
+        if (!src.inst3.group_name.empty()) {
+            dst.AddInstance(TransGroupExprInst(src.inst3));
+        }
+    }
     // manipulate
     else if (type == rttr::type::get<node::Delete>())
     {
@@ -102,6 +195,9 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
     {
         auto& src = static_cast<const node::Transform&>(front);
         auto& dst = static_cast<evt::node::Transform&>(back);
+
+        dst.SetGroupName(src.group_name.str);
+        dst.SetGroupType(TransGroupType(src.group_type));
 
         sm::ivec3 trans_idx(evt::node::Transform::TRANS_X, evt::node::Transform::TRANS_Y, evt::node::Transform::TRANS_Z);
         dst.SetTranslate(ParseExprFloat3(src.translate, back, trans_idx, sm::vec3(0, 0, 0), eval));
@@ -226,22 +322,8 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
         auto& dst = static_cast<evt::node::Blast&>(back);
 
         dst.SetGroupName(src.group_name.str);
-        dst.SetGroupType(src.group_type);
+        dst.SetGroupType(TransGroupType(src.group_type));
         dst.SetDeleteNonSelected(src.delete_non_selected);
-    }
-    else if (type == rttr::type::get<node::GroupCreate>())
-    {
-        auto& src = static_cast<const node::GroupCreate&>(front);
-        auto& dst = static_cast<evt::node::GroupCreate&>(back);
-
-        dst.SetGroupName(src.group_name);
-        dst.SetGroupType(src.group_type);
-
-        if (src.keep_by_normals) {
-            dst.EnableKeepByNormals(src.direction, src.spread_angle);
-        } else {
-            dst.DisableKeepByNormals();
-        }
     }
     else if (type == rttr::type::get<node::Switch>())
     {

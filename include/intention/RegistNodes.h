@@ -5,8 +5,6 @@
 
 #include <blueprint/Pin.h>
 
-#include <everything/Group.h>
-
 namespace itt
 {
 
@@ -75,6 +73,24 @@ ITT_DEFINE_NODE(Sort,                \
     SortKey key = SortKey::NoChange; \
 )
 
+// group
+ITT_DEFINE_NODE(GroupCreate,                          \
+    std::string group_name;                           \
+    GroupType   group_type = GroupType::Primitives;   \
+    bool        base_group = false;                   \
+    std::string base_group_expr;                      \
+    bool        keep_by_normals  = false;             \
+    sm::vec3    direction        = sm::vec3(0, 0, 1); \
+    float       spread_angle     = 180;               \
+)
+ITT_DEFINE_NODE(GroupExpression,                    \
+    GroupType   group_type = GroupType::Primitives; \
+    GroupExprInst inst0;                            \
+    GroupExprInst inst1;                            \
+    GroupExprInst inst2;                            \
+    GroupExprInst inst3;                            \
+)
+
 // manipulate
 ITT_DEFINE_NODE(Delete,                                      \
     bool             delete_non_selected = false;            \
@@ -139,13 +155,6 @@ ITT_DEFINE_NODE(Blast,                                      \
 ITT_DEFINE_NODE(CopyToPoints, ITT_NODE_PROP)
 ITT_DEFINE_NODE(ForeachPrimBegin, ITT_NODE_PROP)
 ITT_DEFINE_NODE(ForeachPrimEnd, ITT_NODE_PROP)
-ITT_DEFINE_NODE(GroupCreate,                                \
-    std::string    group_name;                              \
-    evt::GroupType group_type = evt::GroupType::Primitives; \
-    bool     keep_by_normals  = false;                      \
-    sm::vec3 direction        = sm::vec3(0, 0, 1);          \
-    float    spread_angle     = 180;                        \
-)
 ITT_DEFINE_IMPORT_EXT_NODE(Merge, ITT_NODE_PROP)
 ITT_DEFINE_PROPS_NODE(Null, ITT_NODE_PROP)
 ITT_DEFINE_IMPORT_EXT_NODE(Switch, \
