@@ -81,6 +81,13 @@ evt::GroupMerge TransGroupMerge(itt::GroupMerge merge_op)
         return evt::GroupMerge::Replace;
     }
 }
+
+evt::node::GroupExpression::Instance TransGroupExprInst(const itt::GroupExprInst& src)
+{
+    evt::node::GroupExpression::Instance dst;
+    dst.group_name = src.group_name;
+    dst.expr_str   = src.expr_str;
+    dst.merge_op   = TransGroupMerge(src.merge_op);
     return dst;
 }
 
