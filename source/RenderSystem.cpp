@@ -80,7 +80,9 @@ void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) cons
     if (type == rttr::type::get<node::GroupCreate>()) 
     {
         auto geo = back.GetGeometry();
-        assert(geo);
+        if (!geo) {
+            return;
+        }
 
         auto& group_create = static_cast<const node::GroupCreate&>(front);
         auto group = geo->QueryGroup(group_create.group_name);
@@ -91,7 +93,9 @@ void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) cons
     else if (type == rttr::type::get<node::GroupExpression>())
     {
         auto geo = back.GetGeometry();
-        assert(geo);
+        if (!geo) {
+            return;
+        }
 
         auto& group_expr = static_cast<const node::GroupExpression&>(front);
         auto group0 = geo->QueryGroup(group_expr.inst0.group_name);
