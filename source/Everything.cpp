@@ -63,28 +63,24 @@ evt::GroupType TransGroupType(itt::GroupType type)
     }
 }
 
-evt::node::GroupExpression::Instance TransGroupExprInst(const itt::GroupExprInst& src)
+evt::GroupMerge TransGroupMerge(itt::GroupMerge merge_op)
 {
-    evt::node::GroupExpression::Instance dst;
-    dst.group_name = src.group_name;
-    dst.expr_str   = src.expr_str;
-    switch (src.merge_op)
+
+    switch (merge_op)
     {
-    case itt::MergeOP::Replace:
-        dst.merge_op = evt::node::GroupExpression::MergeOP::Replace;
-        break;
-    case itt::MergeOP::Union:
-        dst.merge_op = evt::node::GroupExpression::MergeOP::Union;
-        break;
-    case itt::MergeOP::Intersect:
-        dst.merge_op = evt::node::GroupExpression::MergeOP::Intersect;
-        break;
-    case itt::MergeOP::Subtract:
-        dst.merge_op = evt::node::GroupExpression::MergeOP::Subtract;
-        break;
+    case itt::GroupMerge::Replace:
+        return evt::GroupMerge::Replace;
+    case itt::GroupMerge::Union:
+        return evt::GroupMerge::Union;
+    case itt::GroupMerge::Intersect:
+        return evt::GroupMerge::Intersect;
+    case itt::GroupMerge::Subtract:
+        return evt::GroupMerge::Subtract;
     default:
         assert(0);
+        return evt::GroupMerge::Replace;
     }
+}
     return dst;
 }
 

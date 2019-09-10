@@ -24,12 +24,12 @@ rttr::registration::enumeration<itt::GroupType>("itt_group_type")
     rttr::value("vertices",         itt::GroupType::Vertices)
 );
 
-rttr::registration::enumeration<itt::MergeOP>("itt_merge_op")
+rttr::registration::enumeration<itt::GroupMerge>("itt_group_merge")
 (
-	rttr::value("Replace",   itt::MergeOP::Replace),
-    rttr::value("Union",     itt::MergeOP::Union),
-    rttr::value("Intersect", itt::MergeOP::Intersect),
-    rttr::value("Subtract",  itt::MergeOP::Subtract)
+	rttr::value("replace",   itt::GroupMerge::Replace),
+    rttr::value("union",     itt::GroupMerge::Union),
+    rttr::value("intersect", itt::GroupMerge::Intersect),
+    rttr::value("subtract",  itt::GroupMerge::Subtract)
 );
 
 rttr::registration::class_<itt::GroupExprInst>("itt_group_expr_inst")

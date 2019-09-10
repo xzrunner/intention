@@ -33,7 +33,7 @@ enum class GroupType
     Vertices,
 };
 
-enum class MergeOP
+enum class GroupMerge
 {
     Replace,
     Union,
@@ -45,7 +45,7 @@ struct GroupExprInst
 {
     std::string group_name;
     std::string expr_str;
-    MergeOP     merge_op = MergeOP::Union;
+    GroupMerge  merge_op = GroupMerge::Union;
 
 }; // GroupExprInst
 

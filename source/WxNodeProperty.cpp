@@ -280,13 +280,13 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         v.expr_str   = tokens[1];
         auto& op_str = tokens[2];
         if (op_str == "Replace") {
-            v.merge_op = MergeOP::Replace;
+            v.merge_op = GroupMerge::Replace;
         } else if (op_str == "Union") {
-            v.merge_op = MergeOP::Union;
+            v.merge_op = GroupMerge::Union;
         } else if (op_str == "Intersect") {
-            v.merge_op = MergeOP::Intersect;
+            v.merge_op = GroupMerge::Intersect;
         } else if (op_str == "Subtract") {
-            v.merge_op = MergeOP::Subtract;
+            v.merge_op = GroupMerge::Subtract;
         } else {
             assert(0);
         }
