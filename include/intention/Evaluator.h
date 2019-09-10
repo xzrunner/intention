@@ -43,6 +43,8 @@ public:
 private:
     void Update();
 
+    void UpdateGroupName();
+
 private:
     evt::Evaluator m_eval;
 

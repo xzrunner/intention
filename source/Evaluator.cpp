@@ -10,6 +10,8 @@
 #include <node0/SceneNode.h>
 #include <node0/CompComplex.h>
 #include <everything/EvalContext.h>
+#include <everything/node/GroupCreate.h>
+#include <everything/node/GroupExpression.h>
 
 #include <queue>
 
@@ -213,6 +215,50 @@ evt::NodePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
 void Evaluator::Update()
 {
     m_eval.Update();
+
+    UpdateGroupName();
+}
+
+void Evaluator::UpdateGroupName()
+{
+    for (auto& itr : m_nodes_map)
+    {
+        auto type = itr.first->get_type();
+        if (type == rttr::type::get<node::GroupCreate>())
+        {
+            assert(itr.second->get_type() == rttr::type::get<evt::node::GroupCreate>());
+            auto front = static_cast<const node::GroupCreate*>(itr.first);
+            auto back = std::static_pointer_cast<evt::node::GroupCreate>(itr.second);
+            const_cast<node::GroupCreate*>(front)->group_name = back->GetGroupName();
+        }
+        else if (type == rttr::type::get<node::GroupExpression>())
+        {
+            assert(itr.second->get_type() == rttr::type::get<evt::node::GroupExpression>());
+            auto front = const_cast<node::GroupExpression*>(
+                static_cast<const node::GroupExpression*>(itr.first)
+            );
+            auto back = std::static_pointer_cast<evt::node::GroupExpression>(itr.second);
+            auto& back_insts = back->GetInstances();
+            size_t idx = 0;
+            if (!front->inst0.expr_str.empty()) {
+                assert(idx < back_insts.size());
+                front->inst0.group_name = back_insts[idx++].group_name;
+            }
+            if (!front->inst1.expr_str.empty()) {
+                assert(idx < back_insts.size());
+                front->inst1.group_name = back_insts[idx++].group_name;
+            }
+            if (!front->inst2.expr_str.empty()) {
+                assert(idx < back_insts.size());
+                front->inst2.group_name = back_insts[idx++].group_name;
+            }
+            if (!front->inst3.expr_str.empty()) {
+                assert(idx < back_insts.size());
+                front->inst3.group_name = back_insts[idx++].group_name;
+            }
+            assert(idx == back_insts.size());
+        }
+    }
 }
 
 }
