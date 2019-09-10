@@ -77,7 +77,7 @@ void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) cons
     }
 
     auto type = front.get_type();
-    if (type == rttr::type::get<node::GroupCreate>()) 
+    if (type == rttr::type::get<node::GroupCreate>())
     {
         auto geo = back.GetGeometry();
         if (!geo) {
@@ -85,7 +85,7 @@ void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) cons
         }
 
         auto& group_create = static_cast<const node::GroupCreate&>(front);
-        auto group = geo->QueryGroup(group_create.group_name);
+        auto group = geo->GetGroup().Query(group_create.group_name);
         if (group) {
             DrawGroup(*group, *geo);
         }
@@ -98,19 +98,19 @@ void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) cons
         }
 
         auto& group_expr = static_cast<const node::GroupExpression&>(front);
-        auto group0 = geo->QueryGroup(group_expr.inst0.group_name);
+        auto group0 = geo->GetGroup().Query(group_expr.inst0.group_name);
         if (group0)  {
             DrawGroup(*group0, *geo);
         }
-        auto group1 = geo->QueryGroup(group_expr.inst1.group_name);
+        auto group1 = geo->GetGroup().Query(group_expr.inst1.group_name);
         if (group1) {
             DrawGroup(*group1, *geo);
         }
-        auto group2 = geo->QueryGroup(group_expr.inst2.group_name);
+        auto group2 = geo->GetGroup().Query(group_expr.inst2.group_name);
         if (group2) {
             DrawGroup(*group2, *geo);
         }
-        auto group3 = geo->QueryGroup(group_expr.inst3.group_name);
+        auto group3 = geo->GetGroup().Query(group_expr.inst3.group_name);
         if (group3) {
             DrawGroup(*group3, *geo);
         }
