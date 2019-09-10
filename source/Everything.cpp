@@ -442,7 +442,7 @@ sm::vec3 Everything::ParseExprFloat3(const StrVec3& src, const evt::Node& dst,
                                      const sm::ivec3& idx, const sm::vec3& expect,
                                      const Evaluator& eval)
 {
-    sm::vec3 ret;
+    sm::vec3 ret = expect;
 
     auto& dst_props = const_cast<evt::NodePropsMgr&>(dst.GetProps());
     try {
