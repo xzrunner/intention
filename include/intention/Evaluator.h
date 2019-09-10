@@ -33,8 +33,8 @@ public:
     void OnRebuildConnection();
 
     // calc
-    float CalcFloat(const std::string& expr, const evt::Node& node,
-        float expect = 0.0f) const;
+    float CalcFloat(const std::string& expr, const evt::Node& node, float expect = 0.0f) const;
+    int CalcInt(const std::string& expr, const evt::Node& node, int expect = 0) const;
 
     auto& GetAllNodes() const { return m_nodes_map; }
 

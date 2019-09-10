@@ -247,7 +247,8 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
     {
         auto& src = static_cast<const node::Switch&>(front);
         auto& dst = static_cast<evt::node::Switch&>(back);
-        dst.SetSelected(src.selected);
+        dst.SetSelected(ParseExprInt(src.selected, back,
+            evt::node::Switch::SELECTED, 0, eval));
     }
 
     // update props
@@ -379,6 +380,22 @@ sm::vec3 Everything::ParseExprFloat3(const StrVec3& src, const evt::Node& dst,
     } catch (boost::bad_lexical_cast&) {
         dst_props.SetExpr(idx.z, src.z);
         ret.z = eval.CalcFloat(src.z, dst, 1.0f);
+    }
+
+    return ret;
+}
+
+int Everything::ParseExprInt(const std::string& src, const evt::Node& dst,
+                             size_t idx, int expect, const Evaluator& eval)
+{
+    int ret = expect;
+
+    auto& dst_props = const_cast<evt::NodePropsMgr&>(dst.GetProps());
+    try {
+        ret = boost::lexical_cast<int>(src);
+    } catch (boost::bad_lexical_cast&) {
+        dst_props.SetExpr(idx, src);
+        ret = eval.CalcInt(src, dst, 0);
     }
 
     return ret;

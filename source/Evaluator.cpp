@@ -180,6 +180,29 @@ float Evaluator::CalcFloat(const std::string& expr, const evt::Node& node, float
     }
 }
 
+int Evaluator::CalcInt(const std::string& expr, const evt::Node& node, int expect) const
+{
+    auto var = m_eval.CalcExpr(expr, evt::EvalContext(m_eval, node));
+    switch (var.type)
+    {
+    case evt::VariableType::Bool:
+        return var.b ? 1 : 0;
+    case evt::VariableType::Int:
+        return var.i;
+    case evt::VariableType::Float:
+        return static_cast<int>(var.f);
+    case evt::VariableType::Float3:
+    {
+        auto f3 = static_cast<const float*>(var.p);
+        return static_cast<int>(f3[0]);
+    }
+    case evt::VariableType::Double:
+        return static_cast<int>(var.d);
+    default:
+        return expect;
+    }
+}
+
 evt::NodePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
 {
     auto itr = m_nodes_map.find(&front_node);
