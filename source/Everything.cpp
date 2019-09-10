@@ -127,6 +127,7 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
 
         dst.SetGroupName(src.group_name);
         dst.SetGroupType(TransGroupType(src.group_type));
+        dst.SetGroupMerge(TransGroupMerge(src.merge_op));
 
         if (src.base_group) {
             dst.EnableBaseGroup(src.base_group_expr);

@@ -77,6 +77,7 @@ ITT_DEFINE_NODE(Sort,                \
 ITT_DEFINE_NODE(GroupCreate,                          \
     std::string group_name;                           \
     GroupType   group_type = GroupType::Primitives;   \
+    GroupMerge  merge_op   = GroupMerge::Replace;     \
     bool        base_group = false;                   \
     std::string base_group_expr;                      \
     bool        keep_by_normals  = false;             \

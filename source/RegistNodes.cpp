@@ -46,6 +46,10 @@ REGIST_NODE_RTTI(GroupCreate,                                              \
 (                                                                          \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType"))     \
 )                                                                          \
+.property("merge_op", &itt::node::GroupCreate::merge_op)                   \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MergeOp"))       \
+)                                                                          \
 .property("base_group", &itt::node::GroupCreate::base_group)               \
 (                                                                          \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BaseGroup"))     \

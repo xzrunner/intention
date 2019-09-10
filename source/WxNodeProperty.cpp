@@ -150,6 +150,14 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         type_prop->SetValue(static_cast<int>(type));
         m_pg->Append(type_prop);
     }
+    else if (prop_type == rttr::type::get<GroupMerge>())
+    {
+        const wxChar* OPs[] = { wxT("Replace"), wxT("Union"), wxT("Intersect"), wxT("Subtract"), NULL };
+        auto op_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, OPs);
+        auto op = prop.get_value(node).get_value<GroupMerge>();
+        op_prop->SetValue(static_cast<int>(op));
+        m_pg->Append(op_prop);
+    }
     else if (prop_type == rttr::type::get<GroupExprInst>())
     {
         auto v = prop.get_value(node).get_value<GroupExprInst>();
@@ -263,6 +271,10 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     else if (prop_type == rttr::type::get<GroupType>() && key == ui_info.desc)
     {
         prop.set_value(m_node, GroupType(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<GroupMerge>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, GroupMerge(wxANY_AS(val, int)));
     }
     else if (prop_type == rttr::type::get<GroupExprInst>() && key == ui_info.desc)
     {
