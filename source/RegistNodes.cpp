@@ -106,6 +106,14 @@ REGIST_NODE_RTTI(Delete,
 )                                                                           \
 )
 REGIST_NODE_RTTI(Transform,
+.property("group_name", &itt::node::Transform::group_name)             \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
+)                                                                      \
+.property("group_type", &itt::node::Transform::group_type)             \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType")) \
+)                                                                      \
 .property("translate", &itt::node::Transform::translate)               \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Translate")) \
