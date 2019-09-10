@@ -193,6 +193,7 @@ REGIST_NODE_RTTI(PolyExtrude,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance"))  \
 )
 )
+REGIST_NODE_RTTI_DEFAULT(PolyFill)
 
 // primitive
 REGIST_NODE_RTTI(Box,

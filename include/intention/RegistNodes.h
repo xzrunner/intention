@@ -131,6 +131,7 @@ ITT_DEFINE_NODE(PolyExtrude, \
     GroupName group_name;    \
     float distance = 0;      \
 )
+ITT_DEFINE_NODE(PolyFill, ITT_NODE_PROP)
 
 // primitive
 ITT_DEFINE_NODE(Box,                         \
