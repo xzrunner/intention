@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\..\include\intention\WxNodeProperty.h" />
     <ClInclude Include="..\..\..\include\intention\WxNodePropsDlg.h" />
     <ClInclude Include="..\..\..\include\intention\WxStageCanvas.h" />
+    <ClInclude Include="..\..\..\include\intention\WxToolbarPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\Evaluator.cpp" />
@@ -49,6 +50,7 @@
     <ClCompile Include="..\..\..\source\WxNodeProperty.cpp" />
     <ClCompile Include="..\..\..\source\WxNodePropsDlg.cpp" />
     <ClCompile Include="..\..\..\source\WxStageCanvas.cpp" />
+    <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>7.intention</ProjectName>

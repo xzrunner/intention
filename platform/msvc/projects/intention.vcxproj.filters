@@ -91,6 +91,9 @@
     <ClInclude Include="..\..\..\include\intention\Serializer.h">
       <Filter>view\blueprint</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\WxToolbarPanel.h">
+      <Filter>view\toolbar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -141,6 +144,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\Serializer.cpp">
       <Filter>view\blueprint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp">
+      <Filter>view\toolbar</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
