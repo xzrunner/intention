@@ -148,16 +148,16 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
 
         dst.SetGroupType(TransGroupType(src.group_type));
         dst.ClearInstances();
-        if (!src.inst0.group_name.empty()) {
+        if (!src.inst0.expr_str.empty()) {
             dst.AddInstance(TransGroupExprInst(src.inst0));
         }
-        if (!src.inst1.group_name.empty()) {
+        if (!src.inst1.expr_str.empty()) {
             dst.AddInstance(TransGroupExprInst(src.inst1));
         }
-        if (!src.inst2.group_name.empty()) {
+        if (!src.inst2.expr_str.empty()) {
             dst.AddInstance(TransGroupExprInst(src.inst2));
         }
-        if (!src.inst3.group_name.empty()) {
+        if (!src.inst3.expr_str.empty()) {
             dst.AddInstance(TransGroupExprInst(src.inst3));
         }
     }
