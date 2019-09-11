@@ -94,6 +94,9 @@
     <ClInclude Include="..\..\..\include\intention\WxToolbarPanel.h">
       <Filter>view\toolbar</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\WxGeoProperty.h">
+      <Filter>view\toolbar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -146,6 +149,9 @@
       <Filter>view\blueprint</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp">
+      <Filter>view\toolbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxGeoProperty.cpp">
       <Filter>view\toolbar</Filter>
     </ClCompile>
   </ItemGroup>

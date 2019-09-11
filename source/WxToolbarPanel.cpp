@@ -15,11 +15,12 @@
 namespace itt
 {
 
-WxToolbarPanel::WxToolbarPanel(wxWindow* parent, ee0::WxStagePage* stage_page)
+WxToolbarPanel::WxToolbarPanel(wxWindow* parent, ee0::WxStagePage* stage_page,
+                               const std::shared_ptr<SceneTree>& stree)
 	: wxPanel(parent)
     , m_stage_page(stage_page)
 {
-	InitLayout();
+	InitLayout(stree);
 
     auto& sub_mgr = stage_page->GetSubjectMgr();
     sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_INSERT, this);
@@ -43,15 +44,15 @@ void WxToolbarPanel::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
 	}
 }
 
-void WxToolbarPanel::InitLayout()
+void WxToolbarPanel::InitLayout(const std::shared_ptr<SceneTree>& stree)
 {
     auto sub_mgr = m_stage_page->GetSubjectMgr();
 
 	auto sizer = new wxBoxSizer(wxVERTICAL);
     // geometry spreadsheet
-    sizer->Add(m_geo_prop = new WxGeoProperty(this), wxEXPAND);
+    sizer->Add(m_geo_prop = new WxGeoProperty(this, stree), wxEXPAND);
     // property
-	sizer->Add(m_node_prop = new WxNodeProperty(this, sub_mgr), wxEXPAND);
+	sizer->Add(m_node_prop = new WxNodeProperty(this, sub_mgr, stree), wxEXPAND);
     // nav bar
     m_nav_bar = new ee0::WxNavigationBar(this);
     m_nav_bar->SetSeekCallback([&](size_t depth)
@@ -76,6 +77,8 @@ void WxToolbarPanel::OnSelectionInsert(const ee0::VariantSet& variants)
 	GD_ASSERT(var_obj.m_type == ee0::VT_PVOID, "no var in vars: obj");
     const ee0::GameObj obj = *static_cast<const ee0::GameObj*>(var_obj.m_val.pv);
 	GD_ASSERT(GAME_OBJ_VALID(obj), "err scene obj");
+    
+    m_geo_prop->LoadFromNode(obj);
 
 	auto& cnode = obj->GetUniqueComp<bp::CompNode>();
 	m_node_prop->LoadFromNode(obj, cnode.GetNode());

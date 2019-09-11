@@ -5,6 +5,7 @@
 #include "intention/NodeHelper.h"
 #include "intention/MessageID.h"
 #include "intention/NodeProp.h"
+#include "intention/SceneTree.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/ReflectPropTypes.h>
@@ -59,8 +60,10 @@ const char* STR_GROUP_NULL = "null";
 namespace itt
 {
 
-WxNodeProperty::WxNodeProperty(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr)
+WxNodeProperty::WxNodeProperty(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr,
+                               const std::shared_ptr<SceneTree>& stree)
 	: bp::WxNodeProperty(parent, sub_mgr)
+    , m_stree(stree)
 {
 }
 

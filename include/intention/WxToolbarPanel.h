@@ -11,16 +11,18 @@ namespace itt
 
 class WxGeoProperty;
 class WxNodeProperty;
+class SceneTree;
 
 class WxToolbarPanel : public wxPanel, public ee0::Observer
 {
 public:
-	WxToolbarPanel(wxWindow* parent, ee0::WxStagePage* stage_page);
+	WxToolbarPanel(wxWindow* parent, ee0::WxStagePage* stage_page,
+        const std::shared_ptr<SceneTree>& stree);
 
 	virtual void OnNotify(uint32_t msg, const ee0::VariantSet& variants) override;
 
 private:
-	void InitLayout();
+	void InitLayout(const std::shared_ptr<SceneTree>& stree);
 
     void OnSelectionInsert(const ee0::VariantSet& variants);
     void OnSelectionClear(const ee0::VariantSet& variants);
