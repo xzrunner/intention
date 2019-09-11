@@ -3,7 +3,6 @@
 #include "intention/Evaluator.h"
 #include "intention/Node.h"
 #include "intention/RegistNodes.h"
-#include "intention/NodeHelper.h"
 #include "intention/NodeProp.h"
 
 #include <blueprint/Pin.h>

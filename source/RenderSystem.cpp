@@ -1,7 +1,6 @@
 #include "intention/RenderSystem.h"
 #include "intention/Node.h"
 #include "intention/RegistNodes.h"
-#include "intention/NodeHelper.h"
 
 #include <polymesh3/Geometry.h>
 #include <everything/Node.h>

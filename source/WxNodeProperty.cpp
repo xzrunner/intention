@@ -2,10 +2,10 @@
 #include "intention/ReflectPropTypes.h"
 #include "intention/PinType.h"
 #include "intention/RegistNodes.h"
-#include "intention/NodeHelper.h"
 #include "intention/MessageID.h"
 #include "intention/NodeProp.h"
 #include "intention/SceneTree.h"
+#include "intention/Evaluator.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/ReflectPropTypes.h>
@@ -20,6 +20,7 @@
 #include <cpputil/StringHelper.h>
 #include <node0/SceneNode.h>
 #include <node2/CompBoundingBox.h>
+#include <everything/GeometryImpl.h>
 
 #include <wx/sizer.h>
 #include <wx/propgrid/propgrid.h>
@@ -122,28 +123,31 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     }
     else if (prop_type == rttr::type::get<GroupName>())
     {
-        std::vector<const bp::Node*> group_nodes;
-        NodeHelper::QueryPrevGroupCreateNodes(*node, group_nodes);
-        if (!group_nodes.empty())
+        assert(node_type.is_derived_from<Node>());
+        auto evt_node = m_stree->GetCurrEval()->QueryBackNode(*node);
+        assert(evt_node && evt_node->GetGeometry());
+        auto& groups = evt_node->GetGeometry()->GetGroup();
+
+        int idx = -1;
+        auto group_name = prop.get_value(node).get_value<GroupName>().str;
+
+        wxArrayString group_names;
+        group_names.push_back("");
+        groups.Traverse([&](const evt::Group& group)->bool 
         {
-            int idx = -1;
-            auto group_name = prop.get_value(node).get_value<GroupName>().str;
-
-            wxArrayString group_names;
-            for (auto& n : group_nodes)
-            {
-                auto& name = static_cast<const node::GroupCreate*>(n)->group_name;
-                if (name == group_name) {
-                    idx = group_names.size();
-                }
-                group_names.push_back(name);
+            if (group.name == group_name) {
+                idx = group_names.size();
             }
-            group_names.push_back(STR_GROUP_NULL);
+            group_names.push_back(group.name);
+            return true;
+        });
 
-            auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, group_names);
-            type_prop->SetValue(idx);
-            m_pg->Append(type_prop);
+        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, group_names);
+        if (idx < 0) {
+            idx = 0;
         }
+        type_prop->SetValue(idx);
+        m_pg->Append(type_prop);
     }
     else if (prop_type == rttr::type::get<GroupType>())
     {
@@ -254,21 +258,31 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     }
     else if (prop_type == rttr::type::get<GroupName>() && key == ui_info.desc)
     {
-        std::vector<const bp::Node*> group_nodes;
-        NodeHelper::QueryPrevGroupCreateNodes(*m_node, group_nodes);
-        if (!group_nodes.empty())
+        const int idx = wxANY_AS(val, int);
+
+        assert(node_type.is_derived_from<Node>());
+        auto evt_node = m_stree->GetCurrEval()->QueryBackNode(*m_node);
+        assert(evt_node && evt_node->GetGeometry());
+        auto& groups = evt_node->GetGeometry()->GetGroup();
+
+        std::string name;
+        if (idx > 0)
         {
-            const int idx = wxANY_AS(val, int);
-            if (idx >= 0 && idx < static_cast<int>(group_nodes.size()))
+            int i = 1;
+            groups.Traverse([&](const evt::Group& group)->bool 
             {
-                auto node = group_nodes[idx];
-                auto& name = static_cast<const node::GroupCreate*>(node)->group_name;
-                prop.set_value(m_node, GroupName({ name }));
-            }
-            else
-            {
-                prop.set_value(m_node, GroupName());
-            }
+                if (i++ == idx) {
+                    name = group.name;
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+        }
+        if (name.empty()) {
+            prop.set_value(m_node, GroupName());
+        } else {
+            prop.set_value(m_node, GroupName({ name }));
         }
     }
     else if (prop_type == rttr::type::get<GroupType>() && key == ui_info.desc)

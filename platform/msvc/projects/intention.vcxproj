@@ -16,7 +16,6 @@
     <ClInclude Include="..\..\..\include\intention\Intention.h" />
     <ClInclude Include="..\..\..\include\intention\MessageID.h" />
     <ClInclude Include="..\..\..\include\intention\Node.h" />
-    <ClInclude Include="..\..\..\include\intention\NodeHelper.h" />
     <ClInclude Include="..\..\..\include\intention\NodeProp.h" />
     <ClInclude Include="..\..\..\include\intention\NodeSelectOP.h" />
     <ClInclude Include="..\..\..\include\intention\PinCallback.h" />
@@ -38,7 +37,6 @@
     <ClCompile Include="..\..\..\source\Everything.cpp" />
     <ClCompile Include="..\..\..\source\Intention.cpp" />
     <ClCompile Include="..\..\..\source\Node.cpp" />
-    <ClCompile Include="..\..\..\source\NodeHelper.cpp" />
     <ClCompile Include="..\..\..\source\NodeSelectOP.cpp" />
     <ClCompile Include="..\..\..\source\PinCallback.cpp" />
     <ClCompile Include="..\..\..\source\ReflectPropTypes.cpp" />

@@ -58,9 +58,6 @@
     <ClInclude Include="..\..\..\include\intention\Evaluator.h">
       <Filter>tools\eval</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\NodeHelper.h">
-      <Filter>tools</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\intention\MessageID.h">
       <Filter>tools</Filter>
     </ClInclude>
@@ -120,9 +117,6 @@
     <ClCompile Include="..\..\..\source\Intention.cpp" />
     <ClCompile Include="..\..\..\source\Evaluator.cpp">
       <Filter>tools\eval</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\NodeHelper.cpp">
-      <Filter>tools</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxStageCanvas.cpp">
       <Filter>view\stage</Filter>
