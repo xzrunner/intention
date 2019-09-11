@@ -151,7 +151,8 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
         std::string idx_str = std::to_string(prim_idx) + ":" + std::to_string(vert_idx);
         v_list->SetItem(item, 0, idx_str);
 
-        v_list->SetItem(item, 1, std::to_string(v->point->order));
+        const int point_idx = attr.QueryIndex(v->point);
+        v_list->SetItem(item, 1, std::to_string(point_idx));
     }
 
     // primitives
