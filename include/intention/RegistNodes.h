@@ -151,10 +151,10 @@ ITT_DEFINE_NODE(Line,                       \
 ITT_DEFINE_NODE(Sphere, ITT_NODE_PROP)
 
 // utility
-ITT_DEFINE_NODE(Blast,                            \
-    GroupName group_name;                         \
-    GroupType group_type = GroupType::Primitives; \
-    bool delete_non_selected = false;             \
+ITT_DEFINE_NODE(Blast,                                \
+    GroupName group_name;                             \
+    GroupType group_type = GroupType::GuessFromGroup; \
+    bool delete_non_selected = false;                 \
 )
 ITT_DEFINE_NODE(CopyToPoints, ITT_NODE_PROP)
 ITT_DEFINE_NODE(ForeachPrimBegin, ITT_NODE_PROP)
