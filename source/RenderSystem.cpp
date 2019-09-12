@@ -14,7 +14,8 @@
 namespace
 {
 
-static const uint32_t LIGHT_SELECT_COLOR   = 0x88000088;
+const float    NODE_RADIUS = 10;
+const uint32_t LIGHT_SELECT_COLOR   = 0x88000088;
 
 }
 
@@ -75,14 +76,27 @@ void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) cons
         return;
     }
 
+    auto geo = back.GetGeometry();
+    if (!geo) {
+        return;
+    }
+
+    auto shape = geo->GetShape();
+    if (shape)
+    {
+        pt3::RenderParams rp;
+        rp.painter  = &m_pt;
+        rp.viewport = &m_vp;
+        rp.cam_mat  = &m_cam_mat;
+        rp.radius   = NODE_RADIUS;
+        rp.color    = LIGHT_SELECT_COLOR;
+
+        pt3::RenderSystem::DrawShape(*shape, rp);
+    }
+
     auto type = front.get_type();
     if (type == rttr::type::get<node::GroupCreate>())
     {
-        auto geo = back.GetGeometry();
-        if (!geo) {
-            return;
-        }
-
         auto& group_create = static_cast<const node::GroupCreate&>(front);
         auto group = geo->GetGroup().Query(group_create.group_name);
         if (group) {
@@ -91,11 +105,6 @@ void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) cons
     }
     else if (type == rttr::type::get<node::GroupExpression>())
     {
-        auto geo = back.GetGeometry();
-        if (!geo) {
-            return;
-        }
-
         auto& group_expr = static_cast<const node::GroupExpression&>(front);
         auto group0 = geo->GetGroup().Query(group_expr.inst0.group_name);
         if (group0)  {
@@ -125,7 +134,7 @@ void RenderSystem::DrawGroup(const evt::Group& group, const evt::GeometryImpl& g
         auto& points = geo.GetAttr().GetPoints();
         for (auto& f : group.items) {
             auto pos = m_vp.TransPosProj3ToProj2(points[f]->pos, m_cam_mat);
-            m_pt.AddCircleFilled(pos, 10, LIGHT_SELECT_COLOR);
+            m_pt.AddCircleFilled(pos, NODE_RADIUS, LIGHT_SELECT_COLOR);
         }
     }
         break;
