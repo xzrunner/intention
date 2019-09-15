@@ -78,6 +78,12 @@ enum class DeleteEntityType
     Faces,
 };
 
+enum class MeasureType
+{
+    Perimeter,
+    Area
+};
+
 void prop_types_regist_rttr();
 
 }

@@ -67,6 +67,12 @@ rttr::registration::enumeration<itt::DeleteEntityType>("itt_delete_entity_type")
     rttr::value("faces",  itt::DeleteEntityType::Faces)
 );
 
+rttr::registration::enumeration<itt::MeasureType>("itt_measure_type")
+(
+	rttr::value("perimeter", itt::MeasureType::Perimeter),
+	rttr::value("area",      itt::MeasureType::Area)
+);
+
 }
 
 namespace itt

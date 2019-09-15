@@ -29,6 +29,16 @@ rttr::registration::class_<itt::Node>("itt::node")
 REGIST_NODE_RTTI_DEFAULT(Geometry)
 
 // attribute
+REGIST_NODE_RTTI(Measure,
+.property("ms_type", &itt::node::Measure::ms_type)                       \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MeasureType")) \
+)                                                                        \
+.property("ms_name", &itt::node::Measure::ms_name)                       \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MeasureName")) \
+)                                                                        \
+)
 REGIST_NODE_RTTI(Sort,
 .property("key", &itt::node::Sort::key)                          \
 (                                                                \

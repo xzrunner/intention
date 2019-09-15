@@ -69,6 +69,10 @@ ITT_DEFINE_PROPS_NODE(Geometry,        \
 )
 
 // attribute
+ITT_DEFINE_NODE(Measure,                          \
+    MeasureType ms_type = MeasureType::Perimeter; \
+    std::string ms_name;                          \
+)
 ITT_DEFINE_NODE(Sort,                \
     SortKey key = SortKey::NoChange; \
 )

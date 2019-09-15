@@ -14,6 +14,7 @@
 
 // attribute
 #include <everything/node/Sort.h>
+#include <everything/node/Measure.h>
 // group
 #include <everything/node/GroupCreate.h>
 #include <everything/node/GroupExpression.h>
@@ -100,7 +101,28 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
 {
     auto type = front.get_type();
     // attribute
-    if (type == rttr::type::get<node::Sort>())
+    if (type == rttr::type::get<node::Measure>())
+    {
+        auto& src = static_cast<const node::Measure&>(front);
+        auto& dst = static_cast<evt::node::Measure&>(back);
+
+        evt::node::Measure::Type type;
+        switch (src.ms_type)
+        {
+        case MeasureType::Perimeter:
+            type = evt::node::Measure::Type::Perimeter;
+            break;
+        case MeasureType::Area:
+            type = evt::node::Measure::Type::Area;
+            break;
+        default:
+            assert(0);
+        }
+        dst.SetMesureType(type);
+
+        dst.SetMesureName(src.ms_name);
+    }
+    else if (type == rttr::type::get<node::Sort>())
     {
         auto& src = static_cast<const node::Sort&>(front);
         auto& dst = static_cast<evt::node::Sort&>(back);

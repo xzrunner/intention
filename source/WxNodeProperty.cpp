@@ -133,7 +133,7 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
 
         wxArrayString group_names;
         group_names.push_back("");
-        groups.Traverse([&](const evt::Group& group)->bool 
+        groups.Traverse([&](const evt::Group& group)->bool
         {
             if (group.name == group_name) {
                 idx = group_names.size();
@@ -195,6 +195,30 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         auto keep = prop.get_value(node).get_value<KnifeKeep>();
         keep_prop->SetValue(static_cast<int>(keep));
         m_pg->Append(keep_prop);
+    }
+    else if (prop_type == rttr::type::get<SortKey>())
+    {
+        const wxChar* KEYS[] = { wxT("NoChange"), wxT("X"), wxT("Y"), wxT("Z"), NULL };
+        auto key_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, KEYS);
+        auto key = prop.get_value(node).get_value<SortKey>();
+        key_prop->SetValue(static_cast<int>(key));
+        m_pg->Append(key_prop);
+    }
+    else if (prop_type == rttr::type::get<DeleteEntityType>())
+    {
+        const wxChar* TYPES[] = { wxT("Points"), wxT("Edges"), wxT("Faces"), NULL };
+        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
+        auto type = prop.get_value(node).get_value<DeleteEntityType>();
+        type_prop->SetValue(static_cast<int>(type));
+        m_pg->Append(type_prop);
+    }
+    else if (prop_type == rttr::type::get<MeasureType>())
+    {
+        const wxChar* TYPES[] = { wxT("Perimeter"), wxT("Area"), NULL };
+        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
+        auto type = prop.get_value(node).get_value<MeasureType>();
+        type_prop->SetValue(static_cast<int>(type));
+        m_pg->Append(type_prop);
     }
     else
     {
@@ -269,7 +293,7 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         if (idx > 0)
         {
             int i = 1;
-            groups.Traverse([&](const evt::Group& group)->bool 
+            groups.Traverse([&](const evt::Group& group)->bool
             {
                 if (i++ == idx) {
                     name = group.name;
@@ -329,6 +353,18 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     else if (prop_type == rttr::type::get<KnifeKeep>() && key == ui_info.desc)
     {
         prop.set_value(m_node, KnifeKeep(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<SortKey>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, SortKey(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<DeleteEntityType>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, DeleteEntityType(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<MeasureType>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, MeasureType(wxANY_AS(val, int)));
     }
     else
     {

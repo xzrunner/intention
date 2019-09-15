@@ -164,6 +164,46 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
         long item = prim_list->InsertItem(i, "");
         prim_list->SetItem(item, 0, std::to_string(i));
     }
+
+    // attrs
+    for (size_t i = 0; i < MAX_LIST_COUNT; ++i)
+    {
+        auto& attrs = attr.GetAttrs(static_cast<evt::GeoAttribute::Type>(i));
+        if (attrs.empty()) {
+            continue;
+        }
+
+        auto dst = m_lists[i];
+        for (auto& a : attrs)
+        {
+            assert(a->vars.size() == dst->GetItemCount());
+            auto item_idx = dst->GetColumnCount();
+            dst->InsertColumn(item_idx, a->name, wxLIST_FORMAT_LEFT);
+            for (int i = 0, n = a->vars.size(); i < n; ++i)
+            {
+                auto& v = a->vars[i];
+                std::string s;
+                switch (v.type)
+                {
+                case evt::VariableType::Bool:
+                    s = v.b ? "true" : "false";
+                    break;
+                case evt::VariableType::Int:
+                    s = std::to_string(v.i);
+                    break;
+                case evt::VariableType::Float:
+                    s = std::to_string(v.f);
+                    break;
+                case evt::VariableType::Double:
+                    s = std::to_string(v.d);
+                    break;
+                default:
+                    assert(0);
+                }
+                dst->SetItem(i, item_idx, s);
+            }
+        }
+    }
 }
 
 void WxGeoProperty::LoadGroups(const evt::GroupMgr& groups)
