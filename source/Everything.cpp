@@ -463,6 +463,38 @@ evt::NodeVarType Everything::TypeFrontToBack(int pin_type)
     return ret;
 }
 
+int Everything::ParseExprInt(const std::string& src, const evt::Node& dst,
+                             size_t idx, int expect, const Evaluator& eval)
+{
+    int ret = expect;
+
+    auto& dst_props = const_cast<evt::NodePropsMgr&>(dst.GetProps());
+    try {
+        ret = boost::lexical_cast<int>(src);
+    } catch (boost::bad_lexical_cast&) {
+        dst_props.SetExpr(idx, src);
+        ret = eval.CalcInt(src, dst, 0);
+    }
+
+    return ret;
+}
+
+float Everything::ParseExprFloat(const std::string& src, const evt::Node& dst,
+                                 size_t idx, float expect, const Evaluator& eval)
+{
+    float ret = expect;
+
+    auto& dst_props = const_cast<evt::NodePropsMgr&>(dst.GetProps());
+    try {
+        ret = boost::lexical_cast<float>(src);
+    } catch (boost::bad_lexical_cast&) {
+        dst_props.SetExpr(idx, src);
+        ret = eval.CalcFloat(src, dst, expect);
+    }
+
+    return ret;
+}
+
 sm::vec3 Everything::ParseExprFloat3(const StrVec3& src, const evt::Node& dst,
                                      const sm::ivec3& idx, const sm::vec3& expect,
                                      const Evaluator& eval)
@@ -487,22 +519,6 @@ sm::vec3 Everything::ParseExprFloat3(const StrVec3& src, const evt::Node& dst,
     } catch (boost::bad_lexical_cast&) {
         dst_props.SetExpr(idx.z, src.z);
         ret.z = eval.CalcFloat(src.z, dst, 1.0f);
-    }
-
-    return ret;
-}
-
-int Everything::ParseExprInt(const std::string& src, const evt::Node& dst,
-                             size_t idx, int expect, const Evaluator& eval)
-{
-    int ret = expect;
-
-    auto& dst_props = const_cast<evt::NodePropsMgr&>(dst.GetProps());
-    try {
-        ret = boost::lexical_cast<int>(src);
-    } catch (boost::bad_lexical_cast&) {
-        dst_props.SetExpr(idx, src);
-        ret = eval.CalcInt(src, dst, 0);
     }
 
     return ret;

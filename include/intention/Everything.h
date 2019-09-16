@@ -25,10 +25,12 @@ public:
     static evt::NodeVarType TypeFrontToBack(int pin_type);
 
 private:
-    static sm::vec3 ParseExprFloat3(const StrVec3& src, const evt::Node& dst,
-        const sm::ivec3& idx, const sm::vec3& expect, const Evaluator& eval);
     static int ParseExprInt(const std::string& src, const evt::Node& dst,
         size_t idx, int expect, const Evaluator& eval);
+    static float ParseExprFloat(const std::string& src, const evt::Node& dst,
+        size_t idx, float expect, const Evaluator& eval);
+    static sm::vec3 ParseExprFloat3(const StrVec3& src, const evt::Node& dst,
+        const sm::ivec3& idx, const sm::vec3& expect, const Evaluator& eval);
 
 }; // Everything
 
