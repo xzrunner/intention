@@ -81,17 +81,19 @@ void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) cons
         return;
     }
 
-    auto shape = geo->GetShape();
-    if (shape)
+    auto shapes = geo->GetGeoShapes();
+    if (!shapes.empty())
     {
         pt3::RenderParams rp;
-        rp.painter  = &m_pt;
+        rp.painter = &m_pt;
         rp.viewport = &m_vp;
-        rp.cam_mat  = &m_cam_mat;
-        rp.radius   = NODE_RADIUS;
-        rp.color    = LIGHT_SELECT_COLOR;
+        rp.cam_mat = &m_cam_mat;
+        rp.radius = NODE_RADIUS;
+        rp.color = LIGHT_SELECT_COLOR;
 
-        pt3::RenderSystem::DrawShape(*shape, rp);
+        for (auto& s : shapes) {
+            pt3::RenderSystem::DrawShape(*s, rp);
+        }
     }
 
     auto type = front.get_type();
