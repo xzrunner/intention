@@ -168,7 +168,7 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
     // attrs
     for (size_t i = 0; i < MAX_LIST_COUNT; ++i)
     {
-        auto& attrs = attr.GetAttrs(static_cast<evt::GeoAttribute::Type>(i));
+        auto& attrs = attr.GetAttrs(static_cast<evt::GeoAttrType>(i));
         if (attrs.empty()) {
             continue;
         }
