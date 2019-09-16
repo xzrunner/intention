@@ -242,10 +242,14 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
         auto& src = static_cast<const node::Carve&>(front);
         auto& dst = static_cast<evt::node::Carve&>(back);
 
-        dst.SetFirstU(src.first_u);
-        dst.SetSecondU(src.second_u);
-        dst.SetFirstV(src.first_v);
-        dst.SetSecondV(src.second_v);
+        dst.SetFirstU(ParseExprFloat(src.first_u, back,
+            evt::node::Carve::FIRST_U, 0, eval));
+        dst.SetSecondU(ParseExprFloat(src.second_u, back,
+            evt::node::Carve::SECOND_U, 1, eval));
+        dst.SetFirstV(ParseExprFloat(src.first_v, back,
+            evt::node::Carve::FIRST_V, 0, eval));
+        dst.SetSecondV(ParseExprFloat(src.second_v, back,
+            evt::node::Carve::SECOND_V, 1, eval));
     }
     else if (type == rttr::type::get<node::Add>())
     {
