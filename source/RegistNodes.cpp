@@ -193,6 +193,12 @@ REGIST_NODE_RTTI(Knife,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Keep"))      \
 )
 )
+REGIST_NODE_RTTI(Normal,
+.property("attr_add_norm_to", &itt::node::Normal::attr_add_norm_to)           \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("AddNormTo")) \
+)                                                                      \
+)
 REGIST_NODE_RTTI(PolyExtrude,
 .property("group_name", &itt::node::PolyExtrude::group_name)           \
 (                                                                      \

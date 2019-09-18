@@ -63,6 +63,14 @@ enum class KnifeKeep
     KeepAll,
 };
 
+enum class GeoAttrType
+{
+    Point = 0,
+    Vertex,
+    Primitive,
+    Detail,
+};
+
 enum class SortKey
 {
     NoChange,

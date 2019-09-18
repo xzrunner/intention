@@ -27,6 +27,7 @@
 #include <everything/node/Add.h>
 #include <everything/node/Boolean.h>
 #include <everything/node/Knife.h>
+#include <everything/node/Normal.h>
 #include <everything/node/PolyExtrude.h>
 // primitive
 #include <everything/node/Box.h>
@@ -304,6 +305,32 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
             assert(0);
         }
         dst.SetKeepType(keep);
+    }
+    else if (type == rttr::type::get<node::Normal>())
+    {
+        auto& src = static_cast<const node::Normal&>(front);
+        auto& dst = static_cast<evt::node::Normal&>(back);
+
+        evt::GeoAttrType type;
+        switch (src.attr_add_norm_to)
+        {
+        case GeoAttrType::Point:
+            type = evt::GeoAttrType::Point;
+            break;
+        case GeoAttrType::Vertex:
+            type = evt::GeoAttrType::Vertex;
+            break;
+        case GeoAttrType::Primitive:
+            type = evt::GeoAttrType::Primitive;
+            break;
+        case GeoAttrType::Detail:
+            type = evt::GeoAttrType::Detail;
+            break;
+        default:
+            assert(0);
+        }
+
+        dst.SetAttrAddNormalTo(type);
     }
     else if (type == rttr::type::get<node::PolyExtrude>())
     {

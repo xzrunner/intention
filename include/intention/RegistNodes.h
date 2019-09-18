@@ -131,6 +131,9 @@ ITT_DEFINE_NODE(Knife,                      \
     sm::vec3 direction = sm::vec3(0, 1, 0); \
     KnifeKeep keep = KnifeKeep::KeepAll;    \
 )
+ITT_DEFINE_NODE(Normal,                                 \
+    GeoAttrType attr_add_norm_to = GeoAttrType::Vertex; \
+)
 ITT_DEFINE_NODE(PolyExtrude, \
     GroupName group_name;    \
     float distance = 0;      \

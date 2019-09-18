@@ -196,6 +196,14 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         keep_prop->SetValue(static_cast<int>(keep));
         m_pg->Append(keep_prop);
     }
+    else if (prop_type == rttr::type::get<GeoAttrType>())
+    {
+        const wxChar* TYPES[] = { wxT("Point"), wxT("Vertex"), wxT("Primitive"), wxT("Detail"), NULL };
+        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
+        auto type = prop.get_value(node).get_value<GeoAttrType>();
+        type_prop->SetValue(static_cast<int>(type));
+        m_pg->Append(type_prop);
+    }
     else if (prop_type == rttr::type::get<SortKey>())
     {
         const wxChar* KEYS[] = { wxT("NoChange"), wxT("X"), wxT("Y"), wxT("Z"), NULL };
@@ -353,6 +361,10 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     else if (prop_type == rttr::type::get<KnifeKeep>() && key == ui_info.desc)
     {
         prop.set_value(m_node, KnifeKeep(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<GeoAttrType>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, GeoAttrType(wxANY_AS(val, int)));
     }
     else if (prop_type == rttr::type::get<SortKey>() && key == ui_info.desc)
     {

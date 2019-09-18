@@ -41,7 +41,7 @@ void QueryVertexIndex(const evt::GeoAttribute& attr,
     }
 }
 
-const size_t BASE_COUNT[] = { 4, 2, 1, 0 };
+const size_t BASE_COUNT[] = { 4, 2, 1, 1 };
 
 }
 
@@ -106,6 +106,8 @@ void WxGeoProperty::InitLayout()
     m_lists[VERTEX]->InsertColumn(1, "Point Num", wxLIST_FORMAT_LEFT);
 
     m_lists[PRIMITIVE]->InsertColumn(0, "ID", wxLIST_FORMAT_LEFT);
+
+    m_lists[DETAIL]->InsertColumn(0, "ID", wxLIST_FORMAT_LEFT);
 }
 
 void WxGeoProperty::Clear()
@@ -164,6 +166,11 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
         long item = prim_list->InsertItem(i, "");
         prim_list->SetItem(item, 0, std::to_string(i));
     }
+
+    // detail
+    auto detail_list = m_lists[DETAIL];
+    long item = detail_list->InsertItem(0, "");
+    detail_list->SetItem(item, 0, "");
 
     // attrs
     for (size_t i = 0; i < MAX_LIST_COUNT; ++i)

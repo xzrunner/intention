@@ -52,6 +52,14 @@ rttr::registration::enumeration<itt::KnifeKeep>("itt_knife_keep")
     rttr::value("all",   itt::KnifeKeep::KeepAll)
 );
 
+rttr::registration::enumeration<itt::GeoAttrType>("itt_geo_attr_type")
+(
+	rttr::value("point",     itt::GeoAttrType::Point),
+    rttr::value("vertex",    itt::GeoAttrType::Vertex),
+    rttr::value("primitive", itt::GeoAttrType::Primitive),
+    rttr::value("detail",    itt::GeoAttrType::Detail)
+);
+
 rttr::registration::enumeration<itt::SortKey>("itt_sort_key")
 (
 	rttr::value("no_change", itt::SortKey::NoChange),
