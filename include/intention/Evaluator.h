@@ -20,7 +20,7 @@ class Evaluator : boost::noncopyable
 {
 public:
     // update nodes
-    void OnAddNode(const bp::Node& node);
+    void OnAddNode(const bp::Node& node, bool need_update = true);
     void OnRemoveNode(const bp::Node& node);
     void OnClearAllNodes();
 

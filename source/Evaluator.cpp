@@ -18,7 +18,7 @@
 namespace itt
 {
 
-void Evaluator::OnAddNode(const bp::Node& front)
+void Evaluator::OnAddNode(const bp::Node& front, bool need_update)
 {
     auto back = Everything::CreateBackFromFront(front);
     if (!back) {
@@ -33,8 +33,9 @@ void Evaluator::OnAddNode(const bp::Node& front)
     }
 
     Everything::UpdatePropBackFromFront(front, *back, *this);
-
-    Update();
+    if (need_update) {
+        Update();
+    }
 }
 
 void Evaluator::OnRemoveNode(const bp::Node& node)

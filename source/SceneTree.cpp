@@ -262,7 +262,7 @@ bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
             for (auto& c : node->GetSharedComp<n0::CompComplex>().GetAllChildren()) {
                 if (c->HasUniqueComp<bp::CompNode>()) {
                     auto& bp_node = c->GetUniqueComp<bp::CompNode>().GetNode();
-                    eval->OnAddNode(*bp_node);
+                    eval->OnAddNode(*bp_node, false);
                 }
             }
 
