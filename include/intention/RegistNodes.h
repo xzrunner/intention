@@ -167,7 +167,10 @@ ITT_DEFINE_NODE(CopyToPoints, \
     bool use_pt_dir = false;  \
 )
 ITT_DEFINE_NODE(ForeachPrimBegin, ITT_NODE_PROP)
-ITT_DEFINE_NODE(ForeachPrimEnd, ITT_NODE_PROP)
+ITT_DEFINE_NODE(ForeachPrimEnd,      \
+    bool do_single_pass     = false; \
+    int  single_pass_offset = 0;     \
+)
 ITT_DEFINE_IMPORT_EXT_NODE(Merge, ITT_NODE_PROP)
 ITT_DEFINE_PROPS_NODE(Null, ITT_NODE_PROP)
 ITT_DEFINE_IMPORT_EXT_NODE(Switch, \

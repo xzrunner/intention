@@ -37,6 +37,7 @@
 // utility
 #include <everything/node/Blast.h>
 #include <everything/node/CopyToPoints.h>
+#include <everything/node/ForeachPrimEnd.h>
 #include <everything/node/Switch.h>
 
 #include <boost/lexical_cast.hpp>
@@ -387,6 +388,14 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
         auto& dst = static_cast<evt::node::CopyToPoints&>(back);
 
         dst.EnableUsePointDir(src.use_pt_dir);
+    }
+    else if (type == rttr::type::get<node::ForeachPrimEnd>())
+    {
+        auto& src = static_cast<const node::ForeachPrimEnd&>(front);
+        auto& dst = static_cast<evt::node::ForeachPrimEnd&>(back);
+
+        dst.EnableSinglePass(src.do_single_pass);
+        dst.SetSinglePassOffset(src.single_pass_offset);
     }
     else if (type == rttr::type::get<node::Switch>())
     {

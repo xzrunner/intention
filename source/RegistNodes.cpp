@@ -274,7 +274,16 @@ REGIST_NODE_RTTI(CopyToPoints,
 )                                                                     \
 )
 REGIST_NODE_RTTI_DEFAULT(ForeachPrimBegin)
-REGIST_NODE_RTTI_DEFAULT(ForeachPrimEnd)
+REGIST_NODE_RTTI(ForeachPrimEnd,
+.property("do_single_pass", &itt::node::ForeachPrimEnd::do_single_pass)         \
+(                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SinglePass"))         \
+)                                                                               \
+.property("single_pass_offset", &itt::node::ForeachPrimEnd::single_pass_offset) \
+(                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SinglePassOffset"))   \
+)                                                                               \
+)
 REGIST_NODE_RTTI_DEFAULT(Merge)
 REGIST_NODE_RTTI_DEFAULT(Null)
 REGIST_NODE_RTTI(Switch,
