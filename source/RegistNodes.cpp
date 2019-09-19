@@ -267,7 +267,12 @@ REGIST_NODE_RTTI(Blast,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DelNonSelected")) \
 )
 )
-REGIST_NODE_RTTI_DEFAULT(CopyToPoints)
+REGIST_NODE_RTTI(CopyToPoints,
+.property("use_pt_dir", &itt::node::CopyToPoints::use_pt_dir)         \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UsePtDir")) \
+)                                                                     \
+)
 REGIST_NODE_RTTI_DEFAULT(ForeachPrimBegin)
 REGIST_NODE_RTTI_DEFAULT(ForeachPrimEnd)
 REGIST_NODE_RTTI_DEFAULT(Merge)

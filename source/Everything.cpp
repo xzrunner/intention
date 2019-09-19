@@ -381,6 +381,13 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
         dst.SetGroupType(TransGroupType(src.group_type));
         dst.SetDeleteNonSelected(src.delete_non_selected);
     }
+    else if (type == rttr::type::get<node::CopyToPoints>())
+    {
+        auto& src = static_cast<const node::CopyToPoints&>(front);
+        auto& dst = static_cast<evt::node::CopyToPoints&>(back);
+
+        dst.EnableUsePointDir(src.use_pt_dir);
+    }
     else if (type == rttr::type::get<node::Switch>())
     {
         auto& src = static_cast<const node::Switch&>(front);

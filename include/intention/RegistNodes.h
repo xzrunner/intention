@@ -163,7 +163,9 @@ ITT_DEFINE_NODE(Blast,                                \
     GroupType group_type = GroupType::GuessFromGroup; \
     bool delete_non_selected = false;                 \
 )
-ITT_DEFINE_NODE(CopyToPoints, ITT_NODE_PROP)
+ITT_DEFINE_NODE(CopyToPoints, \
+    bool use_pt_dir = false;  \
+)
 ITT_DEFINE_NODE(ForeachPrimBegin, ITT_NODE_PROP)
 ITT_DEFINE_NODE(ForeachPrimEnd, ITT_NODE_PROP)
 ITT_DEFINE_IMPORT_EXT_NODE(Merge, ITT_NODE_PROP)
