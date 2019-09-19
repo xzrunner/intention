@@ -7,6 +7,7 @@
 
 #include <node0/SceneNode.h>
 #include <everything/GeometryImpl.h>
+#include <everything/GeoAttrName.h>
 
 #include <wx/listctrl.h>
 
@@ -38,6 +39,24 @@ void QueryVertexIndex(const evt::GeoAttribute& attr,
         }
 
         break;
+    }
+}
+
+std::string VarToString(const evt::VarType& type, const evt::VarValue& val)
+{
+    switch (type)
+    {
+    case evt::VarType::Bool:
+        return val.b ? "true" : "false";
+    case evt::VarType::Int:
+        return std::to_string(val.i);
+    case evt::VarType::Float:
+        return std::to_string(val.f);
+    case evt::VarType::Double:
+        return std::to_string(val.d);
+    default:
+        assert(0);
+        return "";
     }
 }
 
@@ -127,9 +146,21 @@ void WxGeoProperty::Clear()
 
 void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
 {
+    // prepare column
+    for (size_t i = 0; i < MAX_LIST_COUNT; ++i)
+    {
+        auto dst = m_lists[i];
+        auto& attr_desc = attr.GetAttrDesc(static_cast<evt::GeoAttrType>(i));
+        for (auto& desc : attr_desc) {
+            auto item_idx = dst->GetColumnCount();
+            dst->InsertColumn(item_idx, desc.name, wxLIST_FORMAT_LEFT);
+        }
+    }
+
     // points
     auto p_list = m_lists[POINT];
     auto& pts = attr.GetPoints();
+    auto& p_desc = attr.GetAttrDesc(evt::GeoAttrType::Point);
     for (int i = 0, n = pts.size(); i < n; ++i)
     {
         auto& p = pts[i];
@@ -138,11 +169,18 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
         p_list->SetItem(item, 1, std::to_string(p->pos.x));
         p_list->SetItem(item, 2, std::to_string(p->pos.y));
         p_list->SetItem(item, 3, std::to_string(p->pos.z));
+
+        assert(p_desc.size() == p->vars.size());
+        for (int j = 0, m = p->vars.size(); j < m; ++j) {
+            auto str = VarToString(p_desc[j].type, p->vars[j]);
+            p_list->SetItem(item, 4 + j, str);
+        }
     }
 
     // vertices
     auto v_list = m_lists[VERTEX];
     auto& vts = attr.GetVertices();
+    auto& v_desc = attr.GetAttrDesc(evt::GeoAttrType::Vertex);
     for (int i = 0, n = vts.size(); i < n; ++i)
     {
         auto& v = vts[i];
@@ -155,61 +193,41 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
 
         const int point_idx = attr.QueryIndex(v->point);
         v_list->SetItem(item, 1, std::to_string(point_idx));
+
+        assert(v_desc.size() == v->vars.size());
+        for (int j = 0, m = v->vars.size(); j < m; ++j) {
+            auto str = VarToString(v_desc[j].type, v->vars[j]);
+            v_list->SetItem(item, 2 + j, str);
+        }
     }
 
     // primitives
     auto prim_list = m_lists[PRIMITIVE];
     auto& prims = attr.GetPrimtives();
+    auto& prim_desc = attr.GetAttrDesc(evt::GeoAttrType::Primitive);
     for (int i = 0, n = prims.size(); i < n; ++i)
     {
         auto& p = prims[i];
         long item = prim_list->InsertItem(i, "");
         prim_list->SetItem(item, 0, std::to_string(i));
+
+        assert(prim_desc.size() == p->vars.size());
+        for (int j = 0, m = p->vars.size(); j < m; ++j) {
+            auto str = VarToString(prim_desc[j].type, p->vars[j]);
+            prim_list->SetItem(item, 1 + j, str);
+        }
     }
 
     // detail
     auto detail_list = m_lists[DETAIL];
+    auto& detail = attr.GetDetail();
+    auto& detail_desc = attr.GetAttrDesc(evt::GeoAttrType::Detail);
     long item = detail_list->InsertItem(0, "");
     detail_list->SetItem(item, 0, "");
-
-    // attrs
-    for (size_t i = 0; i < MAX_LIST_COUNT; ++i)
-    {
-        auto& attrs = attr.GetAttrs(static_cast<evt::GeoAttrType>(i));
-        if (attrs.empty()) {
-            continue;
-        }
-
-        auto dst = m_lists[i];
-        for (auto& a : attrs)
-        {
-            assert(a->vars.size() == dst->GetItemCount());
-            auto item_idx = dst->GetColumnCount();
-            dst->InsertColumn(item_idx, a->name, wxLIST_FORMAT_LEFT);
-            for (int i = 0, n = a->vars.size(); i < n; ++i)
-            {
-                auto& v = a->vars[i];
-                std::string s;
-                switch (v.type)
-                {
-                case evt::VariableType::Bool:
-                    s = v.b ? "true" : "false";
-                    break;
-                case evt::VariableType::Int:
-                    s = std::to_string(v.i);
-                    break;
-                case evt::VariableType::Float:
-                    s = std::to_string(v.f);
-                    break;
-                case evt::VariableType::Double:
-                    s = std::to_string(v.d);
-                    break;
-                default:
-                    assert(0);
-                }
-                dst->SetItem(i, item_idx, s);
-            }
-        }
+    assert(detail_desc.size() == detail.vars.size());
+    for (int i = 0, n = detail.vars.size(); i < n; ++i) {
+        auto str = VarToString(detail_desc[i].type, detail.vars[i]);
+        prim_list->SetItem(item, i, str);
     }
 }
 
