@@ -165,18 +165,18 @@ float Evaluator::CalcFloat(const std::string& expr, const evt::Node& node, float
     auto var = m_eval.CalcExpr(expr, evt::EvalContext(m_eval, node));
     switch (var.type)
     {
-    case evt::VariableType::Bool:
+    case evt::VarType::Bool:
         return var.b ? 1.0f : 0.0f;
-    case evt::VariableType::Int:
+    case evt::VarType::Int:
         return static_cast<float>(var.i);
-    case evt::VariableType::Float:
+    case evt::VarType::Float:
         return var.f;
-    case evt::VariableType::Float3:
+    case evt::VarType::Float3:
     {
         auto f3 = static_cast<const float*>(var.p);
         return f3[0];
     }
-    case evt::VariableType::Double:
+    case evt::VarType::Double:
         return static_cast<float>(var.d);
     default:
         return expect;
@@ -188,18 +188,18 @@ int Evaluator::CalcInt(const std::string& expr, const evt::Node& node, int expec
     auto var = m_eval.CalcExpr(expr, evt::EvalContext(m_eval, node));
     switch (var.type)
     {
-    case evt::VariableType::Bool:
+    case evt::VarType::Bool:
         return var.b ? 1 : 0;
-    case evt::VariableType::Int:
+    case evt::VarType::Int:
         return var.i;
-    case evt::VariableType::Float:
+    case evt::VarType::Float:
         return static_cast<int>(var.f);
-    case evt::VariableType::Float3:
+    case evt::VarType::Float3:
     {
         auto f3 = static_cast<const float*>(var.p);
         return static_cast<int>(f3[0]);
     }
-    case evt::VariableType::Double:
+    case evt::VarType::Double:
         return static_cast<int>(var.d);
     default:
         return expect;

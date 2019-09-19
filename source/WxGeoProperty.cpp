@@ -98,9 +98,9 @@ void WxGeoProperty::InitLayout()
     AddPage(m_lists[DETAIL],    "Detail");
 
     m_lists[POINT]->InsertColumn(0, "ID",   wxLIST_FORMAT_LEFT);
-    m_lists[POINT]->InsertColumn(1, "P[x]", wxLIST_FORMAT_LEFT);
-    m_lists[POINT]->InsertColumn(2, "P[y]", wxLIST_FORMAT_LEFT);
-    m_lists[POINT]->InsertColumn(3, "P[z]", wxLIST_FORMAT_LEFT);
+    m_lists[POINT]->InsertColumn(1, evt::GeoAttrName::vert_x, wxLIST_FORMAT_LEFT);
+    m_lists[POINT]->InsertColumn(2, evt::GeoAttrName::vert_y, wxLIST_FORMAT_LEFT);
+    m_lists[POINT]->InsertColumn(3, evt::GeoAttrName::vert_z, wxLIST_FORMAT_LEFT);
 
     m_lists[VERTEX]->InsertColumn(0, "ID",        wxLIST_FORMAT_LEFT);
     m_lists[VERTEX]->InsertColumn(1, "Point Num", wxLIST_FORMAT_LEFT);

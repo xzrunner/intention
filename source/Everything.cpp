@@ -330,7 +330,7 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
             assert(0);
         }
 
-        dst.SetAttrAddNormalTo(type);
+        dst.SetAttrAddTo(type);
     }
     else if (type == rttr::type::get<node::PolyExtrude>())
     {
@@ -402,7 +402,7 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
             {
                 evt::Variable d_val;
                 try {
-                    d_val.type = evt::VariableType::Float;
+                    d_val.type = evt::VarType::Float;
                     d_val.f = boost::lexical_cast<float>(sp.value);
                 } catch (boost::bad_lexical_cast&) {
                     continue;
