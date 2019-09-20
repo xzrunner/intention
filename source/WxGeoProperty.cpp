@@ -253,14 +253,17 @@ void WxGeoProperty::LoadGroups(const evt::GroupMgr& groups)
         }
 
         auto list = m_lists[idx];
-        auto item_idx = list->GetColumnCount();
-        list->InsertColumn(item_idx, "group:" + group.name, wxLIST_FORMAT_LEFT);
+        auto col = list->GetColumnCount();
+        list->InsertColumn(col, "G:" + group.name, wxLIST_FORMAT_LEFT, 100);
         for (int i = 0, n = list->GetItemCount(); i < n; ++i) {
-            list->SetItem(i, item_idx, "0");
+            list->SetItem(i, col, "0");
         }
         auto n = list->GetItemCount();
-        for (int i = 0, n = group.items.size(); i < n; ++i) {
-            list->SetItem(group.items[i], item_idx, "1");
+        for (int i = 0, n = group.items.size(); i < n; ++i)
+        {
+            auto idx = group.items[i];
+            assert(static_cast<int>(idx) < list->GetItemCount());
+            list->SetItem(idx, col, "1");
         }
 
         return true;
