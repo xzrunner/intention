@@ -171,7 +171,7 @@ void RenderSystem::DrawFace(const pm3::Polytope& poly, size_t face_idx,
     auto& face = poly.Faces()[face_idx];
 	polygon.reserve(face->points.size());
 	for (auto& v : face->points) {
-		polygon.push_back(m_vp.TransPosProj3ToProj2(poly.Points()[v], cam_mat));
+		polygon.push_back(m_vp.TransPosProj3ToProj2(poly.Points()[v]->pos, cam_mat));
 	}
 	m_pt.AddPolygonFilled(polygon.data(), polygon.size(), color);
 }
