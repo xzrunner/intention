@@ -126,6 +126,9 @@ ITT_DEFINE_NODE(Add,              \
 ITT_DEFINE_NODE(Boolean,                             \
     BooleanOperator op = BooleanOperator::Intersect; \
 )
+ITT_DEFINE_NODE(Fuse,        \
+    float distance = 0.001f; \
+)
 ITT_DEFINE_NODE(Knife,                      \
     sm::vec3 origin;                        \
     sm::vec3 direction = sm::vec3(0, 1, 0); \

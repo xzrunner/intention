@@ -26,6 +26,7 @@
 // polygon
 #include <everything/node/Add.h>
 #include <everything/node/Boolean.h>
+#include <everything/node/Fuse.h>
 #include <everything/node/Knife.h>
 #include <everything/node/Normal.h>
 #include <everything/node/PolyExtrude.h>
@@ -281,6 +282,13 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
             assert(0);
         }
         dst.SetOperator(op);
+    }
+    else if (type == rttr::type::get<node::Fuse>())
+    {
+        auto& src = static_cast<const node::Fuse&>(front);
+        auto& dst = static_cast<evt::node::Fuse&>(back);
+
+        dst.SetDistance(src.distance);
     }
     else if (type == rttr::type::get<node::Knife>())
     {

@@ -179,6 +179,12 @@ REGIST_NODE_RTTI(Boolean,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Operator")) \
 )                                                                     \
 )
+REGIST_NODE_RTTI(Fuse,
+.property("distance", &itt::node::Fuse::distance)                     \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance")) \
+)                                                                     \
+)
 REGIST_NODE_RTTI(Knife,
 .property("origin", &itt::node::Knife::origin)                         \
 (                                                                      \
