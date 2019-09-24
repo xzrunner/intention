@@ -60,6 +60,15 @@ std::string VarToString(const evt::VarType& type, const evt::VarValue& val)
     }
 }
 
+std::string TopoIDToString(const he::TopoID& id)
+{
+    std::string ret;
+    for (auto& id : id.Path()) {
+        ret += std::to_string(id) + ", ";
+    }
+    return ret.substr(0, ret.find_last_of(","));
+}
+
 const size_t BASE_COUNT[] = { 4, 2, 1, 1 };
 
 }
@@ -165,7 +174,13 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
     {
         auto& p = pts[i];
         long item = p_list->InsertItem(i, "");
-        p_list->SetItem(item, 0, std::to_string(i));
+
+        auto id_str = std::to_string(i);
+        if (!p->topo_id.Empty()) {
+            id_str += "(" + TopoIDToString(p->topo_id) + ")";
+        }
+        p_list->SetItem(item, 0, id_str);
+
         p_list->SetItem(item, 1, std::to_string(p->pos.x));
         p_list->SetItem(item, 2, std::to_string(p->pos.y));
         p_list->SetItem(item, 3, std::to_string(p->pos.z));
@@ -207,13 +222,18 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
     auto& prim_desc = attr.GetAttrDesc(evt::GeoAttrType::Primitive);
     for (int i = 0, n = prims.size(); i < n; ++i)
     {
-        auto& p = prims[i];
+        auto& prim = prims[i];
         long item = prim_list->InsertItem(i, "");
-        prim_list->SetItem(item, 0, std::to_string(i));
 
-        assert(prim_desc.size() == p->vars.size());
-        for (int j = 0, m = p->vars.size(); j < m; ++j) {
-            auto str = VarToString(prim_desc[j].type, p->vars[j]);
+        auto id_str = std::to_string(i);
+        if (!prim->topo_id.Empty()) {
+            id_str += "(" + TopoIDToString(prim->topo_id) + ")";
+        }
+        prim_list->SetItem(item, 0, id_str);
+
+        assert(prim_desc.size() == prim->vars.size());
+        for (int j = 0, m = prim->vars.size(); j < m; ++j) {
+            auto str = VarToString(prim_desc[j].type, prim->vars[j]);
             prim_list->SetItem(item, 1 + j, str);
         }
     }
