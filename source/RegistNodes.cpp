@@ -24,6 +24,10 @@ rttr::registration::class_<itt::Node>("itt::node")
 (
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo(itt::Node::STR_PROP_DISPLAY))
 )
+.property("template", &itt::Node::GetTemplate, &itt::Node::SetTemplate)
+(
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Template"))
+)
 ;
 
 REGIST_NODE_RTTI_DEFAULT(Geometry)
