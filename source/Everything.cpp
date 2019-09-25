@@ -377,7 +377,8 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
 
         dst.SetOrigin(src.origin);
         dst.SetDirection(src.direction);
-        dst.SetLength(src.length);
+        dst.SetLength(ParseExprFloat(src.length, back,
+            evt::node::Line::LENGTH, 1.0f, eval));
         dst.SetPoints(src.points);
     }
     // utility
