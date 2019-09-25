@@ -154,7 +154,7 @@ ITT_DEFINE_NODE(Curve,              \
 )
 ITT_DEFINE_NODE(Line,                       \
     sm::vec3 origin    = sm::vec3(0, 0, 0); \
-    sm::vec3 direction = sm::vec3(0, 0, 1); \
+    sm::vec3 direction = sm::vec3(0, 1, 0); \
     float    length    = 1;                 \
     size_t   points    = 2;                 \
 )
