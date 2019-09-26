@@ -91,6 +91,7 @@ void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) cons
         rp.cam_mat = &m_cam_mat;
         rp.radius = NODE_RADIUS;
         rp.color = LIGHT_SELECT_COLOR;
+        rp.draw_ctrl_node = true;
 
         for (auto& s : shapes) {
             pt3::RenderSystem::DrawShape(*s, rp);
