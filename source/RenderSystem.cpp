@@ -147,19 +147,11 @@ void RenderSystem::DrawGroup(const evt::Group& group, const evt::GeometryImpl& g
     case evt::GroupType::Edges:
         break;
     case evt::GroupType::Primitives:
-    {
-        auto brush_model = geo.GetBrushModel();
-        auto& brushes = brush_model->GetBrushes();
-        if (brushes.empty()) {
-            return;
+        for (auto& brush : geo.GetBrushModel()->GetBrushes()) {
+            for (auto& f : group.items) {
+                DrawFace(*brush.impl, f, LIGHT_SELECT_COLOR, m_cam_mat);
+            }
         }
-        assert(brushes.size() == 1);
-        auto& brush = brushes[0];
-
-        for (auto& f : group.items) {
-            DrawFace(*brush.impl, f, LIGHT_SELECT_COLOR, m_cam_mat);
-        }
-    }
         break;
     default:
         assert(0);
