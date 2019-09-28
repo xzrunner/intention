@@ -69,6 +69,11 @@ std::string TopoIDToString(const he::TopoID& id)
     return ret.substr(0, ret.find_last_of(","));
 }
 
+std::string IDToString(const he::TopoID& topo_id, size_t group_id)
+{
+    return TopoIDToString(topo_id) + "; " + std::to_string(group_id);
+}
+
 const size_t BASE_COUNT[] = { 4, 2, 1, 1 };
 
 }
@@ -177,7 +182,7 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
 
         auto id_str = std::to_string(i);
         if (!p->topo_id.Empty()) {
-            id_str += "(" + TopoIDToString(p->topo_id) + ")";
+            id_str += "(" + IDToString(p->topo_id, p->group_id) + ")";
         }
         p_list->SetItem(item, 0, id_str);
 
@@ -227,7 +232,7 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
 
         auto id_str = std::to_string(i);
         if (!prim->topo_id.Empty()) {
-            id_str += "(" + TopoIDToString(prim->topo_id) + ")";
+            id_str += "(" + IDToString(prim->topo_id, prim->group_id) + ")";
         }
         prim_list->SetItem(item, 0, id_str);
 
