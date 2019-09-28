@@ -58,7 +58,7 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
     rp.viewport = &m_vp;
     rp.cam_mat  = &m_cam_mat;
 
-    if (itt_node.GetDisplay() && !itt_node.GetTemplate())
+    if (itt_node.GetDisplay())
     {
         // draw face
         rp.type = pt3::RenderParams::DRAW_MESH;
