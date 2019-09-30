@@ -2,7 +2,7 @@
 #include "intention/Evaluator.h"
 #include "intention/Node.h"
 #include "intention/RegistNodes.h"
-#include "intention/Everything.h"
+#include "intention/SOP.h"
 
 #include <blueprint/CompNode.h>
 #include <blueprint/Node.h>
@@ -12,14 +12,14 @@
 #include <node0/NodeFlagsHelper.h>
 #include <node0/NodeFlags.h>
 #include <ns/NodeFactory.h>
-#include <everything/node/Geometry.h>
+#include <sop/node/Geometry.h>
 
 #include <assert.h>
 
 namespace
 {
 
-void RebuildBackFromFront(std::shared_ptr<evt::node::Geometry>& dst,
+void RebuildBackFromFront(std::shared_ptr<sop::node::Geometry>& dst,
                           const std::shared_ptr<itt::node::Geometry>& src,
                           const itt::Evaluator& eval)
 {
@@ -30,17 +30,17 @@ void RebuildBackFromFront(std::shared_ptr<evt::node::Geometry>& dst,
         if (!dst_c) {
             continue;
         }
-        evt::node::Geometry::AddChild(dst, dst_c);
+        sop::node::Geometry::AddChild(dst, dst_c);
 
         //// calc again, for expr which need level info
-        //itt::Everything::UpdatePropBackFromFront(*c, *dst_c, eval);
+        //itt::SOP::UpdatePropBackFromFront(*c, *dst_c, eval);
     }
 
     // calc again, for expr which need level info
     for (auto& c : src->children)
     {
         auto dst_c = eval.QueryBackNode(*c);
-        itt::Everything::UpdatePropBackFromFront(*c, *dst_c, eval);
+        itt::SOP::UpdatePropBackFromFront(*c, *dst_c, eval);
     }
 }
 
@@ -112,8 +112,8 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
             assert(curr_node->HasUniqueComp<bp::CompNode>());
             auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
             auto child = m_path.patrs.back().eval->QueryBackNode(*bp_node);
-            assert(parent->get_type() == rttr::type::get<evt::node::Geometry>());
-            evt::node::Geometry::AddChild(std::static_pointer_cast<evt::node::Geometry>(parent), child);
+            assert(parent->get_type() == rttr::type::get<sop::node::Geometry>());
+            sop::node::Geometry::AddChild(std::static_pointer_cast<sop::node::Geometry>(parent), child);
         }
 
         // prepare ccomplex
@@ -190,8 +190,8 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
                     assert(curr_node->HasUniqueComp<bp::CompNode>());
                     auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
                     auto child = m_path.patrs.back().eval->QueryBackNode(*bp_node);
-                    assert(parent->get_type() == rttr::type::get<evt::node::Geometry>());
-                    RebuildBackFromFront(std::static_pointer_cast<evt::node::Geometry>(parent), geo, *curr.eval);
+                    assert(parent->get_type() == rttr::type::get<sop::node::Geometry>());
+                    RebuildBackFromFront(std::static_pointer_cast<sop::node::Geometry>(parent), geo, *curr.eval);
                 }
             }
         }
@@ -235,8 +235,8 @@ bool SceneTree::Clear()
         auto& curr_node = m_path.patrs.back().node;
         assert(curr_node->HasUniqueComp<bp::CompNode>());
         auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
-        assert(parent->get_type() == rttr::type::get<evt::node::Geometry>());
-        std::static_pointer_cast<evt::node::Geometry>(parent)->ClearChildren();
+        assert(parent->get_type() == rttr::type::get<sop::node::Geometry>());
+        std::static_pointer_cast<sop::node::Geometry>(parent)->ClearChildren();
     }
 
     return dirty;
@@ -275,8 +275,8 @@ bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
                 {
                     auto src = std::static_pointer_cast<node::Geometry>(bp_parent);
                     auto dst = GetCurrEval()->QueryBackNode(*src);
-                    assert(dst && dst->get_type() == rttr::type::get<evt::node::Geometry>());
-                    auto dst_geo = std::static_pointer_cast<evt::node::Geometry>(dst);
+                    assert(dst && dst->get_type() == rttr::type::get<sop::node::Geometry>());
+                    auto dst_geo = std::static_pointer_cast<sop::node::Geometry>(dst);
                     RebuildBackFromFront(dst_geo, src, *eval);
                 }
             }

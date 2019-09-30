@@ -3,9 +3,9 @@
 #include "intention/RegistNodes.h"
 
 #include <polymesh3/Geometry.h>
-#include <everything/Node.h>
-#include <everything/GeometryImpl.h>
-#include <everything/node/GroupCreate.h>
+#include <sop/Node.h>
+#include <sop/GeometryImpl.h>
+#include <sop/node/GroupCreate.h>
 #include <painting3/RenderSystem.h>
 #include <painting3/Viewport.h>
 #include <node3/RenderSystem.h>
@@ -30,7 +30,7 @@ RenderSystem::RenderSystem(const pt3::Viewport& vp,
 }
 
 void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
-                              const evt::Node& back,
+                              const sop::Node& back,
                               const bp::Node& front) const
 {
     if (!front.get_type().is_derived_from<itt::Node>()) {
@@ -70,7 +70,7 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
     n3::RenderSystem::Draw(*sn, rp, rc);
 }
 
-void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) const
+void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) const
 {
     auto& itt_node = static_cast<const Node&>(front);
     if (!itt_node.GetDisplay()) {
@@ -129,11 +129,11 @@ void RenderSystem::DrawNode2D(const evt::Node& back, const bp::Node& front) cons
     }
 }
 
-void RenderSystem::DrawGroup(const evt::Group& group, const evt::GeometryImpl& geo) const
+void RenderSystem::DrawGroup(const sop::Group& group, const sop::GeometryImpl& geo) const
 {
     switch (group.type)
     {
-    case evt::GroupType::Points:
+    case sop::GroupType::Points:
     {
         auto& points = geo.GetAttr().GetPoints();
         for (auto& f : group.items) {
@@ -142,11 +142,11 @@ void RenderSystem::DrawGroup(const evt::Group& group, const evt::GeometryImpl& g
         }
     }
         break;
-    case evt::GroupType::Vertices:
+    case sop::GroupType::Vertices:
         break;
-    case evt::GroupType::Edges:
+    case sop::GroupType::Edges:
         break;
-    case evt::GroupType::Primitives:
+    case sop::GroupType::Primitives:
     {
         size_t p_off = 0, f_off = 0;
         for (auto& brush : geo.GetBrushModel()->GetBrushes())

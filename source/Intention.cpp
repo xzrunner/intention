@@ -8,7 +8,7 @@
 #include <blueprint/node/Input.h>
 #include <blueprint/node/Output.h>
 
-#include <everything/Everything.h>
+#include <sop/SOP.h>
 
 namespace itt
 {
@@ -19,7 +19,7 @@ extern void regist_rttr();
 
 Intention::Intention()
 {
-	evt::Everything::Instance();
+	sop::SOP::Instance();
 
 	regist_rttr();
 

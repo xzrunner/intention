@@ -2,14 +2,13 @@
 
 #include <blueprint/typedef.h>
 
-#include <everything/Evaluator.h>
+#include <sop/Evaluator.h>
+#include <sop/typedef.h>
 
 #include <boost/noncopyable.hpp>
 
 #include <vector>
 #include <unordered_map>
-
-#include <everything/typedef.h>
 
 namespace bp { class Connecting; }
 
@@ -33,12 +32,12 @@ public:
     void OnRebuildConnection();
 
     // calc
-    float CalcFloat(const std::string& expr, const evt::Node& node, float expect = 0.0f) const;
-    int CalcInt(const std::string& expr, const evt::Node& node, int expect = 0) const;
+    float CalcFloat(const std::string& expr, const sop::Node& node, float expect = 0.0f) const;
+    int CalcInt(const std::string& expr, const sop::Node& node, int expect = 0) const;
 
     auto& GetAllNodes() const { return m_nodes_map; }
 
-    evt::NodePtr QueryBackNode(const bp::Node& front_node) const;
+    sop::NodePtr QueryBackNode(const bp::Node& front_node) const;
 
 private:
     void Update();
@@ -46,9 +45,9 @@ private:
     void UpdateGroupName();
 
 private:
-    evt::Evaluator m_eval;
+    sop::Evaluator m_eval;
 
-    std::unordered_map<const bp::Node*, evt::NodePtr> m_nodes_map;
+    std::unordered_map<const bp::Node*, sop::NodePtr> m_nodes_map;
 
 }; // Evaluator
 

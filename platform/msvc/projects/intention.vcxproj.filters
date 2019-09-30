@@ -45,9 +45,6 @@
     <ClInclude Include="..\..\..\include\intention\Node.h">
       <Filter>dataset\node</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\Everything.h">
-      <Filter>tools\trans</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\intention\ReflectPropTypes.h">
       <Filter>tools\rtti</Filter>
     </ClInclude>
@@ -94,6 +91,9 @@
     <ClInclude Include="..\..\..\include\intention\WxGeoProperty.h">
       <Filter>view\toolbar</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\intention\SOP.h">
+      <Filter>tools\trans</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -101,9 +101,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\Node.cpp">
       <Filter>dataset\node</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\Everything.cpp">
-      <Filter>tools\trans</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\ReflectPropTypes.cpp">
       <Filter>tools\rtti</Filter>
@@ -147,6 +144,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxGeoProperty.cpp">
       <Filter>view\toolbar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\SOP.cpp">
+      <Filter>tools\trans</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

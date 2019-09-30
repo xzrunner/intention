@@ -6,16 +6,16 @@
 #include <blueprint/CompNode.h>
 
 #include <node0/SceneNode.h>
-#include <everything/GeometryImpl.h>
-#include <everything/GeoAttrName.h>
+#include <sop/GeometryImpl.h>
+#include <sop/GeoAttrName.h>
 
 #include <wx/listctrl.h>
 
 namespace
 {
 
-void QueryVertexIndex(const evt::GeoAttribute& attr,
-                      const std::shared_ptr<evt::GeoAttribute::Vertex>& vert,
+void QueryVertexIndex(const sop::GeoAttribute& attr,
+                      const std::shared_ptr<sop::GeoAttribute::Vertex>& vert,
                       int& prim_idx, int& vert_idx)
 {
     auto& prims = attr.GetPrimtives();
@@ -42,17 +42,17 @@ void QueryVertexIndex(const evt::GeoAttribute& attr,
     }
 }
 
-std::string VarToString(const evt::VarType& type, const evt::VarValue& val)
+std::string VarToString(const sop::VarType& type, const sop::VarValue& val)
 {
     switch (type)
     {
-    case evt::VarType::Bool:
+    case sop::VarType::Bool:
         return val.b ? "true" : "false";
-    case evt::VarType::Int:
+    case sop::VarType::Int:
         return std::to_string(val.i);
-    case evt::VarType::Float:
+    case sop::VarType::Float:
         return std::to_string(val.f);
-    case evt::VarType::Double:
+    case sop::VarType::Double:
         return std::to_string(val.d);
     default:
         assert(0);
@@ -131,9 +131,9 @@ void WxGeoProperty::InitLayout()
     AddPage(m_lists[DETAIL],    "Detail");
 
     m_lists[POINT]->InsertColumn(0, "ID",   wxLIST_FORMAT_LEFT);
-    m_lists[POINT]->InsertColumn(1, evt::GeoAttrName::vert_x, wxLIST_FORMAT_LEFT);
-    m_lists[POINT]->InsertColumn(2, evt::GeoAttrName::vert_y, wxLIST_FORMAT_LEFT);
-    m_lists[POINT]->InsertColumn(3, evt::GeoAttrName::vert_z, wxLIST_FORMAT_LEFT);
+    m_lists[POINT]->InsertColumn(1, sop::GeoAttrName::vert_x, wxLIST_FORMAT_LEFT);
+    m_lists[POINT]->InsertColumn(2, sop::GeoAttrName::vert_y, wxLIST_FORMAT_LEFT);
+    m_lists[POINT]->InsertColumn(3, sop::GeoAttrName::vert_z, wxLIST_FORMAT_LEFT);
 
     m_lists[VERTEX]->InsertColumn(0, "ID",        wxLIST_FORMAT_LEFT);
     m_lists[VERTEX]->InsertColumn(1, "Point Num", wxLIST_FORMAT_LEFT);
@@ -158,13 +158,13 @@ void WxGeoProperty::Clear()
     }
 }
 
-void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
+void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
 {
     // prepare column
     for (size_t i = 0; i < MAX_LIST_COUNT; ++i)
     {
         auto dst = m_lists[i];
-        auto& attr_desc = attr.GetAttrDesc(static_cast<evt::GeoAttrType>(i));
+        auto& attr_desc = attr.GetAttrDesc(static_cast<sop::GeoAttrType>(i));
         for (auto& desc : attr_desc) {
             auto item_idx = dst->GetColumnCount();
             dst->InsertColumn(item_idx, desc.name, wxLIST_FORMAT_LEFT);
@@ -174,7 +174,7 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
     // points
     auto p_list = m_lists[POINT];
     auto& pts = attr.GetPoints();
-    auto& p_desc = attr.GetAttrDesc(evt::GeoAttrType::Point);
+    auto& p_desc = attr.GetAttrDesc(sop::GeoAttrType::Point);
     for (int i = 0, n = pts.size(); i < n; ++i)
     {
         auto& p = pts[i];
@@ -200,7 +200,7 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
     // vertices
     auto v_list = m_lists[VERTEX];
     auto& vts = attr.GetVertices();
-    auto& v_desc = attr.GetAttrDesc(evt::GeoAttrType::Vertex);
+    auto& v_desc = attr.GetAttrDesc(sop::GeoAttrType::Vertex);
     for (int i = 0, n = vts.size(); i < n; ++i)
     {
         auto& v = vts[i];
@@ -224,7 +224,7 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
     // primitives
     auto prim_list = m_lists[PRIMITIVE];
     auto& prims = attr.GetPrimtives();
-    auto& prim_desc = attr.GetAttrDesc(evt::GeoAttrType::Primitive);
+    auto& prim_desc = attr.GetAttrDesc(sop::GeoAttrType::Primitive);
     for (int i = 0, n = prims.size(); i < n; ++i)
     {
         auto& prim = prims[i];
@@ -246,7 +246,7 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
     // detail
     auto detail_list = m_lists[DETAIL];
     auto& detail = attr.GetDetail();
-    auto& detail_desc = attr.GetAttrDesc(evt::GeoAttrType::Detail);
+    auto& detail_desc = attr.GetAttrDesc(sop::GeoAttrType::Detail);
     long item = detail_list->InsertItem(0, "");
     detail_list->SetItem(item, 0, "");
     assert(detail_desc.size() == detail.vars.size());
@@ -256,20 +256,20 @@ void WxGeoProperty::LoadDefault(const evt::GeoAttribute& attr)
     }
 }
 
-void WxGeoProperty::LoadGroups(const evt::GroupMgr& groups)
+void WxGeoProperty::LoadGroups(const sop::GroupMgr& groups)
 {
-    groups.Traverse([&](const evt::Group& group)->bool
+    groups.Traverse([&](const sop::Group& group)->bool
     {
         ListIndex idx = MAX_LIST_COUNT;
         switch (group.type)
         {
-        case evt::GroupType::Points:
+        case sop::GroupType::Points:
             idx = POINT;
             break;
-        case evt::GroupType::Vertices:
+        case sop::GroupType::Vertices:
             idx = VERTEX;
             break;
-        case evt::GroupType::Primitives:
+        case sop::GroupType::Primitives:
             idx = PRIMITIVE;
             break;
         default:

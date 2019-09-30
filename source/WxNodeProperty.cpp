@@ -20,7 +20,7 @@
 #include <cpputil/StringHelper.h>
 #include <node0/SceneNode.h>
 #include <node2/CompBoundingBox.h>
-#include <everything/GeometryImpl.h>
+#include <sop/GeometryImpl.h>
 
 #include <wx/sizer.h>
 #include <wx/propgrid/propgrid.h>
@@ -54,7 +54,7 @@ int PinTypeToIdx(int type)
     return -1;
 }
 
-evt::NodePtr GetGroupNameNode(const itt::GroupName& name, const evt::NodePtr& self)
+sop::NodePtr GetGroupNameNode(const itt::GroupName& name, const sop::NodePtr& self)
 {
     if (name.idx == -1)
     {
@@ -163,7 +163,7 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
 
         wxArrayString group_names;
         group_names.push_back("");
-        groups.Traverse([&](const evt::Group& group)->bool
+        groups.Traverse([&](const sop::Group& group)->bool
         {
             if (group.name == group_name.str) {
                 idx = group_names.size();
@@ -337,7 +337,7 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         if (idx > 0)
         {
             int i = 1;
-            groups.Traverse([&](const evt::Group& group)->bool
+            groups.Traverse([&](const sop::Group& group)->bool
             {
                 if (i++ == idx) {
                     name = group.name;

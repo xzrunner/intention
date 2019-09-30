@@ -6,7 +6,7 @@
 
 class wxListCtrl;
 
-namespace evt { class GeoAttribute; class GroupMgr; }
+namespace sop { class GeoAttribute; class GroupMgr; }
 
 namespace itt
 {
@@ -25,8 +25,8 @@ private:
 
     void Clear();
 
-    void LoadDefault(const evt::GeoAttribute& attr);
-    void LoadGroups(const evt::GroupMgr& groups);
+    void LoadDefault(const sop::GeoAttribute& attr);
+    void LoadGroups(const sop::GroupMgr& groups);
 
 private:
     enum ListIndex

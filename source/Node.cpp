@@ -1,10 +1,10 @@
 #include "intention/Node.h"
-#include "intention/Everything.h"
+#include "intention/SOP.h"
 #include "intention/NodeProp.h"
 
 #include <blueprint/Pin.h>
 
-#include <everything/Node.h>
+#include <sop/Node.h>
 
 namespace itt
 {
@@ -132,7 +132,7 @@ void Node::InitPins(const std::vector<PinDesc>& input,
 
 void Node::InitPins(const std::string& name)
 {
-	rttr::type t = rttr::type::get_by_name("evt::" + name);
+	rttr::type t = rttr::type::get_by_name("sop::" + name);
     if (!t.is_valid()) {
         return;
     }
@@ -144,17 +144,17 @@ void Node::InitPins(const std::string& name)
 	assert(method_imports.is_valid());
 	auto var_imports = method_imports.invoke(var);
 	assert(var_imports.is_valid()
-		&& var_imports.is_type<std::vector<evt::Node::Port>>());
-	auto& imports = var_imports.get_value<std::vector<evt::Node::Port>>();
+		&& var_imports.is_type<std::vector<sop::Node::Port>>());
+	auto& imports = var_imports.get_value<std::vector<sop::Node::Port>>();
 
 	auto method_exports = t.get_method("GetExports");
 	assert(method_exports.is_valid());
 	auto var_exports = method_exports.invoke(var);
 	assert(var_exports.is_valid()
-		&& var_exports.is_type<std::vector<evt::Node::Port>>());
-	auto& exports = var_exports.get_value<std::vector<evt::Node::Port>>();
+		&& var_exports.is_type<std::vector<sop::Node::Port>>());
+	auto& exports = var_exports.get_value<std::vector<sop::Node::Port>>();
 
-	auto rg2grp = [](std::vector<PinDesc>& dst, const std::vector<evt::Node::Port>& src)
+	auto rg2grp = [](std::vector<PinDesc>& dst, const std::vector<sop::Node::Port>& src)
 	{
 		dst.reserve(dst.size() + src.size());
 		for (int i = 0, n = src.size(); i < n; ++i)
@@ -162,7 +162,7 @@ void Node::InitPins(const std::string& name)
             PinDesc d;
 
 			auto& s = src[i];
-            d.type = Everything::TypeBackToFront(s.var.type);
+            d.type = SOP::TypeBackToFront(s.var.type);
             d.name = s.var.name;
 
             dst.push_back(d);
