@@ -1,3 +1,3 @@
-# intention
+# sopview
 
-Procedural modeling node-based. Modeling user intentions. 
+Houdini SOP front-end.
