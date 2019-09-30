@@ -34,6 +34,7 @@
 #include <everything/node/Box.h>
 #include <everything/node/Curve.h>
 #include <everything/node/Line.h>
+#include <everything/node/Primitive.h>
 #include <everything/node/Sphere.h>
 // utility
 #include <everything/node/Blast.h>
@@ -380,6 +381,16 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
         dst.SetLength(ParseExprFloat(src.length, back,
             evt::node::Line::LENGTH, 1.0f, eval));
         dst.SetPoints(src.points);
+    }
+    else if (type == rttr::type::get<node::Primitive>())
+    {
+        auto& src = static_cast<const node::Primitive&>(front);
+        auto& dst = static_cast<evt::node::Primitive&>(back);
+
+        dst.SetTranslate(src.translate);
+        dst.SetRotate(src.rotate);
+        dst.SetScale(src.scale);
+        dst.SetShear(src.shear);
     }
     // utility
     else if (type == rttr::type::get<node::Blast>())

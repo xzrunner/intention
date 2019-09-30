@@ -260,6 +260,24 @@ REGIST_NODE_RTTI(Line,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Points"))    \
 )                                                                      \
 )
+REGIST_NODE_RTTI(Primitive,
+.property("translate", &itt::node::Primitive::translate)               \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Translate")) \
+)                                                                      \
+.property("rotate", &itt::node::Primitive::rotate)                     \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Rotate"))    \
+)                                                                      \
+.property("scale", &itt::node::Primitive::scale)                       \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))     \
+)                                                                      \
+.property("shear", &itt::node::Primitive::shear)                       \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Shear"))     \
+)                                                                      \
+)
 REGIST_NODE_RTTI_DEFAULT(Sphere)
 
 // utility

@@ -158,6 +158,12 @@ ITT_DEFINE_NODE(Line,                          \
     std::string length    = "1";               \
     size_t      points    = 2;                 \
 )
+ITT_DEFINE_NODE(Primitive,                  \
+    sm::vec3 translate = sm::vec3(0, 0, 0); \
+    sm::vec3 rotate    = sm::vec3(0, 0, 0); \
+    sm::vec3 scale     = sm::vec3(1, 1, 1); \
+    sm::vec3 shear     = sm::vec3(0, 0, 0); \
+)
 ITT_DEFINE_NODE(Sphere, ITT_NODE_PROP)
 
 // utility
