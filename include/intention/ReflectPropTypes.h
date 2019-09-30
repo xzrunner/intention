@@ -20,7 +20,10 @@ struct StrVec3
 
 struct GroupName
 {
+    GroupName(int idx = -1) : idx(idx) {}
+
     std::string str;
+    int idx = -1;   // input num, -1 for self
 
 }; // GroupName
 

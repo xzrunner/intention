@@ -278,10 +278,18 @@ REGIST_NODE_RTTI(Blast,
 )
 )
 REGIST_NODE_RTTI(CopyToPoints,
-.property("use_pt_dir", &itt::node::CopyToPoints::use_pt_dir)         \
-(                                                                     \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UsePtDir")) \
-)                                                                     \
+.property("src_group", &itt::node::CopyToPoints::src_group)              \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SrcGroup"))    \
+)                                                                        \
+.property("target_group", &itt::node::CopyToPoints::target_group)        \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TargetGroup")) \
+)                                                                        \
+.property("use_pt_dir", &itt::node::CopyToPoints::use_pt_dir)            \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UsePtDir"))    \
+)                                                                        \
 )
 REGIST_NODE_RTTI_DEFAULT(ForeachPrimBegin)
 REGIST_NODE_RTTI(ForeachPrimEnd,

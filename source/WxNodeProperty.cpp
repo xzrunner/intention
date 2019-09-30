@@ -54,6 +54,30 @@ int PinTypeToIdx(int type)
     return -1;
 }
 
+evt::NodePtr GetGroupNameNode(const itt::GroupName& name, const evt::NodePtr& self)
+{
+    if (name.idx == -1)
+    {
+        return self;
+    }
+    else
+    {
+        auto& imports = self->GetImports();
+        assert(name.idx >= 0 && name.idx < static_cast<int>(imports.size()));
+        auto& conns = imports[name.idx].conns;
+        if (conns.empty()) {
+            return false;
+        }
+        assert(conns.size() == 1);
+        auto ret = conns[0].node.lock();
+        if (!ret || !ret->GetGeometry()) {
+            return nullptr;
+        } else {
+            return ret;
+        }
+    }
+}
+
 const char* STR_GROUP_NULL = "null";
 
 }
@@ -128,16 +152,20 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         if (!evt_node || !evt_node->GetGeometry()) {
             return false;
         }
+        auto group_name = prop.get_value(node).get_value<GroupName>();
+        evt_node = GetGroupNameNode(group_name, evt_node);
+        if (!evt_node) {
+            return false;
+        }
         auto& groups = evt_node->GetGeometry()->GetGroup();
 
         int idx = -1;
-        auto group_name = prop.get_value(node).get_value<GroupName>().str;
 
         wxArrayString group_names;
         group_names.push_back("");
         groups.Traverse([&](const evt::Group& group)->bool
         {
-            if (group.name == group_name) {
+            if (group.name == group_name.str) {
                 idx = group_names.size();
             }
             group_names.push_back(group.name);
@@ -297,6 +325,12 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         assert(node_type.is_derived_from<Node>());
         auto evt_node = m_stree->GetCurrEval()->QueryBackNode(*m_node);
         assert(evt_node && evt_node->GetGeometry());
+        auto group_name = prop.get_value(m_node).get_value<GroupName>();
+        evt_node = GetGroupNameNode(group_name, evt_node);
+        if (!evt_node) {
+            return false;
+        }
+
         auto& groups = evt_node->GetGeometry()->GetGroup();
 
         std::string name;
@@ -313,11 +347,13 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
                 }
             });
         }
+
         if (name.empty()) {
-            prop.set_value(m_node, GroupName());
+            group_name.str.clear();
         } else {
-            prop.set_value(m_node, GroupName({ name }));
+            group_name.str = name;
         }
+        prop.set_value(m_node, group_name);
     }
     else if (prop_type == rttr::type::get<GroupType>() && key == ui_info.desc)
     {

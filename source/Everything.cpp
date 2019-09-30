@@ -396,6 +396,8 @@ void Everything::UpdatePropBackFromFront(const bp::Node& front, evt::Node& back,
         auto& src = static_cast<const node::CopyToPoints&>(front);
         auto& dst = static_cast<evt::node::CopyToPoints&>(back);
 
+        dst.SetSrcGroup(src.src_group.str);
+        dst.SetTargetGroup(src.target_group.str);
         dst.EnableUsePointDir(src.use_pt_dir);
     }
     else if (type == rttr::type::get<node::ForeachPrimEnd>())
