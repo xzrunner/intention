@@ -125,7 +125,9 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     {
         assert(node_type.is_derived_from<Node>());
         auto evt_node = m_stree->GetCurrEval()->QueryBackNode(*node);
-        assert(evt_node && evt_node->GetGeometry());
+        if (!evt_node || !evt_node->GetGeometry()) {
+            return false;
+        }
         auto& groups = evt_node->GetGeometry()->GetGroup();
 
         int idx = -1;

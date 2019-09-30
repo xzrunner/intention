@@ -27,7 +27,9 @@ void RebuildBackFromFront(std::shared_ptr<evt::node::Geometry>& dst,
     for (auto& c : src->children)
     {
         auto dst_c = eval.QueryBackNode(*c);
-        assert(dst_c);
+        if (!dst_c) {
+            continue;
+        }
         evt::node::Geometry::AddChild(dst, dst_c);
 
         //// calc again, for expr which need level info

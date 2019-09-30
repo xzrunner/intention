@@ -62,7 +62,11 @@ void Evaluator::OnClearAllNodes()
 void Evaluator::OnNodePropChanged(const bp::NodePtr& node)
 {
     auto itr = m_nodes_map.find(node.get());
-    assert(itr != m_nodes_map.end());
+    // not sop node
+    if (itr == m_nodes_map.end()) {
+        return;
+    }
+
     Everything::UpdatePropBackFromFront(*node, *itr->second, *this);
 
     if (node->get_type().is_derived_from<Node>())
