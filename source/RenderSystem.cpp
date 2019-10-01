@@ -1,6 +1,6 @@
-#include "intention/RenderSystem.h"
-#include "intention/Node.h"
-#include "intention/RegistNodes.h"
+#include "sopview/RenderSystem.h"
+#include "sopview/Node.h"
+#include "sopview/RegistNodes.h"
 
 #include <polymesh3/Geometry.h>
 #include <sop/Node.h>
@@ -19,7 +19,7 @@ const uint32_t LIGHT_SELECT_COLOR   = 0x88000088;
 
 }
 
-namespace itt
+namespace sopv
 {
 
 RenderSystem::RenderSystem(const pt3::Viewport& vp,
@@ -33,7 +33,7 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
                               const sop::Node& back,
                               const bp::Node& front) const
 {
-    if (!front.get_type().is_derived_from<itt::Node>()) {
+    if (!front.get_type().is_derived_from<sopv::Node>()) {
         return;
     }
 

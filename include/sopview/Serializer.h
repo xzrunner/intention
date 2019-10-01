@@ -6,7 +6,7 @@
 
 namespace ee0 { class WxStagePage; }
 
-namespace itt
+namespace sopv
 {
 
 class Serializer

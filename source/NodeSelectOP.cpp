@@ -1,7 +1,7 @@
-#include "intention/NodeSelectOP.h"
-#include "intention/RegistNodes.h"
-#include "intention/SceneTree.h"
-#include "intention/MessageID.h"
+#include "sopview/NodeSelectOP.h"
+#include "sopview/RegistNodes.h"
+#include "sopview/SceneTree.h"
+#include "sopview/MessageID.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -9,7 +9,7 @@
 
 #include <node0/SceneNode.h>
 
-namespace itt
+namespace sopv
 {
 
 NodeSelectOP::NodeSelectOP(const std::shared_ptr<pt0::Camera>& camera,

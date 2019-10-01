@@ -8,7 +8,7 @@ class wxListCtrl;
 
 namespace sop { class GeoAttribute; class GroupMgr; }
 
-namespace itt
+namespace sopv
 {
 
 class SceneTree;

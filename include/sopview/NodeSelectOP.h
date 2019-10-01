@@ -6,7 +6,7 @@
 
 namespace pt0 { class Camera; }
 
-namespace itt
+namespace sopv
 {
 
 class SceneTree;

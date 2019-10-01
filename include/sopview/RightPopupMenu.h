@@ -4,7 +4,7 @@
 
 namespace ee0 { class WxStagePage; }
 
-namespace itt
+namespace sopv
 {
 
 class RightPopupMenu : public ee0::RightPopupMenu

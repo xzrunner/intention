@@ -1,6 +1,6 @@
-#include "intention/RightPopupMenu.h"
-#include "intention/WxNodePropsDlg.h"
-#include "intention/Node.h"
+#include "sopview/RightPopupMenu.h"
+#include "sopview/WxNodePropsDlg.h"
+#include "sopview/Node.h"
 
 #include <ee0/EditPanelImpl.h>
 #include <ee0/WxStagePage.h>
@@ -21,7 +21,7 @@ enum MenuID
 
 }
 
-namespace itt
+namespace sopv
 {
 
 RightPopupMenu::RightPopupMenu(ee0::WxStagePage* stage)

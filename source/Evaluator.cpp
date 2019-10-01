@@ -1,6 +1,6 @@
-#include "intention/Evaluator.h"
-#include "intention/SOP.h"
-#include "intention/RegistNodes.h"
+#include "sopview/Evaluator.h"
+#include "sopview/SOP.h"
+#include "sopview/RegistNodes.h"
 
 #include <blueprint/Node.h>
 #include <blueprint/Pin.h>
@@ -15,7 +15,7 @@
 
 #include <queue>
 
-namespace itt
+namespace sopv
 {
 
 void Evaluator::OnAddNode(const bp::Node& front, bool need_update)

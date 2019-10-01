@@ -2,7 +2,7 @@
 
 #include <ee3/WxStageCanvas.h>
 
-namespace itt
+namespace sopv
 {
 
 class SceneTree;

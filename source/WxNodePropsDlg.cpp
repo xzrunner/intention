@@ -1,11 +1,11 @@
-#include "intention/WxNodePropsDlg.h"
-#include "intention/NodeProp.h"
+#include "sopview/WxNodePropsDlg.h"
+#include "sopview/NodeProp.h"
 
 #include <wx/sizer.h>
 #include <wx/listctrl.h>
 #include <wx/button.h>
 
-namespace itt
+namespace sopv
 {
 
 WxNodePropsDlg::WxNodePropsDlg(wxWindow* parent, const NodePropArray& props)

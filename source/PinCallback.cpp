@@ -1,5 +1,5 @@
-#include "intention/PinCallback.h"
-#include "intention/PinType.h"
+#include "sopview/PinCallback.h"
+#include "sopview/PinType.h"
 
 #include <painting0/Color.h>
 #include <blueprint/Pin.h>
@@ -18,7 +18,7 @@ std::string get_desc_func(const std::string& name, int type)
     std::string ret = name;
     switch (type)
     {
-    case itt::PIN_PRIMITIVE:
+    case sopv::PIN_PRIMITIVE:
         ret += "(P)";
         break;
     }
@@ -29,7 +29,7 @@ const pt0::Color& get_color_func(int type)
 {
     switch (type)
     {
-    case itt::PIN_PRIMITIVE:
+    case sopv::PIN_PRIMITIVE:
         return COL_PRIMITIVE;
     default:
         return COL_DEFAULT;
@@ -51,7 +51,7 @@ bool can_type_cast_func(int type_from, int type_to)
 
 }
 
-namespace itt
+namespace sopv
 {
 
 void InitPinCallback()

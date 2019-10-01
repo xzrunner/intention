@@ -4,7 +4,7 @@
 
 class wxListCtrl;
 
-namespace itt
+namespace sopv
 {
 
 struct NodePropArray;

@@ -1,12 +1,12 @@
-#include "intention/Node.h"
-#include "intention/SOP.h"
-#include "intention/NodeProp.h"
+#include "sopview/Node.h"
+#include "sopview/SOP.h"
+#include "sopview/NodeProp.h"
 
 #include <blueprint/Pin.h>
 
 #include <sop/Node.h>
 
-namespace itt
+namespace sopv
 {
 
 const char* Node::STR_PROP_DISPLAY = "Display";

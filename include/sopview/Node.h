@@ -2,7 +2,7 @@
 
 #include <blueprint/Node.h>
 
-namespace itt
+namespace sopv
 {
 
 struct NodePropArray;

@@ -1,8 +1,8 @@
-#include "intention/SceneTree.h"
-#include "intention/Evaluator.h"
-#include "intention/Node.h"
-#include "intention/RegistNodes.h"
-#include "intention/SOP.h"
+#include "sopview/SceneTree.h"
+#include "sopview/Evaluator.h"
+#include "sopview/Node.h"
+#include "sopview/RegistNodes.h"
+#include "sopview/SOP.h"
 
 #include <blueprint/CompNode.h>
 #include <blueprint/Node.h>
@@ -20,8 +20,8 @@ namespace
 {
 
 void RebuildBackFromFront(std::shared_ptr<sop::node::Geometry>& dst,
-                          const std::shared_ptr<itt::node::Geometry>& src,
-                          const itt::Evaluator& eval)
+                          const std::shared_ptr<sopv::node::Geometry>& src,
+                          const sopv::Evaluator& eval)
 {
     dst->ClearChildren();
     for (auto& c : src->children)
@@ -33,20 +33,20 @@ void RebuildBackFromFront(std::shared_ptr<sop::node::Geometry>& dst,
         sop::node::Geometry::AddChild(dst, dst_c);
 
         //// calc again, for expr which need level info
-        //itt::SOP::UpdatePropBackFromFront(*c, *dst_c, eval);
+        //sopv::SOP::UpdatePropBackFromFront(*c, *dst_c, eval);
     }
 
     // calc again, for expr which need level info
     for (auto& c : src->children)
     {
         auto dst_c = eval.QueryBackNode(*c);
-        itt::SOP::UpdatePropBackFromFront(*c, *dst_c, eval);
+        sopv::SOP::UpdatePropBackFromFront(*c, *dst_c, eval);
     }
 }
 
 }
 
-namespace itt
+namespace sopv
 {
 
 SceneTree::SceneTree()

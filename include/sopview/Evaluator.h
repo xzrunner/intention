@@ -12,7 +12,7 @@
 
 namespace bp { class Connecting; }
 
-namespace itt
+namespace sopv
 {
 
 class Evaluator : boost::noncopyable

@@ -1,89 +1,89 @@
-#include "intention/ReflectPropTypes.h"
+#include "sopview/ReflectPropTypes.h"
 
 #include <rttr/registration.h>
 
 RTTR_REGISTRATION
 {
 
-rttr::registration::class_<itt::StrVec3>("itt_str_vec3")
-    .property("x", &itt::StrVec3::x)
-    .property("y", &itt::StrVec3::y)
-    .property("z", &itt::StrVec3::z)
+rttr::registration::class_<sopv::StrVec3>("itt_str_vec3")
+    .property("x", &sopv::StrVec3::x)
+    .property("y", &sopv::StrVec3::y)
+    .property("z", &sopv::StrVec3::z)
 ;
 
-rttr::registration::class_<itt::GroupName>("itt_group_name")
-    .property("str", &itt::GroupName::str)
+rttr::registration::class_<sopv::GroupName>("itt_group_name")
+    .property("str", &sopv::GroupName::str)
 ;
 
-rttr::registration::enumeration<itt::GroupType>("itt_group_type")
+rttr::registration::enumeration<sopv::GroupType>("itt_group_type")
 (
-    rttr::value("guess_from_group", itt::GroupType::GuessFromGroup),
-	rttr::value("primitives",       itt::GroupType::Primitives),
-    rttr::value("points",           itt::GroupType::Points),
-    rttr::value("edges",            itt::GroupType::Edges),
-    rttr::value("vertices",         itt::GroupType::Vertices)
+    rttr::value("guess_from_group", sopv::GroupType::GuessFromGroup),
+	rttr::value("primitives",       sopv::GroupType::Primitives),
+    rttr::value("points",           sopv::GroupType::Points),
+    rttr::value("edges",            sopv::GroupType::Edges),
+    rttr::value("vertices",         sopv::GroupType::Vertices)
 );
 
-rttr::registration::enumeration<itt::GroupMerge>("itt_group_merge")
+rttr::registration::enumeration<sopv::GroupMerge>("itt_group_merge")
 (
-	rttr::value("replace",   itt::GroupMerge::Replace),
-    rttr::value("union",     itt::GroupMerge::Union),
-    rttr::value("intersect", itt::GroupMerge::Intersect),
-    rttr::value("subtract",  itt::GroupMerge::Subtract)
+	rttr::value("replace",   sopv::GroupMerge::Replace),
+    rttr::value("union",     sopv::GroupMerge::Union),
+    rttr::value("intersect", sopv::GroupMerge::Intersect),
+    rttr::value("subtract",  sopv::GroupMerge::Subtract)
 );
 
-rttr::registration::class_<itt::GroupExprInst>("itt_group_expr_inst")
-    .property("group_name", &itt::GroupExprInst::group_name)
-    .property("expr_str",   &itt::GroupExprInst::expr_str)
-    .property("merge_op",   &itt::GroupExprInst::merge_op)
+rttr::registration::class_<sopv::GroupExprInst>("itt_group_expr_inst")
+    .property("group_name", &sopv::GroupExprInst::group_name)
+    .property("expr_str",   &sopv::GroupExprInst::expr_str)
+    .property("merge_op",   &sopv::GroupExprInst::merge_op)
 ;
 
-rttr::registration::enumeration<itt::BooleanOperator>("itt_boolean_operator")
+rttr::registration::enumeration<sopv::BooleanOperator>("itt_boolean_operator")
 (
-	rttr::value("union",     itt::BooleanOperator::Union),
-	rttr::value("intersect", itt::BooleanOperator::Intersect),
-    rttr::value("subtract",  itt::BooleanOperator::Subtract)
+	rttr::value("union",     sopv::BooleanOperator::Union),
+	rttr::value("intersect", sopv::BooleanOperator::Intersect),
+    rttr::value("subtract",  sopv::BooleanOperator::Subtract)
 );
 
-rttr::registration::enumeration<itt::KnifeKeep>("itt_knife_keep")
+rttr::registration::enumeration<sopv::KnifeKeep>("itt_knife_keep")
 (
-	rttr::value("above", itt::KnifeKeep::KeepAbove),
-	rttr::value("below", itt::KnifeKeep::KeepBelow),
-    rttr::value("all",   itt::KnifeKeep::KeepAll)
+	rttr::value("above", sopv::KnifeKeep::KeepAbove),
+	rttr::value("below", sopv::KnifeKeep::KeepBelow),
+    rttr::value("all",   sopv::KnifeKeep::KeepAll)
 );
 
-rttr::registration::enumeration<itt::GeoAttrType>("itt_geo_attr_type")
+rttr::registration::enumeration<sopv::GeoAttrType>("itt_geo_attr_type")
 (
-	rttr::value("point",     itt::GeoAttrType::Point),
-    rttr::value("vertex",    itt::GeoAttrType::Vertex),
-    rttr::value("primitive", itt::GeoAttrType::Primitive),
-    rttr::value("detail",    itt::GeoAttrType::Detail)
+	rttr::value("point",     sopv::GeoAttrType::Point),
+    rttr::value("vertex",    sopv::GeoAttrType::Vertex),
+    rttr::value("primitive", sopv::GeoAttrType::Primitive),
+    rttr::value("detail",    sopv::GeoAttrType::Detail)
 );
 
-rttr::registration::enumeration<itt::SortKey>("itt_sort_key")
+rttr::registration::enumeration<sopv::SortKey>("itt_sort_key")
 (
-	rttr::value("no_change", itt::SortKey::NoChange),
-	rttr::value("x", itt::SortKey::X),
-    rttr::value("y", itt::SortKey::Y),
-    rttr::value("z", itt::SortKey::Z)
+	rttr::value("no_change", sopv::SortKey::NoChange),
+	rttr::value("x", sopv::SortKey::X),
+    rttr::value("y", sopv::SortKey::Y),
+    rttr::value("z", sopv::SortKey::Z)
 );
 
-rttr::registration::enumeration<itt::DeleteEntityType>("itt_delete_entity_type")
+rttr::registration::enumeration<sopv::DeleteEntityType>("itt_delete_entity_type")
 (
-	rttr::value("points", itt::DeleteEntityType::Points),
-	rttr::value("edges",  itt::DeleteEntityType::Edges),
-    rttr::value("faces",  itt::DeleteEntityType::Faces)
+	rttr::value("points", sopv::DeleteEntityType::Points),
+	rttr::value("edges",  sopv::DeleteEntityType::Edges),
+    rttr::value("faces",  sopv::DeleteEntityType::Faces)
 );
 
-rttr::registration::enumeration<itt::MeasureType>("itt_measure_type")
+rttr::registration::enumeration<sopv::MeasureType>("itt_measure_type")
 (
-	rttr::value("perimeter", itt::MeasureType::Perimeter),
-	rttr::value("area",      itt::MeasureType::Area)
+	rttr::value("perimeter", sopv::MeasureType::Perimeter),
+	rttr::value("area",      sopv::MeasureType::Area)
 );
 
 }
 
-namespace itt
+namespace sopv
 {
 
 void prop_types_regist_rttr()

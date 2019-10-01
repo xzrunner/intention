@@ -1,9 +1,9 @@
-#include "intention/SOP.h"
-#include "intention/PinType.h"
-#include "intention/Evaluator.h"
-#include "intention/Node.h"
-#include "intention/RegistNodes.h"
-#include "intention/NodeProp.h"
+#include "sopview/SOP.h"
+#include "sopview/PinType.h"
+#include "sopview/Evaluator.h"
+#include "sopview/Node.h"
+#include "sopview/RegistNodes.h"
+#include "sopview/NodeProp.h"
 
 #include <blueprint/Pin.h>
 #include <blueprint/Node.h>
@@ -47,19 +47,19 @@
 namespace
 {
 
-sop::GroupType TransGroupType(itt::GroupType type)
+sop::GroupType TransGroupType(sopv::GroupType type)
 {
     switch (type)
     {
-    case itt::GroupType::GuessFromGroup:
+    case sopv::GroupType::GuessFromGroup:
         return sop::GroupType::GuessFromGroup;
-    case itt::GroupType::Primitives:
+    case sopv::GroupType::Primitives:
         return sop::GroupType::Primitives;
-    case itt::GroupType::Points:
+    case sopv::GroupType::Points:
         return sop::GroupType::Points;
-    case itt::GroupType::Edges:
+    case sopv::GroupType::Edges:
         return sop::GroupType::Edges;
-    case itt::GroupType::Vertices:
+    case sopv::GroupType::Vertices:
         return sop::GroupType::Vertices;
     default:
         assert(0);
@@ -67,18 +67,18 @@ sop::GroupType TransGroupType(itt::GroupType type)
     }
 }
 
-sop::GroupMerge TransGroupMerge(itt::GroupMerge merge_op)
+sop::GroupMerge TransGroupMerge(sopv::GroupMerge merge_op)
 {
 
     switch (merge_op)
     {
-    case itt::GroupMerge::Replace:
+    case sopv::GroupMerge::Replace:
         return sop::GroupMerge::Replace;
-    case itt::GroupMerge::Union:
+    case sopv::GroupMerge::Union:
         return sop::GroupMerge::Union;
-    case itt::GroupMerge::Intersect:
+    case sopv::GroupMerge::Intersect:
         return sop::GroupMerge::Intersect;
-    case itt::GroupMerge::Subtract:
+    case sopv::GroupMerge::Subtract:
         return sop::GroupMerge::Subtract;
     default:
         assert(0);
@@ -86,7 +86,7 @@ sop::GroupMerge TransGroupMerge(itt::GroupMerge merge_op)
     }
 }
 
-sop::node::GroupExpression::Instance TransGroupExprInst(const itt::GroupExprInst& src)
+sop::node::GroupExpression::Instance TransGroupExprInst(const sopv::GroupExprInst& src)
 {
     sop::node::GroupExpression::Instance dst;
     dst.group_name = src.group_name;
@@ -97,7 +97,7 @@ sop::node::GroupExpression::Instance TransGroupExprInst(const itt::GroupExprInst
 
 }
 
-namespace itt
+namespace sopv
 {
 
 void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
@@ -457,9 +457,9 @@ sop::NodePtr SOP::CreateBackFromFront(const bp::Node& node)
     auto src_type = type.get_name().to_string();
     std::string dst_type;
     std::string lib_str = "sop";
-    auto find_lib = src_type.find("itt::");
+    auto find_lib = src_type.find("sopv::");
     if (find_lib != std::string::npos) {
-        dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("itt::"));
+        dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("sopv::"));
     }
 
     sop::NodePtr dst = nullptr;

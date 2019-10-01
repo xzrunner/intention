@@ -6,7 +6,7 @@
 
 namespace ee0 { class WxStagePage; class WxNavigationBar; }
 
-namespace itt
+namespace sopv
 {
 
 class WxGeoProperty;

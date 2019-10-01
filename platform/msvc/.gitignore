@@ -1,5 +1,5 @@
-intention/
+sopview/
 projects/*
 
-!projects/intention.vcxproj
-!projects/intention.vcxproj.filters
+!projects/sopview.vcxproj
+!projects/sopview.vcxproj.filters

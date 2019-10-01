@@ -9,7 +9,7 @@
 
 namespace bp { class Node; }
 
-namespace itt
+namespace sopv
 {
 
 class Evaluator;

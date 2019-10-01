@@ -1,11 +1,11 @@
 #pragma once
 
-#include "intention/Node.h"
-#include "intention/ReflectPropTypes.h"
+#include "sopview/Node.h"
+#include "sopview/ReflectPropTypes.h"
 
 #include <blueprint/Pin.h>
 
-namespace itt
+namespace sopv
 {
 
 void nodes_regist_rttr();

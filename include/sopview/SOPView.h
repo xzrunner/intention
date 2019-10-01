@@ -7,10 +7,10 @@
 #include <vector>
 #include <memory>
 
-namespace itt
+namespace sopv
 {
 
-class Intention
+class SOPView
 {
 public:
     auto& GetAllNodes() { return m_nodes; }
@@ -22,8 +22,8 @@ private:
 private:
     std::vector<bp::NodePtr> m_nodes;
 
-    CU_SINGLETON_DECLARATION(Intention)
+    CU_SINGLETON_DECLARATION(SOPView)
 
-}; // Intention
+}; // SOPView
 
 }

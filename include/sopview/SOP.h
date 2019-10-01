@@ -7,7 +7,7 @@
 namespace sop { class Node; }
 namespace bp { class Node; class Pin; }
 
-namespace itt
+namespace sopv
 {
 
 class Evaluator;

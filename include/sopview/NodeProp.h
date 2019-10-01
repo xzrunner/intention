@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace itt
+namespace sopv
 {
 
 //#define EnableNodePropType

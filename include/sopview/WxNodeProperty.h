@@ -2,7 +2,7 @@
 
 #include <blueprint/WxNodeProperty.h>
 
-namespace itt
+namespace sopv
 {
 
 class SceneTree;

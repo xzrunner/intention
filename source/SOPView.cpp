@@ -1,6 +1,6 @@
-#include "intention/Intention.h"
-#include "intention/PinCallback.h"
-#include "intention/Node.h"
+#include "sopview/SOPView.h"
+#include "sopview/PinCallback.h"
+#include "sopview/Node.h"
 
 #include <blueprint/NodeBuilder.h>
 #include <blueprint/node/Commentary.h>
@@ -10,14 +10,14 @@
 
 #include <sop/SOP.h>
 
-namespace itt
+namespace sopv
 {
 
-CU_SINGLETON_DEFINITION(Intention);
+CU_SINGLETON_DEFINITION(SOPView);
 
 extern void regist_rttr();
 
-Intention::Intention()
+SOPView::SOPView()
 {
 	sop::SOP::Instance();
 
@@ -29,7 +29,7 @@ Intention::Intention()
     InitPinCallback();
 }
 
-void Intention::Init()
+void SOPView::Init()
 {
 	//bp::NodeBuilder::Callback cb;
 	//cb.on_created = [](bp::Node& node, std::vector<n0::SceneNodePtr>& nodes) {
@@ -48,7 +48,7 @@ void Intention::Init()
 	//bp::NodeBuilder::Instance()->RegistCB(cb);
 }
 
-void Intention::InitNodes()
+void SOPView::InitNodes()
 {
     const int bp_count = 1;
 

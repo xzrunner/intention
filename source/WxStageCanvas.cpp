@@ -1,7 +1,7 @@
-#include "intention/WxStageCanvas.h"
-#include "intention/RenderSystem.h"
-#include "intention/Evaluator.h"
-#include "intention/SceneTree.h"
+#include "sopview/WxStageCanvas.h"
+#include "sopview/RenderSystem.h"
+#include "sopview/Evaluator.h"
+#include "sopview/SceneTree.h"
 
 #include <painting2/RenderSystem.h>
 #include <painting3/MaterialMgr.h>
@@ -9,7 +9,7 @@
 #include <painting3/WindowContext.h>
 #include <painting3/PerspCam.h>
 
-namespace itt
+namespace sopv
 {
 
 WxStageCanvas::WxStageCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM

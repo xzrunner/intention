@@ -1,8 +1,8 @@
-#include "intention/WxToolbarPanel.h"
-#include "intention/WxGeoProperty.h"
-#include "intention/WxNodeProperty.h"
-#include "intention/MessageID.h"
-#include "intention/Node.h"
+#include "sopview/WxToolbarPanel.h"
+#include "sopview/WxGeoProperty.h"
+#include "sopview/WxNodeProperty.h"
+#include "sopview/MessageID.h"
+#include "sopview/Node.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -12,7 +12,7 @@
 #include <guard/check.h>
 #include <node0/SceneNode.h>
 
-namespace itt
+namespace sopv
 {
 
 WxToolbarPanel::WxToolbarPanel(wxWindow* parent, ee0::WxStagePage* stage_page,

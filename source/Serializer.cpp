@@ -1,5 +1,5 @@
-#include "intention/Serializer.h"
-#include "intention/RegistNodes.h"
+#include "sopview/Serializer.h"
+#include "sopview/RegistNodes.h"
 
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
@@ -19,7 +19,7 @@
 #include <ns/CompSerializer.h>
 #include <ns/N0CompComplex.h>
 
-namespace itt
+namespace sopv
 {
 
 void Serializer::Init()

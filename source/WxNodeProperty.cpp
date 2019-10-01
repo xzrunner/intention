@@ -1,11 +1,11 @@
-#include "intention/WxNodeProperty.h"
-#include "intention/ReflectPropTypes.h"
-#include "intention/PinType.h"
-#include "intention/RegistNodes.h"
-#include "intention/MessageID.h"
-#include "intention/NodeProp.h"
-#include "intention/SceneTree.h"
-#include "intention/Evaluator.h"
+#include "sopview/WxNodeProperty.h"
+#include "sopview/ReflectPropTypes.h"
+#include "sopview/PinType.h"
+#include "sopview/RegistNodes.h"
+#include "sopview/MessageID.h"
+#include "sopview/NodeProp.h"
+#include "sopview/SceneTree.h"
+#include "sopview/Evaluator.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/ReflectPropTypes.h>
@@ -38,7 +38,7 @@ const int PIN_IDX_TO_TYPE[] = {
     bp::PIN_ANY_VAR,
     bp::PIN_PORT,
 
-    itt::PIN_PRIMITIVE,
+    sopv::PIN_PRIMITIVE,
 };
 
 int PinTypeToIdx(int type)
@@ -54,7 +54,7 @@ int PinTypeToIdx(int type)
     return -1;
 }
 
-sop::NodePtr GetGroupNameNode(const itt::GroupName& name, const sop::NodePtr& self)
+sop::NodePtr GetGroupNameNode(const sopv::GroupName& name, const sop::NodePtr& self)
 {
     if (name.idx == -1)
     {
@@ -82,7 +82,7 @@ const char* STR_GROUP_NULL = "null";
 
 }
 
-namespace itt
+namespace sopv
 {
 
 WxNodeProperty::WxNodeProperty(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr,
@@ -96,11 +96,11 @@ void WxNodeProperty::LoadFromNode(const n0::SceneNodePtr& obj, const bp::NodePtr
 {
     bp::WxNodeProperty::LoadFromNode(obj, node);
 
-    if (!node->get_type().is_derived_from<itt::Node>()) {
+    if (!node->get_type().is_derived_from<sopv::Node>()) {
         return;
     }
 
-    auto itt_node = std::static_pointer_cast<itt::Node>(node);
+    auto itt_node = std::static_pointer_cast<sopv::Node>(node);
     auto& props = itt_node->GetProps();
     if (!props) {
         return;
@@ -426,11 +426,11 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
 
 bool WxNodeProperty::UpdateView(wxPropertyGridEvent& event)
 {
-    if (!m_node || !m_node->get_type().is_derived_from<itt::Node>()) {
+    if (!m_node || !m_node->get_type().is_derived_from<sopv::Node>()) {
         return false;
     }
 
-    auto itt_node = std::static_pointer_cast<itt::Node>(m_node);
+    auto itt_node = std::static_pointer_cast<sopv::Node>(m_node);
     auto& props = itt_node->GetProps();
     if (!props) {
         return false;

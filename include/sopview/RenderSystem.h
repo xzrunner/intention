@@ -8,7 +8,7 @@ namespace bp { class Node; }
 namespace pm3 { class Polytope; }
 namespace pt3 { class Viewport; }
 
-namespace itt
+namespace sopv
 {
 
 class RenderSystem

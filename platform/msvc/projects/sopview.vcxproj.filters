@@ -36,64 +36,26 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\intention\PinCallback.h">
-      <Filter>dataset\pin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\PinType.h">
-      <Filter>dataset\pin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\Node.h">
-      <Filter>dataset\node</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\ReflectPropTypes.h">
-      <Filter>tools\rtti</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\RegistNodes.h">
-      <Filter>tools\rtti</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\Intention.h" />
-    <ClInclude Include="..\..\..\include\intention\Evaluator.h">
-      <Filter>tools\eval</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\MessageID.h">
-      <Filter>tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\WxStageCanvas.h">
-      <Filter>view\stage</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\RenderSystem.h">
-      <Filter>view\stage</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\WxNodeProperty.h">
-      <Filter>view\toolbar</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\WxNodePropsDlg.h">
-      <Filter>view\toolbar</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\NodeProp.h">
-      <Filter>dataset\node</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\SceneTree.h">
-      <Filter>view\blueprint</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\RightPopupMenu.h">
-      <Filter>view\blueprint</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\NodeSelectOP.h">
-      <Filter>view\blueprint</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\Serializer.h">
-      <Filter>view\blueprint</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\WxToolbarPanel.h">
-      <Filter>view\toolbar</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\WxGeoProperty.h">
-      <Filter>view\toolbar</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\intention\SOP.h">
-      <Filter>tools\trans</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\Evaluator.h" />
+    <ClInclude Include="..\..\..\include\sopview\SOP.h" />
+    <ClInclude Include="..\..\..\include\sopview\MessageID.h" />
+    <ClInclude Include="..\..\..\include\sopview\Node.h" />
+    <ClInclude Include="..\..\..\include\sopview\NodeProp.h" />
+    <ClInclude Include="..\..\..\include\sopview\NodeSelectOP.h" />
+    <ClInclude Include="..\..\..\include\sopview\PinCallback.h" />
+    <ClInclude Include="..\..\..\include\sopview\PinType.h" />
+    <ClInclude Include="..\..\..\include\sopview\ReflectPropTypes.h" />
+    <ClInclude Include="..\..\..\include\sopview\RegistNodes.h" />
+    <ClInclude Include="..\..\..\include\sopview\RenderSystem.h" />
+    <ClInclude Include="..\..\..\include\sopview\RightPopupMenu.h" />
+    <ClInclude Include="..\..\..\include\sopview\SceneTree.h" />
+    <ClInclude Include="..\..\..\include\sopview\Serializer.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxGeoProperty.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxNodeProperty.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxNodePropsDlg.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxStageCanvas.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxToolbarPanel.h" />
+    <ClInclude Include="..\..\..\include\sopview\SOPView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -111,7 +73,6 @@
     <ClCompile Include="..\..\..\source\RegistNodes.cpp">
       <Filter>tools\rtti</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\Intention.cpp" />
     <ClCompile Include="..\..\..\source\Evaluator.cpp">
       <Filter>tools\eval</Filter>
     </ClCompile>
@@ -148,5 +109,6 @@
     <ClCompile Include="..\..\..\source\SOP.cpp">
       <Filter>tools\trans</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\SOPView.cpp" />
   </ItemGroup>
 </Project>

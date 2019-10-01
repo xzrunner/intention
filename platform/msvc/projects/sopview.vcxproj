@@ -11,31 +11,31 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\intention\Evaluator.h" />
-    <ClInclude Include="..\..\..\include\intention\SOP.h" />
-    <ClInclude Include="..\..\..\include\intention\Intention.h" />
-    <ClInclude Include="..\..\..\include\intention\MessageID.h" />
-    <ClInclude Include="..\..\..\include\intention\Node.h" />
-    <ClInclude Include="..\..\..\include\intention\NodeProp.h" />
-    <ClInclude Include="..\..\..\include\intention\NodeSelectOP.h" />
-    <ClInclude Include="..\..\..\include\intention\PinCallback.h" />
-    <ClInclude Include="..\..\..\include\intention\PinType.h" />
-    <ClInclude Include="..\..\..\include\intention\ReflectPropTypes.h" />
-    <ClInclude Include="..\..\..\include\intention\RegistNodes.h" />
-    <ClInclude Include="..\..\..\include\intention\RenderSystem.h" />
-    <ClInclude Include="..\..\..\include\intention\RightPopupMenu.h" />
-    <ClInclude Include="..\..\..\include\intention\SceneTree.h" />
-    <ClInclude Include="..\..\..\include\intention\Serializer.h" />
-    <ClInclude Include="..\..\..\include\intention\WxGeoProperty.h" />
-    <ClInclude Include="..\..\..\include\intention\WxNodeProperty.h" />
-    <ClInclude Include="..\..\..\include\intention\WxNodePropsDlg.h" />
-    <ClInclude Include="..\..\..\include\intention\WxStageCanvas.h" />
-    <ClInclude Include="..\..\..\include\intention\WxToolbarPanel.h" />
+    <ClInclude Include="..\..\..\include\sopview\Evaluator.h" />
+    <ClInclude Include="..\..\..\include\sopview\SOP.h" />
+    <ClInclude Include="..\..\..\include\sopview\SOPView.h" />
+    <ClInclude Include="..\..\..\include\sopview\MessageID.h" />
+    <ClInclude Include="..\..\..\include\sopview\Node.h" />
+    <ClInclude Include="..\..\..\include\sopview\NodeProp.h" />
+    <ClInclude Include="..\..\..\include\sopview\NodeSelectOP.h" />
+    <ClInclude Include="..\..\..\include\sopview\PinCallback.h" />
+    <ClInclude Include="..\..\..\include\sopview\PinType.h" />
+    <ClInclude Include="..\..\..\include\sopview\ReflectPropTypes.h" />
+    <ClInclude Include="..\..\..\include\sopview\RegistNodes.h" />
+    <ClInclude Include="..\..\..\include\sopview\RenderSystem.h" />
+    <ClInclude Include="..\..\..\include\sopview\RightPopupMenu.h" />
+    <ClInclude Include="..\..\..\include\sopview\SceneTree.h" />
+    <ClInclude Include="..\..\..\include\sopview\Serializer.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxGeoProperty.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxNodeProperty.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxNodePropsDlg.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxStageCanvas.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxToolbarPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\Evaluator.cpp" />
     <ClCompile Include="..\..\..\source\SOP.cpp" />
-    <ClCompile Include="..\..\..\source\Intention.cpp" />
+    <ClCompile Include="..\..\..\source\SOPView.cpp" />
     <ClCompile Include="..\..\..\source\Node.cpp" />
     <ClCompile Include="..\..\..\source\NodeSelectOP.cpp" />
     <ClCompile Include="..\..\..\source\PinCallback.cpp" />
@@ -53,9 +53,9 @@
     <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>7.intention</ProjectName>
+    <ProjectName>7.sopview</ProjectName>
     <ProjectGuid>{1E9CF0DF-3499-40F5-BD40-630A9B92D41B}</ProjectGuid>
-    <RootNamespace>intention</RootNamespace>
+    <RootNamespace>sopview</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -85,12 +85,12 @@
     <_ProjectFileVersion>15.0.26730.12</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>..\intention\x86\Debug\</OutDir>
-    <IntDir>..\intention\x86\Debug\obj\</IntDir>
+    <OutDir>..\sopview\x86\Debug\</OutDir>
+    <IntDir>..\sopview\x86\Debug\obj\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\intention\x86\Release\</OutDir>
-    <IntDir>..\intention\x86\Release\obj\</IntDir>
+    <OutDir>..\sopview\x86\Release\</OutDir>
+    <IntDir>..\sopview\x86\Release\obj\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

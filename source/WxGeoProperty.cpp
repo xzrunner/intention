@@ -1,7 +1,7 @@
-#include "intention/WxGeoProperty.h"
-#include "intention/Node.h"
-#include "intention/SceneTree.h"
-#include "intention/Evaluator.h"
+#include "sopview/WxGeoProperty.h"
+#include "sopview/Node.h"
+#include "sopview/SceneTree.h"
+#include "sopview/Evaluator.h"
 
 #include <blueprint/CompNode.h>
 
@@ -78,7 +78,7 @@ const size_t BASE_COUNT[] = { 4, 2, 1, 1 };
 
 }
 
-namespace itt
+namespace sopv
 {
 
 WxGeoProperty::WxGeoProperty(wxWindow* parent, const std::shared_ptr<SceneTree>& stree)

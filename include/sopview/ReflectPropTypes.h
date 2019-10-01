@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace itt
+namespace sopv
 {
 
 struct StrVec3
