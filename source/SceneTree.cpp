@@ -51,9 +51,9 @@ namespace sopv
 
 SceneTree::SceneTree()
 {
-#ifdef ITT_SCENE_TREE_DUMMY_ROOT
+#ifdef SOPV_SCENE_TREE_DUMMY_ROOT
     InitDummyRoot();
-#endif // ITT_SCENE_TREE_DUMMY_ROOT
+#endif // SOPV_SCENE_TREE_DUMMY_ROOT
 }
 
 void SceneTree::AfterLoadFromFile()
@@ -63,7 +63,7 @@ void SceneTree::AfterLoadFromFile()
 
 bool SceneTree::Add(const n0::SceneNodePtr& node)
 {
-#ifndef ITT_SCENE_TREE_DUMMY_ROOT
+#ifndef SOPV_SCENE_TREE_DUMMY_ROOT
     if (m_path.patrs.empty())
     {
         auto eval = std::make_shared<Evaluator>();
@@ -72,7 +72,7 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
 
         return true;
     }
-#endif // ITT_SCENE_TREE_DUMMY_ROOT
+#endif // SOPV_SCENE_TREE_DUMMY_ROOT
 
     assert(!m_path.patrs.empty());
 
@@ -330,11 +330,11 @@ void SceneTree::ClearNodeDisplayTag()
 
 n0::SceneNodePtr SceneTree::GetRoot() const
 {
-#ifdef ITT_SCENE_TREE_DUMMY_ROOT
+#ifdef SOPV_SCENE_TREE_DUMMY_ROOT
     return m_path.patrs.size() <= 1 ? nullptr : m_path.patrs[m_path.patrs.size() - 2].node;
 #else
     return m_path.patrs.empty() ? nullptr : m_path.patrs.front().node;
-#endif // ITT_SCENE_TREE_DUMMY_ROOT
+#endif // SOPV_SCENE_TREE_DUMMY_ROOT
 }
 
 void SceneTree::InitDummyRoot()
