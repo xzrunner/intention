@@ -36,26 +36,64 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\sopview\Evaluator.h" />
-    <ClInclude Include="..\..\..\include\sopview\SOP.h" />
-    <ClInclude Include="..\..\..\include\sopview\MessageID.h" />
-    <ClInclude Include="..\..\..\include\sopview\Node.h" />
-    <ClInclude Include="..\..\..\include\sopview\NodeProp.h" />
-    <ClInclude Include="..\..\..\include\sopview\NodeSelectOP.h" />
-    <ClInclude Include="..\..\..\include\sopview\PinCallback.h" />
-    <ClInclude Include="..\..\..\include\sopview\PinType.h" />
-    <ClInclude Include="..\..\..\include\sopview\ReflectPropTypes.h" />
-    <ClInclude Include="..\..\..\include\sopview\RegistNodes.h" />
-    <ClInclude Include="..\..\..\include\sopview\RenderSystem.h" />
-    <ClInclude Include="..\..\..\include\sopview\RightPopupMenu.h" />
-    <ClInclude Include="..\..\..\include\sopview\SceneTree.h" />
-    <ClInclude Include="..\..\..\include\sopview\Serializer.h" />
-    <ClInclude Include="..\..\..\include\sopview\WxGeoProperty.h" />
-    <ClInclude Include="..\..\..\include\sopview\WxNodeProperty.h" />
-    <ClInclude Include="..\..\..\include\sopview\WxNodePropsDlg.h" />
-    <ClInclude Include="..\..\..\include\sopview\WxStageCanvas.h" />
-    <ClInclude Include="..\..\..\include\sopview\WxToolbarPanel.h" />
     <ClInclude Include="..\..\..\include\sopview\SOPView.h" />
+    <ClInclude Include="..\..\..\include\sopview\SOP.h">
+      <Filter>tools\trans</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\WxGeoProperty.h">
+      <Filter>view\toolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\WxNodeProperty.h">
+      <Filter>view\toolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\WxNodePropsDlg.h">
+      <Filter>view\toolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\WxToolbarPanel.h">
+      <Filter>view\toolbar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\WxStageCanvas.h">
+      <Filter>view\stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\RenderSystem.h">
+      <Filter>view\stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\NodeSelectOP.h">
+      <Filter>view\blueprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\RightPopupMenu.h">
+      <Filter>view\blueprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\Serializer.h">
+      <Filter>view\blueprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\SceneTree.h">
+      <Filter>view\blueprint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\Evaluator.h">
+      <Filter>tools\eval</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\PinType.h">
+      <Filter>dataset\pin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\PinCallback.h">
+      <Filter>dataset\pin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\Node.h">
+      <Filter>dataset\node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\ReflectPropTypes.h">
+      <Filter>tools\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\RegistNodes.h">
+      <Filter>tools\rtti</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\NodeProp.h">
+      <Filter>dataset\node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\MessageID.h">
+      <Filter>dataset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
