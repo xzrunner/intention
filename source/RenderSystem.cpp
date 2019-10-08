@@ -8,7 +8,9 @@
 #include <sop/node/GroupCreate.h>
 #include <painting3/RenderSystem.h>
 #include <painting3/Viewport.h>
+#include <node0/SceneNode.h>
 #include <node3/RenderSystem.h>
+#include <node3/CompShape.h>
 #include <model/BrushBuilder.h>
 
 namespace
@@ -82,19 +84,23 @@ void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) cons
         return;
     }
 
-    auto shapes = geo->GetGeoShapes();
-    if (!shapes.empty())
+    auto node = geo->GetNode();
+    if (node->HasSharedComp<n3::CompShape>())
     {
-        pt3::RenderParams rp;
-        rp.painter = &m_pt;
-        rp.viewport = &m_vp;
-        rp.cam_mat = &m_cam_mat;
-        rp.radius = NODE_RADIUS;
-        rp.color = LIGHT_SELECT_COLOR;
-        rp.draw_ctrl_node = true;
+        auto& shapes = node->GetSharedComp<n3::CompShape>().GetShapes();
+        if (!shapes.empty())
+        {
+            pt3::RenderParams rp;
+            rp.painter = &m_pt;
+            rp.viewport = &m_vp;
+            rp.cam_mat = &m_cam_mat;
+            rp.radius = NODE_RADIUS;
+            rp.color = LIGHT_SELECT_COLOR;
+            rp.draw_ctrl_node = true;
 
-        for (auto& s : shapes) {
-            pt3::RenderSystem::DrawShape(*s, rp);
+            for (auto& s : shapes) {
+                pt3::RenderSystem::DrawShape(*s, rp);
+            }
         }
     }
 
