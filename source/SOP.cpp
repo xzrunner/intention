@@ -330,20 +330,20 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Normal&>(front);
         auto& dst = static_cast<sop::node::Normal&>(back);
 
-        sop::GeoAttrType type;
+        sop::GeoAttrClass type;
         switch (src.attr_add_norm_to)
         {
-        case GeoAttrType::Point:
-            type = sop::GeoAttrType::Point;
+        case GeoAttrClass::Point:
+            type = sop::GeoAttrClass::Point;
             break;
-        case GeoAttrType::Vertex:
-            type = sop::GeoAttrType::Vertex;
+        case GeoAttrClass::Vertex:
+            type = sop::GeoAttrClass::Vertex;
             break;
-        case GeoAttrType::Primitive:
-            type = sop::GeoAttrType::Primitive;
+        case GeoAttrClass::Primitive:
+            type = sop::GeoAttrClass::Primitive;
             break;
-        case GeoAttrType::Detail:
-            type = sop::GeoAttrType::Detail;
+        case GeoAttrClass::Detail:
+            type = sop::GeoAttrClass::Detail;
             break;
         default:
             assert(0);

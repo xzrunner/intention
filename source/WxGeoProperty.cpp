@@ -42,19 +42,19 @@ void QueryVertexIndex(const sop::GeoAttribute& attr,
     }
 }
 
-std::string VarToString(sop::GeoAttrVarType type, const sop::VarValue& val, int index = -1)
+std::string VarToString(sop::GeoAttrType type, const sop::VarValue& val, int index = -1)
 {
     switch (type)
     {
-    case sop::GeoAttrVarType::Bool:
+    case sop::GeoAttrType::Bool:
         return val.b ? "true" : "false";
-    case sop::GeoAttrVarType::Int:
+    case sop::GeoAttrType::Int:
         return std::to_string(val.i);
-    case sop::GeoAttrVarType::Float:
+    case sop::GeoAttrType::Float:
         return std::to_string(val.f);
-    case sop::GeoAttrVarType::Double:
+    case sop::GeoAttrType::Double:
         return std::to_string(val.d);
-    case sop::GeoAttrVarType::Float2:
+    case sop::GeoAttrType::Float2:
     {
         switch (index)
         {
@@ -67,8 +67,8 @@ std::string VarToString(sop::GeoAttrVarType type, const sop::VarValue& val, int 
             return "";
         }
     }
-    case sop::GeoAttrVarType::Float3:
-    case sop::GeoAttrVarType::Vector:
+    case sop::GeoAttrType::Float3:
+    case sop::GeoAttrType::Vector:
     {
         switch (index)
         {
@@ -83,8 +83,8 @@ std::string VarToString(sop::GeoAttrVarType type, const sop::VarValue& val, int 
             return "";
         }
     }
-    case sop::GeoAttrVarType::Float4:
-    case sop::GeoAttrVarType::Vector4:
+    case sop::GeoAttrType::Float4:
+    case sop::GeoAttrType::Vector4:
     {
         switch (index)
         {
@@ -112,7 +112,7 @@ std::string GetAttrName(sop::GeoAttr attr, int index = -1)
     std::string name = sop::GeoAttrNames[attr];
     switch (sop::GeoAttrTypes[attr])
     {
-    case sop::GeoAttrVarType::Float2:
+    case sop::GeoAttrType::Float2:
         switch (index)
         {
         case 0:
@@ -125,7 +125,7 @@ std::string GetAttrName(sop::GeoAttr attr, int index = -1)
             assert(0);
         }
         break;
-    case sop::GeoAttrVarType::Float3:
+    case sop::GeoAttrType::Float3:
         switch (index)
         {
         case 0:
@@ -141,7 +141,7 @@ std::string GetAttrName(sop::GeoAttr attr, int index = -1)
             assert(0);
         }
         break;
-    case sop::GeoAttrVarType::Float4:
+    case sop::GeoAttrType::Float4:
         switch (index)
         {
         case 0:
@@ -160,7 +160,7 @@ std::string GetAttrName(sop::GeoAttr attr, int index = -1)
             assert(0);
         }
         break;
-    case sop::GeoAttrVarType::Vector:
+    case sop::GeoAttrType::Vector:
         switch (index)
         {
         case 0:
@@ -176,7 +176,7 @@ std::string GetAttrName(sop::GeoAttr attr, int index = -1)
             assert(0);
         }
         break;
-    case sop::GeoAttrVarType::Vector4:
+    case sop::GeoAttrType::Vector4:
         switch (index)
         {
         case 0:
@@ -199,17 +199,17 @@ std::string GetAttrName(sop::GeoAttr attr, int index = -1)
     return name;
 }
 
-int GetAttrVarNum(sop::GeoAttrVarType type)
+int GetAttrVarNum(sop::GeoAttrType type)
 {
     switch (type)
     {
-    case sop::GeoAttrVarType::Float2:
+    case sop::GeoAttrType::Float2:
         return 2;
-    case sop::GeoAttrVarType::Float3:
-    case sop::GeoAttrVarType::Vector:
+    case sop::GeoAttrType::Float3:
+    case sop::GeoAttrType::Vector:
         return 3;
-    case sop::GeoAttrVarType::Float4:
-    case sop::GeoAttrVarType::Vector4:
+    case sop::GeoAttrType::Float4:
+    case sop::GeoAttrType::Vector4:
         return 4;
     default:
         return 1;
@@ -320,25 +320,25 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
     for (size_t i = 0; i < MAX_LIST_COUNT; ++i)
     {
         auto dst = m_lists[i];
-        auto& attr_desc = attr.GetAttrDesc(static_cast<sop::GeoAttrType>(i));
+        auto& attr_desc = attr.GetAttrDesc(static_cast<sop::GeoAttrClass>(i));
         for (auto& desc : attr_desc) 
         {
             int num;
             switch (desc.type)
             {
-            case sop::GeoAttrVarType::Float2:
+            case sop::GeoAttrType::Float2:
                 num = 2;
                 break;
-            case sop::GeoAttrVarType::Float3:
+            case sop::GeoAttrType::Float3:
                 num = 3;
                 break;
-            case sop::GeoAttrVarType::Float4:
+            case sop::GeoAttrType::Float4:
                 num = 4;
                 break;
-            case sop::GeoAttrVarType::Vector:
+            case sop::GeoAttrType::Vector:
                 num = 3;
                 break;
-            case sop::GeoAttrVarType::Vector4:
+            case sop::GeoAttrType::Vector4:
                 num = 4;
                 break;
             default:
@@ -369,7 +369,7 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
     // points
     auto p_list = m_lists[POINT];
     auto& pts = attr.GetPoints();
-    auto& p_desc = attr.GetAttrDesc(sop::GeoAttrType::Point);
+    auto& p_desc = attr.GetAttrDesc(sop::GeoAttrClass::Point);
     for (int i = 0, n = pts.size(); i < n; ++i)
     {
         auto& p = pts[i];
@@ -400,7 +400,7 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
     // vertices
     auto v_list = m_lists[VERTEX];
     auto& vts = attr.GetVertices();
-    auto& v_desc = attr.GetAttrDesc(sop::GeoAttrType::Vertex);
+    auto& v_desc = attr.GetAttrDesc(sop::GeoAttrClass::Vertex);
     for (int i = 0, n = vts.size(); i < n; ++i)
     {
         auto& v = vts[i];
@@ -429,7 +429,7 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
     // primitives
     auto prim_list = m_lists[PRIMITIVE];
     auto& prims = attr.GetPrimtives();
-    auto& prim_desc = attr.GetAttrDesc(sop::GeoAttrType::Primitive);
+    auto& prim_desc = attr.GetAttrDesc(sop::GeoAttrClass::Primitive);
     for (int i = 0, n = prims.size(); i < n; ++i)
     {
         auto& prim = prims[i];
@@ -456,7 +456,7 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
     // detail
     auto detail_list = m_lists[DETAIL];
     auto& detail = attr.GetDetail();
-    auto& detail_desc = attr.GetAttrDesc(sop::GeoAttrType::Detail);
+    auto& detail_desc = attr.GetAttrDesc(sop::GeoAttrClass::Detail);
     long item = detail_list->InsertItem(0, "");
     detail_list->SetItem(item, 0, "");
 

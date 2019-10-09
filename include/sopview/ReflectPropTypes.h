@@ -66,7 +66,7 @@ enum class KnifeKeep
     KeepAll,
 };
 
-enum class GeoAttrType
+enum class GeoAttrClass
 {
     Point = 0,
     Vertex,

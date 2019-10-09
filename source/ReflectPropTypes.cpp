@@ -52,12 +52,12 @@ rttr::registration::enumeration<sopv::KnifeKeep>("itt_knife_keep")
     rttr::value("all",   sopv::KnifeKeep::KeepAll)
 );
 
-rttr::registration::enumeration<sopv::GeoAttrType>("itt_geo_attr_type")
+rttr::registration::enumeration<sopv::GeoAttrClass>("itt_geo_attr_cls")
 (
-	rttr::value("point",     sopv::GeoAttrType::Point),
-    rttr::value("vertex",    sopv::GeoAttrType::Vertex),
-    rttr::value("primitive", sopv::GeoAttrType::Primitive),
-    rttr::value("detail",    sopv::GeoAttrType::Detail)
+	rttr::value("point",     sopv::GeoAttrClass::Point),
+    rttr::value("vertex",    sopv::GeoAttrClass::Vertex),
+    rttr::value("primitive", sopv::GeoAttrClass::Primitive),
+    rttr::value("detail",    sopv::GeoAttrClass::Detail)
 );
 
 rttr::registration::enumeration<sopv::SortKey>("itt_sort_key")

@@ -140,7 +140,7 @@ ITT_DEFINE_NODE(Knife,                      \
     KnifeKeep keep = KnifeKeep::KeepAll;    \
 )
 ITT_DEFINE_NODE(Normal,                                 \
-    GeoAttrType attr_add_norm_to = GeoAttrType::Vertex; \
+    GeoAttrClass attr_add_norm_to = GeoAttrClass::Vertex; \
 )
 ITT_DEFINE_NODE(PolyExtrude, \
     GroupName group_name;    \
