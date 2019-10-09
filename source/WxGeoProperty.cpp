@@ -7,7 +7,7 @@
 
 #include <node0/SceneNode.h>
 #include <sop/GeometryImpl.h>
-#include <sop/GeoAttrName.h>
+#include <sop/GeoAttrDefine.h>
 
 #include <wx/listctrl.h>
 
@@ -42,21 +42,177 @@ void QueryVertexIndex(const sop::GeoAttribute& attr,
     }
 }
 
-std::string VarToString(const sop::VarType& type, const sop::VarValue& val)
+std::string VarToString(sop::GeoAttrVarType type, const sop::VarValue& val, int index = -1)
 {
     switch (type)
     {
-    case sop::VarType::Bool:
+    case sop::GeoAttrVarType::Bool:
         return val.b ? "true" : "false";
-    case sop::VarType::Int:
+    case sop::GeoAttrVarType::Int:
         return std::to_string(val.i);
-    case sop::VarType::Float:
+    case sop::GeoAttrVarType::Float:
         return std::to_string(val.f);
-    case sop::VarType::Double:
+    case sop::GeoAttrVarType::Double:
         return std::to_string(val.d);
+    case sop::GeoAttrVarType::Float2:
+    {
+        switch (index)
+        {
+        case 0:
+            return std::to_string(static_cast<const sm::vec2*>(val.p)->x);
+        case 1:
+            return std::to_string(static_cast<const sm::vec2*>(val.p)->y);
+        default:
+            assert(0);
+            return "";
+        }
+    }
+    case sop::GeoAttrVarType::Float3:
+    case sop::GeoAttrVarType::Vector:
+    {
+        switch (index)
+        {
+        case 0:
+            return std::to_string(static_cast<const sm::vec3*>(val.p)->x);
+        case 1:
+            return std::to_string(static_cast<const sm::vec3*>(val.p)->y);
+        case 2:
+            return std::to_string(static_cast<const sm::vec3*>(val.p)->z);
+        default:
+            assert(0);
+            return "";
+        }
+    }
+    case sop::GeoAttrVarType::Float4:
+    case sop::GeoAttrVarType::Vector4:
+    {
+        switch (index)
+        {
+        case 0:
+            return std::to_string(static_cast<const sm::vec4*>(val.p)->x);
+        case 1:
+            return std::to_string(static_cast<const sm::vec4*>(val.p)->y);
+        case 2:
+            return std::to_string(static_cast<const sm::vec4*>(val.p)->z);
+        case 3:
+            return std::to_string(static_cast<const sm::vec4*>(val.p)->w);
+        default:
+            assert(0);
+            return "";
+        }
+    }
     default:
         assert(0);
         return "";
+    }
+}
+
+std::string GetAttrName(sop::GeoAttr attr, int index = -1)
+{
+    std::string name = sop::GeoAttrNames[attr];
+    switch (sop::GeoAttrTypes[attr])
+    {
+    case sop::GeoAttrVarType::Float2:
+        switch (index)
+        {
+        case 0:
+            name += "[0]";
+            break;
+        case 1:
+            name += "[1]";
+            break;
+        default:
+            assert(0);
+        }
+        break;
+    case sop::GeoAttrVarType::Float3:
+        switch (index)
+        {
+        case 0:
+            name += "[0]";
+            break;
+        case 1:
+            name += "[1]";
+            break;
+        case 2:
+            name += "[2]";
+            break;
+        default:
+            assert(0);
+        }
+        break;
+    case sop::GeoAttrVarType::Float4:
+        switch (index)
+        {
+        case 0:
+            name += "[0]";
+            break;
+        case 1:
+            name += "[1]";
+            break;
+        case 2:
+            name += "[2]";
+            break;
+        case 3:
+            name += "[3]";
+            break;
+        default:
+            assert(0);
+        }
+        break;
+    case sop::GeoAttrVarType::Vector:
+        switch (index)
+        {
+        case 0:
+            name += "[x]";
+            break;
+        case 1:
+            name += "[y]";
+            break;
+        case 2:
+            name += "[z]";
+            break;
+        default:
+            assert(0);
+        }
+        break;
+    case sop::GeoAttrVarType::Vector4:
+        switch (index)
+        {
+        case 0:
+            name += "[x]";
+            break;
+        case 1:
+            name += "[y]";
+            break;
+        case 2:
+            name += "[z]";
+            break;
+        case 3:
+            name += "[w]";
+            break;
+        default:
+            assert(0);
+        }
+        break;
+    }
+    return name;
+}
+
+int GetAttrVarNum(sop::GeoAttrVarType type)
+{
+    switch (type)
+    {
+    case sop::GeoAttrVarType::Float2:
+        return 2;
+    case sop::GeoAttrVarType::Float3:
+    case sop::GeoAttrVarType::Vector:
+        return 3;
+    case sop::GeoAttrVarType::Float4:
+    case sop::GeoAttrVarType::Vector4:
+        return 4;
+    default:
+        return 1;
     }
 }
 
@@ -131,9 +287,9 @@ void WxGeoProperty::InitLayout()
     AddPage(m_lists[DETAIL],    "Detail");
 
     m_lists[POINT]->InsertColumn(0, "ID",   wxLIST_FORMAT_LEFT);
-    m_lists[POINT]->InsertColumn(1, sop::GeoAttrName::vert_x, wxLIST_FORMAT_LEFT);
-    m_lists[POINT]->InsertColumn(2, sop::GeoAttrName::vert_y, wxLIST_FORMAT_LEFT);
-    m_lists[POINT]->InsertColumn(3, sop::GeoAttrName::vert_z, wxLIST_FORMAT_LEFT);
+    m_lists[POINT]->InsertColumn(1, GetAttrName(sop::GEO_ATTR_POS, 0), wxLIST_FORMAT_LEFT);
+    m_lists[POINT]->InsertColumn(2, GetAttrName(sop::GEO_ATTR_POS, 1), wxLIST_FORMAT_LEFT);
+    m_lists[POINT]->InsertColumn(3, GetAttrName(sop::GEO_ATTR_POS, 2), wxLIST_FORMAT_LEFT);
 
     m_lists[VERTEX]->InsertColumn(0, "ID",        wxLIST_FORMAT_LEFT);
     m_lists[VERTEX]->InsertColumn(1, "Point Num", wxLIST_FORMAT_LEFT);
@@ -165,9 +321,48 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
     {
         auto dst = m_lists[i];
         auto& attr_desc = attr.GetAttrDesc(static_cast<sop::GeoAttrType>(i));
-        for (auto& desc : attr_desc) {
-            auto item_idx = dst->GetColumnCount();
-            dst->InsertColumn(item_idx, desc.name, wxLIST_FORMAT_LEFT);
+        for (auto& desc : attr_desc) 
+        {
+            int num;
+            switch (desc.type)
+            {
+            case sop::GeoAttrVarType::Float2:
+                num = 2;
+                break;
+            case sop::GeoAttrVarType::Float3:
+                num = 3;
+                break;
+            case sop::GeoAttrVarType::Float4:
+                num = 4;
+                break;
+            case sop::GeoAttrVarType::Vector:
+                num = 3;
+                break;
+            case sop::GeoAttrVarType::Vector4:
+                num = 4;
+                break;
+            default:
+                num = 1;
+            }
+
+            if (desc.attr == sop::GEO_ATTR_UNKNOWN)
+            {
+                for (int i = 0; i < num; ++i)
+                {
+                    auto item_idx = dst->GetColumnCount();
+                    auto name = GetAttrName(desc.attr, i);
+                    dst->InsertColumn(item_idx, desc.name, wxLIST_FORMAT_LEFT);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < num; ++i) 
+                {
+                    auto item_idx = dst->GetColumnCount();
+                    auto name = GetAttrName(desc.attr, i);
+                    dst->InsertColumn(item_idx, name, wxLIST_FORMAT_LEFT);
+                }
+            }
         }
     }
 
@@ -191,9 +386,14 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
         p_list->SetItem(item, 3, std::to_string(p->pos.z));
 
         assert(p_desc.size() == p->vars.size());
+
+        int idx = 4;
         for (int j = 0, m = p->vars.size(); j < m; ++j) {
-            auto str = VarToString(p_desc[j].type, p->vars[j]);
-            p_list->SetItem(item, 4 + j, str);
+            auto var_n = GetAttrVarNum(p_desc[j].type);
+            for (int k = 0; k < var_n; ++k) {
+                auto str = VarToString(p_desc[j].type, p->vars[j], k);
+                p_list->SetItem(item, idx++, str);
+            }
         }
     }
 
@@ -215,9 +415,14 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
         v_list->SetItem(item, 1, std::to_string(point_idx));
 
         assert(v_desc.size() == v->vars.size());
+
+        int idx = 2;
         for (int j = 0, m = v->vars.size(); j < m; ++j) {
-            auto str = VarToString(v_desc[j].type, v->vars[j]);
-            v_list->SetItem(item, 2 + j, str);
+            auto var_n = GetAttrVarNum(v_desc[j].type);
+            for (int k = 0; k < var_n; ++k) {
+                auto str = VarToString(v_desc[j].type, v->vars[j], k);
+                v_list->SetItem(item, idx++, str);
+            }
         }
     }
 
@@ -237,9 +442,14 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
         prim_list->SetItem(item, 0, id_str);
 
         assert(prim_desc.size() == prim->vars.size());
+
+        int idx = 1;
         for (int j = 0, m = prim->vars.size(); j < m; ++j) {
-            auto str = VarToString(prim_desc[j].type, prim->vars[j]);
-            prim_list->SetItem(item, 1 + j, str);
+            auto var_n = GetAttrVarNum(prim_desc[j].type);
+            for (int k = 0; k < var_n; ++k) {
+                auto str = VarToString(prim_desc[j].type, prim->vars[j], k);
+                prim_list->SetItem(item, idx++, str);
+            }
         }
     }
 
@@ -249,10 +459,16 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
     auto& detail_desc = attr.GetAttrDesc(sop::GeoAttrType::Detail);
     long item = detail_list->InsertItem(0, "");
     detail_list->SetItem(item, 0, "");
+
     assert(detail_desc.size() == detail.vars.size());
+
+    int idx = 0;
     for (int i = 0, n = detail.vars.size(); i < n; ++i) {
-        auto str = VarToString(detail_desc[i].type, detail.vars[i]);
-        prim_list->SetItem(item, i, str);
+        auto var_n = GetAttrVarNum(detail_desc[i].type);
+        for (int k = 0; k < var_n; ++k) {
+            auto str = VarToString(detail_desc[i].type, detail.vars[i], k);
+            detail_list->SetItem(item, idx++, str);
+        }
     }
 }
 
