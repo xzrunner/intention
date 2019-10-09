@@ -21,6 +21,8 @@
 // manipulate
 #include <sop/node/Delete.h>
 #include <sop/node/Transform.h>
+// material
+#include <sop/node/Color.h>
 // nurbs
 #include <sop/node/Carve.h>
 // polygon
@@ -239,6 +241,13 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
 
         sm::ivec3 shear_idx(sop::node::Transform::SHEAR_X, sop::node::Transform::SHEAR_Y, sop::node::Transform::SHEAR_Z);
         dst.SetShear(ParseExprFloat3(src.shear, back, shear_idx, sm::vec3(0, 0, 0), eval));
+    }
+    // material
+    else if (type == rttr::type::get<node::Color>())
+    {
+        auto& src = static_cast<const node::Color&>(front);
+        auto& dst = static_cast<sop::node::Color&>(back);
+        dst.SetColor(src.color);
     }
     // NURBs
     else if (type == rttr::type::get<node::Carve>())

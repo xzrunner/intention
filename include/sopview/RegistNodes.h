@@ -111,6 +111,11 @@ ITT_DEFINE_NODE(Transform,                            \
     StrVec3 shear        = StrVec3("0", "0", "0");    \
 )
 
+// material
+ITT_DEFINE_NODE(Color,                           \
+    sm::vec3 color = sm::vec3(1.0f, 1.0f, 1.0f); \
+)
+
 // NURBs
 ITT_DEFINE_NODE(Carve,          \
     std::string first_u  = "0"; \

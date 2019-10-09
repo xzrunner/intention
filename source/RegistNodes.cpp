@@ -150,6 +150,14 @@ REGIST_NODE_RTTI(Transform,
 )                                                                      \
 )
 
+// material
+REGIST_NODE_RTTI(Color,
+.property("color", &sopv::node::Color::color)                      \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Color")) \
+)                                                                  \
+)
+
 // NURBs
 REGIST_NODE_RTTI(Carve,
 .property("first_u", &sopv::node::Carve::first_u)                     \
