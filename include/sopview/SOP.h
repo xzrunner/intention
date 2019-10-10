@@ -1,8 +1,11 @@
 #pragma once
 
+#include "sopview/ReflectPropTypes.h"
+
 #include <SM_Vector.h>
 #include <sop/typedef.h>
 #include <sop/NodeVar.h>
+#include <sop/VarValue.h>
 
 namespace sop { class Node; }
 namespace bp { class Node; class Pin; }

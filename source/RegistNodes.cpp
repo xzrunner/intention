@@ -33,6 +33,31 @@ rttr::registration::class_<sopv::Node>("sopv::node")
 REGIST_NODE_RTTI_DEFAULT(Geometry)
 
 // attribute
+REGIST_NODE_RTTI(AttributeCreate,
+.property("item0", &sopv::node::AttributeCreate::item0)                \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Item0"))     \
+)                                                                      \
+.property("item1", &sopv::node::AttributeCreate::item1)                \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Item1"))     \
+)                                                                      \
+.property("item2", &sopv::node::AttributeCreate::item2)                \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Item2"))     \
+)                                                                      \
+.property("item3", &sopv::node::AttributeCreate::item3)                \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Item3"))     \
+)                                                                      \
+)
+REGIST_NODE_RTTI(AttributeWrangle,
+.property("vex_expr", &sopv::node::AttributeWrangle::vex_expr)        \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("VexExpr")), \
+    rttr::metadata(ee0::PropLongStringTag(), true)                    \
+)                                                                     \
+)
 REGIST_NODE_RTTI(Measure,
 .property("ms_type", &sopv::node::Measure::ms_type)                      \
 (                                                                        \

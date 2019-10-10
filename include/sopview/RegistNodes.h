@@ -69,6 +69,15 @@ ITT_DEFINE_PROPS_NODE(Geometry,        \
 )
 
 // attribute
+ITT_DEFINE_NODE(AttributeCreate, \
+    AttrCreateItem item0;        \
+    AttrCreateItem item1;        \
+    AttrCreateItem item2;        \
+    AttrCreateItem item3;        \
+)
+ITT_DEFINE_NODE(AttributeWrangle, \
+    std::string vex_expr;         \
+)
 ITT_DEFINE_NODE(Measure,                          \
     MeasureType ms_type = MeasureType::Perimeter; \
     std::string ms_name;                          \

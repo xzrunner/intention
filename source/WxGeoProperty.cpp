@@ -321,10 +321,10 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
     {
         auto dst = m_lists[i];
         auto& attr_desc = attr.GetAttrDesc(static_cast<sop::GeoAttrClass>(i));
-        for (auto& desc : attr_desc) 
+        for (auto& desc : attr_desc)
         {
             int num;
-            switch (desc.type)
+            switch (desc.GetType())
             {
             case sop::GeoAttrType::Float2:
                 num = 2;
@@ -345,21 +345,21 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
                 num = 1;
             }
 
-            if (desc.attr == sop::GEO_ATTR_UNKNOWN)
+            if (desc.GetAttr() == sop::GEO_ATTR_UNKNOWN)
             {
                 for (int i = 0; i < num; ++i)
                 {
                     auto item_idx = dst->GetColumnCount();
-                    auto name = GetAttrName(desc.attr, i);
-                    dst->InsertColumn(item_idx, desc.name, wxLIST_FORMAT_LEFT);
+                    auto name = GetAttrName(desc.GetAttr(), i);
+                    dst->InsertColumn(item_idx, desc.GetName(), wxLIST_FORMAT_LEFT);
                 }
             }
             else
             {
-                for (int i = 0; i < num; ++i) 
+                for (int i = 0; i < num; ++i)
                 {
                     auto item_idx = dst->GetColumnCount();
-                    auto name = GetAttrName(desc.attr, i);
+                    auto name = GetAttrName(desc.GetAttr(), i);
                     dst->InsertColumn(item_idx, name, wxLIST_FORMAT_LEFT);
                 }
             }
@@ -389,9 +389,9 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
 
         int idx = 4;
         for (int j = 0, m = p->vars.size(); j < m; ++j) {
-            auto var_n = GetAttrVarNum(p_desc[j].type);
+            auto var_n = GetAttrVarNum(p_desc[j].GetType());
             for (int k = 0; k < var_n; ++k) {
-                auto str = VarToString(p_desc[j].type, p->vars[j], k);
+                auto str = VarToString(p_desc[j].GetType(), p->vars[j], k);
                 p_list->SetItem(item, idx++, str);
             }
         }
@@ -418,9 +418,9 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
 
         int idx = 2;
         for (int j = 0, m = v->vars.size(); j < m; ++j) {
-            auto var_n = GetAttrVarNum(v_desc[j].type);
+            auto var_n = GetAttrVarNum(v_desc[j].GetType());
             for (int k = 0; k < var_n; ++k) {
-                auto str = VarToString(v_desc[j].type, v->vars[j], k);
+                auto str = VarToString(v_desc[j].GetType(), v->vars[j], k);
                 v_list->SetItem(item, idx++, str);
             }
         }
@@ -445,9 +445,9 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
 
         int idx = 1;
         for (int j = 0, m = prim->vars.size(); j < m; ++j) {
-            auto var_n = GetAttrVarNum(prim_desc[j].type);
+            auto var_n = GetAttrVarNum(prim_desc[j].GetType());
             for (int k = 0; k < var_n; ++k) {
-                auto str = VarToString(prim_desc[j].type, prim->vars[j], k);
+                auto str = VarToString(prim_desc[j].GetType(), prim->vars[j], k);
                 prim_list->SetItem(item, idx++, str);
             }
         }
@@ -464,9 +464,9 @@ void WxGeoProperty::LoadDefault(const sop::GeoAttribute& attr)
 
     int idx = 0;
     for (int i = 0, n = detail.vars.size(); i < n; ++i) {
-        auto var_n = GetAttrVarNum(detail_desc[i].type);
+        auto var_n = GetAttrVarNum(detail_desc[i].GetType());
         for (int k = 0; k < var_n; ++k) {
-            auto str = VarToString(detail_desc[i].type, detail.vars[i], k);
+            auto str = VarToString(detail_desc[i].GetType(), detail.vars[i], k);
             detail_list->SetItem(item, idx++, str);
         }
     }

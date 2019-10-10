@@ -6,6 +6,7 @@
 #include "sopview/NodeProp.h"
 #include "sopview/SceneTree.h"
 #include "sopview/Evaluator.h"
+#include "sopview/SOP.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/ReflectPropTypes.h>
@@ -76,6 +77,23 @@ sop::NodePtr GetGroupNameNode(const sopv::GroupName& name, const sop::NodePtr& s
             return ret;
         }
     }
+}
+
+wxEnumProperty* CreateGeoAttrClassProp(const std::string& name, int value)
+{
+    const wxChar* choices[] = { wxT("Point"), wxT("Vertex"), wxT("Primitive"), wxT("Detail"), NULL };
+    auto prop = new wxEnumProperty(name, wxPG_LABEL, choices);
+    prop->SetValue(value);
+    return prop;
+}
+
+wxEnumProperty* CreateGeoAttrTypeProp(const std::string& name, int value)
+{
+    const wxChar* choices[] = { wxT("Int"), wxT("Bool"), wxT("Double"), wxT("Float"), wxT("Float2"), wxT("Float3"),
+        wxT("Float4"), wxT("String"), wxT("Vector"), wxT("Vector4"), wxT("Matrix2"), wxT("Matrix3"), wxT("Matrix4"), NULL };
+    auto prop = new wxEnumProperty(name, wxPG_LABEL, choices);
+    prop->SetValue(value);
+    return prop;
 }
 
 const char* STR_GROUP_NULL = "null";
@@ -228,11 +246,28 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     }
     else if (prop_type == rttr::type::get<GeoAttrClass>())
     {
-        const wxChar* TYPES[] = { wxT("Point"), wxT("Vertex"), wxT("Primitive"), wxT("Detail"), NULL };
-        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
-        auto type = prop.get_value(node).get_value<GeoAttrClass>();
-        type_prop->SetValue(static_cast<int>(type));
-        m_pg->Append(type_prop);
+        auto cls = prop.get_value(node).get_value<sopv::GeoAttrClass>();
+        m_pg->Append(CreateGeoAttrClassProp(ui_info.desc, static_cast<int>(cls)));
+    }
+    else if (prop_type == rttr::type::get<GeoAttrType>())
+    {
+        auto type = prop.get_value(node).get_value<sopv::GeoAttrType>();
+        m_pg->Append(CreateGeoAttrTypeProp(ui_info.desc, static_cast<int>(type)));
+    }
+    else if (prop_type == rttr::type::get<AttrCreateItem>())
+    {
+        auto item = prop.get_value(node).get_value<AttrCreateItem>();
+
+        wxPGProperty* prop = m_pg->Append(new wxStringProperty(ui_info.desc, wxPG_LABEL, wxT("<composed>")));
+        prop->SetExpanded(false);
+
+        m_pg->AppendIn(prop, new wxStringProperty(wxT("Name"),  wxPG_LABEL, item.name));
+        m_pg->AppendIn(prop, CreateGeoAttrClassProp("Class", static_cast<int>(item.cls)));
+        m_pg->AppendIn(prop, CreateGeoAttrTypeProp("Type", static_cast<int>(item.type)));
+        m_pg->AppendIn(prop, new wxFloatProperty("Val X", wxPG_LABEL, item.value.x));
+        m_pg->AppendIn(prop, new wxFloatProperty("Val Y", wxPG_LABEL, item.value.y));
+        m_pg->AppendIn(prop, new wxFloatProperty("Val Z", wxPG_LABEL, item.value.z));
+        m_pg->AppendIn(prop, new wxFloatProperty("Val W", wxPG_LABEL, item.value.w));
     }
     else if (prop_type == rttr::type::get<SortKey>())
     {
@@ -377,18 +412,11 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         auto v = prop.get_value(m_node).get_value<GroupExprInst>();
         v.group_name = tokens[0];
         v.expr_str   = tokens[1];
-        auto& op_str = tokens[2];
-        if (op_str == "Replace") {
-            v.merge_op = GroupMerge::Replace;
-        } else if (op_str == "Union") {
-            v.merge_op = GroupMerge::Union;
-        } else if (op_str == "Intersect") {
-            v.merge_op = GroupMerge::Intersect;
-        } else if (op_str == "Subtract") {
-            v.merge_op = GroupMerge::Subtract;
-        } else {
-            assert(0);
-        }
+
+        auto op_str = tokens[2];
+        std::transform(op_str.begin(), op_str.end(), op_str.begin(), tolower);
+        v.merge_op = rttr::type::get<GroupMerge>().get_enumeration()
+            .name_to_value(op_str).get_value<GroupMerge>();
 
         prop.set_value(m_node, v);
     }
@@ -403,6 +431,41 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     else if (prop_type == rttr::type::get<GeoAttrClass>() && key == ui_info.desc)
     {
         prop.set_value(m_node, GeoAttrClass(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<GeoAttrType>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, GeoAttrType(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<AttrCreateItem>() && key == ui_info.desc)
+    {
+        std::vector<std::string> tokens;
+        auto str = wxANY_AS(val, wxString).ToStdString();
+        boost::split(tokens, str, boost::is_any_of(";"));
+        assert(tokens.size() == 7);
+
+        for (auto& t : tokens) {
+            boost::algorithm::trim(t);
+        }
+
+        auto item = prop.get_value(m_node).get_value<AttrCreateItem>();
+
+        item.name = tokens[0];
+
+        auto cls_str = tokens[1];
+        std::transform(cls_str.begin(), cls_str.end(), cls_str.begin(), tolower);
+        item.cls = rttr::type::get<GeoAttrClass>().get_enumeration()
+            .name_to_value(cls_str).get_value<GeoAttrClass>();
+
+        auto type_str = tokens[2];
+        std::transform(type_str.begin(), type_str.end(), type_str.begin(), tolower);
+        item.type = rttr::type::get<GeoAttrType>().get_enumeration()
+            .name_to_value(type_str).get_value<GeoAttrType>();
+
+        for (int i = 0; i < 4; ++i) {
+            item.value.xyzw[i] = std::atof(tokens[3 + i].c_str());
+        }
+
+        prop.set_value(m_node, item);
     }
     else if (prop_type == rttr::type::get<SortKey>() && key == ui_info.desc)
     {

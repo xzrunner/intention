@@ -13,6 +13,8 @@
 #include <blueprint/node/Output.h>
 
 // attribute
+#include <sop/node/AttributeCreate.h>
+#include <sop/node/AttributeWrangle.h>
 #include <sop/node/Sort.h>
 #include <sop/node/Measure.h>
 // group
@@ -49,7 +51,8 @@
 namespace
 {
 
-sop::GroupType TransGroupType(sopv::GroupType type)
+sop::GroupType
+TransGroupType(sopv::GroupType type)
 {
     switch (type)
     {
@@ -69,7 +72,64 @@ sop::GroupType TransGroupType(sopv::GroupType type)
     }
 }
 
-sop::GroupMerge TransGroupMerge(sopv::GroupMerge merge_op)
+sop::GeoAttrClass
+TransGeoAttrClass(sopv::GeoAttrClass cls)
+{
+    switch (cls)
+    {
+    case sopv::GeoAttrClass::Point:
+        return sop::GeoAttrClass::Point;
+    case sopv::GeoAttrClass::Vertex:
+        return sop::GeoAttrClass::Vertex;
+    case sopv::GeoAttrClass::Primitive:
+        return sop::GeoAttrClass::Primitive;
+    case sopv::GeoAttrClass::Detail:
+        return sop::GeoAttrClass::Detail;
+    default:
+        assert(0);
+        return sop::GeoAttrClass::Point;
+    }
+}
+
+sop::GeoAttrType
+TransGeoAttrType(sopv::GeoAttrType type)
+{
+    switch (type)
+    {
+    case sopv::GeoAttrType::Int:
+        return sop::GeoAttrType::Int;
+    case sopv::GeoAttrType::Bool:
+        return sop::GeoAttrType::Bool;
+    case sopv::GeoAttrType::Double:
+        return sop::GeoAttrType::Double;
+    case sopv::GeoAttrType::Float:
+        return sop::GeoAttrType::Float;
+    case sopv::GeoAttrType::Float2:
+        return sop::GeoAttrType::Float2;
+    case sopv::GeoAttrType::Float3:
+        return sop::GeoAttrType::Float3;
+    case sopv::GeoAttrType::Float4:
+        return sop::GeoAttrType::Float4;
+    case sopv::GeoAttrType::String:
+        return sop::GeoAttrType::String;
+    case sopv::GeoAttrType::Vector:
+        return sop::GeoAttrType::Vector;
+    case sopv::GeoAttrType::Vector4:
+        return sop::GeoAttrType::Vector4;
+    case sopv::GeoAttrType::Matrix2:
+        return sop::GeoAttrType::Matrix2;
+    case sopv::GeoAttrType::Matrix3:
+        return sop::GeoAttrType::Matrix3;
+    case sopv::GeoAttrType::Matrix4:
+        return sop::GeoAttrType::Matrix4;
+    default:
+        assert(0);
+        return sop::GeoAttrType::Int;
+    }
+}
+
+sop::GroupMerge
+TransGroupMerge(sopv::GroupMerge merge_op)
 {
 
     switch (merge_op)
@@ -88,13 +148,64 @@ sop::GroupMerge TransGroupMerge(sopv::GroupMerge merge_op)
     }
 }
 
-sop::node::GroupExpression::Instance TransGroupExprInst(const sopv::GroupExprInst& src)
+sop::node::GroupExpression::Instance
+TransGroupExprInst(const sopv::GroupExprInst& src)
 {
     sop::node::GroupExpression::Instance dst;
     dst.group_name = src.group_name;
     dst.expr_str   = src.expr_str;
     dst.merge_op   = TransGroupMerge(src.merge_op);
     return dst;
+}
+
+sop::node::AttributeCreate::Item
+TransAttrCreateItem(const sopv::AttrCreateItem& item)
+{
+    auto cls  = TransGeoAttrClass(item.cls);
+    auto type = TransGeoAttrType(item.type);
+
+    sop::VarValue val;
+    switch (item.type)
+    {
+    case sopv::GeoAttrType::Int:
+        val = sop::VarValue(static_cast<int>(item.value.x));
+        break;
+
+    case sopv::GeoAttrType::Bool:
+        val = sop::VarValue(item.value.x == 0 ? false : true);
+        break;
+    case sopv::GeoAttrType::Double:
+        val = sop::VarValue(static_cast<double>(item.value.x));
+        break;
+
+    case sopv::GeoAttrType::Float:
+        val = sop::VarValue(item.value.x);
+        break;
+    case sopv::GeoAttrType::Float2:
+        assert(0);
+        break;
+    case sopv::GeoAttrType::Float3:
+        val = sop::VarValue(sm::vec3(item.value.x, item.value.y, item.value.z));
+        break;
+    case sopv::GeoAttrType::Float4:
+        assert(0);
+        break;
+
+    case sopv::GeoAttrType::Vector:
+        val = sop::VarValue(sm::vec3(item.value.x, item.value.y, item.value.z));
+        break;
+    case sopv::GeoAttrType::Vector4:
+        assert(0);
+        break;
+
+    case sopv::GeoAttrType::Matrix2:
+    case sopv::GeoAttrType::Matrix3:
+    case sopv::GeoAttrType::Matrix4:
+        assert(0);
+        break;
+    }
+
+    return { item.name, cls, type, val };
 }
 
 }
@@ -107,7 +218,32 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
 {
     auto type = front.get_type();
     // attribute
-    if (type == rttr::type::get<node::Measure>())
+    if (type == rttr::type::get<node::AttributeCreate>())
+    {
+        auto& src = static_cast<const node::AttributeCreate&>(front);
+        auto& dst = static_cast<sop::node::AttributeCreate&>(back);
+        std::vector<sop::node::AttributeCreate::Item> items;
+        if (!src.item0.name.empty()) {
+            items.push_back(TransAttrCreateItem(src.item0));
+        }
+        if (!src.item1.name.empty()) {
+            items.push_back(TransAttrCreateItem(src.item1));
+        }
+        if (!src.item2.name.empty()) {
+            items.push_back(TransAttrCreateItem(src.item2));
+        }
+        if (!src.item3.name.empty()) {
+            items.push_back(TransAttrCreateItem(src.item3));
+        }
+        dst.SetAttrItems(items);
+    }
+    else if (type == rttr::type::get<node::AttributeWrangle>())
+    {
+        auto& src = static_cast<const node::AttributeWrangle&>(front);
+        auto& dst = static_cast<sop::node::AttributeWrangle&>(back);
+        dst.SetVexExpr(src.vex_expr);
+    }
+    else if (type == rttr::type::get<node::Measure>())
     {
         auto& src = static_cast<const node::Measure&>(front);
         auto& dst = static_cast<sop::node::Measure&>(back);
@@ -268,7 +404,20 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
     {
         auto& src = static_cast<const node::Add&>(front);
         auto& dst = static_cast<sop::node::Add&>(back);
-        dst.SetPoints(src.points);
+        std::vector<sm::vec3> points;
+        if (src.use_p0) {
+            points.push_back(src.p0);
+        }
+        if (src.use_p1) {
+            points.push_back(src.p1);
+        }
+        if (src.use_p2) {
+            points.push_back(src.p2);
+        }
+        if (src.use_p3) {
+            points.push_back(src.p3);
+        }
+        dst.SetPoints(points);
     }
     // polygon
     else if (type == rttr::type::get<node::Boolean>())
@@ -329,27 +478,7 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
     {
         auto& src = static_cast<const node::Normal&>(front);
         auto& dst = static_cast<sop::node::Normal&>(back);
-
-        sop::GeoAttrClass cls;
-        switch (src.attr_add_norm_to)
-        {
-        case GeoAttrClass::Point:
-            cls = sop::GeoAttrClass::Point;
-            break;
-        case GeoAttrClass::Vertex:
-            cls = sop::GeoAttrClass::Vertex;
-            break;
-        case GeoAttrClass::Primitive:
-            cls = sop::GeoAttrClass::Primitive;
-            break;
-        case GeoAttrClass::Detail:
-            cls = sop::GeoAttrClass::Detail;
-            break;
-        default:
-            assert(0);
-        }
-
-        dst.SetAttrAddTo(cls);
+        dst.SetAttrAddTo(TransGeoAttrClass(src.attr_add_norm_to));
     }
     else if (type == rttr::type::get<node::PolyExtrude>())
     {

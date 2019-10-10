@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SM_Vector.h>
+
 #include <string>
 
 namespace sopv
@@ -72,6 +74,37 @@ enum class GeoAttrClass
     Vertex,
     Primitive,
     Detail,
+};
+
+enum class GeoAttrType
+{
+    Int,
+
+    // todo
+    Bool,
+    Double,
+
+    Float,
+    Float2,
+    Float3,
+    Float4,
+
+    String,
+
+    Vector,
+    Vector4,
+
+    Matrix2,
+    Matrix3,
+    Matrix4,
+};
+
+struct AttrCreateItem
+{
+    std::string  name;
+    GeoAttrClass cls  = GeoAttrClass::Point;
+    GeoAttrType  type = GeoAttrType::Float;
+    sm::vec4     value;
 };
 
 enum class SortKey

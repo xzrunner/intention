@@ -52,6 +52,30 @@ rttr::registration::enumeration<sopv::KnifeKeep>("itt_knife_keep")
     rttr::value("all",   sopv::KnifeKeep::KeepAll)
 );
 
+rttr::registration::enumeration<sopv::GeoAttrType>("itt_geo_attr_type")
+(
+	rttr::value("int",     sopv::GeoAttrType::Int),
+    rttr::value("bool",    sopv::GeoAttrType::Bool),
+    rttr::value("double",  sopv::GeoAttrType::Double),
+    rttr::value("float",   sopv::GeoAttrType::Float),
+    rttr::value("float2",  sopv::GeoAttrType::Float2),
+    rttr::value("float3",  sopv::GeoAttrType::Float3),
+    rttr::value("float4",  sopv::GeoAttrType::Float4),
+    rttr::value("string",  sopv::GeoAttrType::String),
+    rttr::value("vector",  sopv::GeoAttrType::Vector),
+    rttr::value("vector4", sopv::GeoAttrType::Vector4),
+    rttr::value("matrix2", sopv::GeoAttrType::Matrix2),
+    rttr::value("matrix3", sopv::GeoAttrType::Matrix3),
+    rttr::value("matrix4", sopv::GeoAttrType::Matrix4)
+);
+
+rttr::registration::class_<sopv::AttrCreateItem>("itt_attr_create_item")
+    .property("name",  &sopv::AttrCreateItem::name)
+    .property("cls",   &sopv::AttrCreateItem::cls)
+    .property("type",  &sopv::AttrCreateItem::type)
+    .property("value", &sopv::AttrCreateItem::value)
+;
+
 rttr::registration::enumeration<sopv::GeoAttrClass>("itt_geo_attr_cls")
 (
 	rttr::value("point",     sopv::GeoAttrClass::Point),
