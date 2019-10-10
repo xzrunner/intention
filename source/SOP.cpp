@@ -330,26 +330,26 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Normal&>(front);
         auto& dst = static_cast<sop::node::Normal&>(back);
 
-        sop::GeoAttrClass type;
+        sop::GeoAttrClass cls;
         switch (src.attr_add_norm_to)
         {
         case GeoAttrClass::Point:
-            type = sop::GeoAttrClass::Point;
+            cls = sop::GeoAttrClass::Point;
             break;
         case GeoAttrClass::Vertex:
-            type = sop::GeoAttrClass::Vertex;
+            cls = sop::GeoAttrClass::Vertex;
             break;
         case GeoAttrClass::Primitive:
-            type = sop::GeoAttrClass::Primitive;
+            cls = sop::GeoAttrClass::Primitive;
             break;
         case GeoAttrClass::Detail:
-            type = sop::GeoAttrClass::Detail;
+            cls = sop::GeoAttrClass::Detail;
             break;
         default:
             assert(0);
         }
 
-        dst.SetAttrAddTo(type);
+        dst.SetAttrAddTo(cls);
     }
     else if (type == rttr::type::get<node::PolyExtrude>())
     {
