@@ -134,8 +134,15 @@ ITT_DEFINE_NODE(Carve,          \
 )
 
 // polygon
-ITT_DEFINE_NODE(Add,              \
-    std::vector<sm::vec3> points; \
+ITT_DEFINE_NODE(Add,     \
+    bool use_p0 = false; \
+    sm::vec3 p0;         \
+    bool use_p1 = false; \
+    sm::vec3 p1;         \
+    bool use_p2 = false; \
+    sm::vec3 p2;         \
+    bool use_p3 = false; \
+    sm::vec3 p3;         \
 )
 ITT_DEFINE_NODE(Boolean,                             \
     BooleanOperator op = BooleanOperator::Intersect; \

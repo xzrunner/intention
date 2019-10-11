@@ -205,10 +205,38 @@ REGIST_NODE_RTTI(Carve,
 
 // polygon
 REGIST_NODE_RTTI(Add,
-.property("points", &sopv::node::Add::points)                       \
-(                                                                   \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Points")) \
-)                                                                   \
+.property("use_p0", &sopv::node::Add::use_p0)                      \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UseP0")) \
+)                                                                  \
+.property("p0", &sopv::node::Add::p0)                              \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P0"))    \
+)                                                                  \
+.property("use_p1", &sopv::node::Add::use_p1)                      \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UseP1")) \
+)                                                                  \
+.property("p1", &sopv::node::Add::p1)                              \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P1"))    \
+)                                                                  \
+.property("use_p2", &sopv::node::Add::use_p2)                      \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UseP2")) \
+)                                                                  \
+.property("p2", &sopv::node::Add::p2)                              \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P2"))    \
+)                                                                  \
+.property("use_p3", &sopv::node::Add::use_p3)                      \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UseP3")) \
+)                                                                  \
+.property("p3", &sopv::node::Add::p3)                              \
+(                                                                  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P3"))    \
+)                                                                  \
 )
 REGIST_NODE_RTTI(Boolean,
 .property("operator", &sopv::node::Boolean::op)                       \
