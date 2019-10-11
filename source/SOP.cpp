@@ -205,7 +205,7 @@ TransAttrCreateItem(const sopv::AttrCreateItem& item)
         break;
     }
 
-    return { item.name, cls, type, val };
+    return { item.name, type, cls, val };
 }
 
 }
