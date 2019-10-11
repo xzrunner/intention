@@ -35,6 +35,8 @@ public:
 
     n0::SceneNodePtr GetRoot() const;
 
+    void EnableSetNodeDisplay(bool enable) { m_enable_set_node_display = enable; }
+
 private:
     void InitDummyRoot();
 
@@ -61,6 +63,8 @@ private:
     Path m_path;
 
     std::map<n0::SceneNodePtr, std::shared_ptr<Evaluator>> m_eval_cache;
+
+    bool m_enable_set_node_display = true;
 
 }; // SceneTree
 

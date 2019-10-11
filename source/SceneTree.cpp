@@ -127,7 +127,9 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
         // update flags
         if (type.is_derived_from<Node>()) {
             auto itt_node = std::static_pointer_cast<Node>(bp_node);
-            itt_node->SetDisplay(true);
+            if (m_enable_set_node_display) {
+                itt_node->SetDisplay(true);
+            }
         }
     }
 
@@ -312,7 +314,7 @@ bool SceneTree::SetDepth(size_t depth)
 
 void SceneTree::ClearNodeDisplayTag()
 {
-    if (m_path.patrs.empty()) {
+    if (!m_enable_set_node_display || m_path.patrs.empty()) {
         return;
     }
 
