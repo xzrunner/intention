@@ -93,6 +93,7 @@ ITT_DEFINE_NODE(GroupCreate,                          \
     GroupMerge  merge_op   = GroupMerge::Replace;     \
     bool        base_group = false;                   \
     std::string base_group_expr;                      \
+    bool        keep_in_bounding = false;             \
     bool        keep_by_normals  = false;             \
     sm::vec3    direction        = sm::vec3(0, 0, 1); \
     float       spread_angle     = 180;               \

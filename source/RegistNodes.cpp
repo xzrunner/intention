@@ -76,39 +76,43 @@ REGIST_NODE_RTTI(Sort,
 )
 
 // group
-REGIST_NODE_RTTI(GroupCreate,                                              \
-.property("group_name", &sopv::node::GroupCreate::group_name)              \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))     \
-)                                                                          \
-.property("group_type", &sopv::node::GroupCreate::group_type)              \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType"))     \
-)                                                                          \
-.property("merge_op", &sopv::node::GroupCreate::merge_op)                  \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MergeOp"))       \
-)                                                                          \
-.property("base_group", &sopv::node::GroupCreate::base_group)              \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BaseGroup"))     \
-)                                                                          \
-.property("base_group_expr", &sopv::node::GroupCreate::base_group_expr)    \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BaseGroupExpr")) \
-)                                                                          \
-.property("keep_by_normals", &sopv::node::GroupCreate::keep_by_normals)    \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("KeepByNormals")) \
-)                                                                          \
-.property("direction", &sopv::node::GroupCreate::direction)                \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Direction"))     \
-)                                                                          \
-.property("spread_angle", &sopv::node::GroupCreate::spread_angle)          \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SpreadAngle"))   \
-)                                                                          \
+REGIST_NODE_RTTI(GroupCreate,                                               \
+.property("group_name", &sopv::node::GroupCreate::group_name)               \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))      \
+)                                                                           \
+.property("group_type", &sopv::node::GroupCreate::group_type)               \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType"))      \
+)                                                                           \
+.property("merge_op", &sopv::node::GroupCreate::merge_op)                   \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MergeOp"))        \
+)                                                                           \
+.property("base_group", &sopv::node::GroupCreate::base_group)               \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BaseGroup"))      \
+)                                                                           \
+.property("base_group_expr", &sopv::node::GroupCreate::base_group_expr)     \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BaseGroupExpr"))  \
+)                                                                           \
+.property("keep_in_bounding", &sopv::node::GroupCreate::keep_in_bounding)   \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("KeepInBounding")) \
+)                                                                           \
+.property("keep_by_normals", &sopv::node::GroupCreate::keep_by_normals)     \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("KeepByNormals"))  \
+)                                                                           \
+.property("direction", &sopv::node::GroupCreate::direction)                 \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Direction"))      \
+)                                                                           \
+.property("spread_angle", &sopv::node::GroupCreate::spread_angle)           \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SpreadAngle"))    \
+)                                                                           \
 )
 REGIST_NODE_RTTI(GroupExpression,                                      \
 .property("group_type", &sopv::node::GroupExpression::group_type)      \

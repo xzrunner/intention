@@ -305,6 +305,12 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
             dst.DisableBaseGroup();
         }
 
+        if (src.keep_in_bounding) {
+            dst.EnableKeepInBounding();
+        } else {
+            dst.DisableKeepInBounding();
+        }
+
         if (src.keep_by_normals) {
             dst.EnableKeepByNormals(src.direction, src.spread_angle);
         } else {
