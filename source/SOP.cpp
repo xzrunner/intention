@@ -493,6 +493,14 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
 
         dst.SetGroupName(src.group_name.str);
         dst.SetDistance(src.distance);
+
+        dst.SetOutputFront(src.output_front);
+        dst.SetOutputBack(src.output_back);
+        dst.SetOutputSide(src.output_side);
+
+        dst.SetFrontGroupName(src.front_group);
+        dst.SetBackGroupName(src.back_group);
+        dst.SetSideGroupName(src.side_group);
     }
     // primitive
     else if (type == rttr::type::get<node::Box>())

@@ -156,12 +156,18 @@ ITT_DEFINE_NODE(Knife,                      \
     sm::vec3 direction = sm::vec3(0, 1, 0); \
     KnifeKeep keep = KnifeKeep::KeepAll;    \
 )
-ITT_DEFINE_NODE(Normal,                                 \
+ITT_DEFINE_NODE(Normal,                                   \
     GeoAttrClass attr_add_norm_to = GeoAttrClass::Vertex; \
 )
-ITT_DEFINE_NODE(PolyExtrude, \
-    GroupName group_name;    \
-    float distance = 0;      \
+ITT_DEFINE_NODE(PolyExtrude,   \
+    GroupName group_name;      \
+    float distance = 0;        \
+    bool output_front = true;  \
+    bool output_back  = false; \
+    bool output_side  = true;  \
+    std::string front_group;   \
+    std::string back_group;    \
+    std::string side_group;    \
 )
 ITT_DEFINE_NODE(PolyFill, ITT_NODE_PROP)
 

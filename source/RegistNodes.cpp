@@ -275,13 +275,37 @@ REGIST_NODE_RTTI(Normal,
 )                                                                      \
 )
 REGIST_NODE_RTTI(PolyExtrude,
-.property("group_name", &sopv::node::PolyExtrude::group_name)          \
-(                                                                      \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
-)                                                                      \
-.property("distance", &sopv::node::PolyExtrude::distance)              \
-(                                                                      \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance"))  \
+.property("group_name", &sopv::node::PolyExtrude::group_name)            \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))   \
+)                                                                        \
+.property("distance", &sopv::node::PolyExtrude::distance)                \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance"))    \
+)                                                                        \
+.property("output_front", &sopv::node::PolyExtrude::output_front)        \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputFront")) \
+)                                                                        \
+.property("output_back", &sopv::node::PolyExtrude::output_back)          \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputBack"))  \
+)                                                                        \
+.property("output_side", &sopv::node::PolyExtrude::output_side)          \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputSide"))  \
+)                                                                        \
+.property("front_group", &sopv::node::PolyExtrude::front_group)          \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FrontGroup"))  \
+)                                                                        \
+.property("back_group", &sopv::node::PolyExtrude::back_group)            \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BackGroup"))   \
+)                                                                        \
+.property("side_group", &sopv::node::PolyExtrude::side_group)            \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SideGroup"))   \
 )
 )
 REGIST_NODE_RTTI_DEFAULT(PolyFill)
