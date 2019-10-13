@@ -136,6 +136,20 @@ REGIST_NODE_RTTI(GroupExpression,                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Inst3"))     \
 )                                                                      \
 )
+REGIST_NODE_RTTI(GroupPromote,                                         \
+.property("group_name", &sopv::node::GroupPromote::group_name)         \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
+)                                                                      \
+.property("src_type", &sopv::node::GroupPromote::src_type)             \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SrcType"))   \
+)                                                                      \
+.property("dst_type", &sopv::node::GroupPromote::dst_type)             \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DstType"))   \
+)                                                                      \
+)
 
 // manipulate
 REGIST_NODE_RTTI(Delete,

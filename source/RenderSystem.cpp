@@ -6,6 +6,7 @@
 #include <sop/Node.h>
 #include <sop/GeometryImpl.h>
 #include <sop/node/GroupCreate.h>
+#include <sop/node/GroupPromote.h>
 #include <painting3/RenderSystem.h>
 #include <painting3/Viewport.h>
 #include <node0/SceneNode.h>
@@ -131,6 +132,14 @@ void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) cons
         auto group3 = geo->GetGroup().Query(group_expr.inst3.group_name);
         if (group3) {
             DrawGroup(*group3, *geo);
+        }
+    }
+    else if (type == rttr::type::get<node::GroupPromote>())
+    {
+        auto& group_promote = static_cast<const node::GroupPromote&>(front);
+        auto group = geo->GetGroup().Query(group_promote.group_name.str);
+        if (group) {
+            DrawGroup(*group, *geo);
         }
     }
 }

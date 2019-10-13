@@ -105,6 +105,11 @@ ITT_DEFINE_NODE(GroupExpression,                    \
     GroupExprInst inst2;                            \
     GroupExprInst inst3;                            \
 )
+ITT_DEFINE_NODE(GroupPromote,                       \
+    GroupName group_name;                           \
+    GroupType src_type = GroupType::GuessFromGroup; \
+    GroupType dst_type = GroupType::Points;         \
+)
 
 // manipulate
 ITT_DEFINE_NODE(Delete,                                      \

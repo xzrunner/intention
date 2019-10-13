@@ -20,6 +20,7 @@
 // group
 #include <sop/node/GroupCreate.h>
 #include <sop/node/GroupExpression.h>
+#include <sop/node/GroupPromote.h>
 // manipulate
 #include <sop/node/Delete.h>
 #include <sop/node/Transform.h>
@@ -336,6 +337,15 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         if (!src.inst3.expr_str.empty()) {
             dst.AddInstance(TransGroupExprInst(src.inst3));
         }
+    }
+    else if (type == rttr::type::get<node::GroupPromote>())
+    {
+        auto& src = static_cast<const node::GroupPromote&>(front);
+        auto& dst = static_cast<sop::node::GroupPromote&>(back);
+
+        dst.SetGroupName(src.group_name.str);
+        dst.SetSrcGroupType(TransGroupType(src.src_type));
+        dst.SetDstGroupType(TransGroupType(src.dst_type));
     }
     // manipulate
     else if (type == rttr::type::get<node::Delete>())
