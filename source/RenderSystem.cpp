@@ -146,12 +146,12 @@ void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) cons
 
 void RenderSystem::DrawGroup(const sop::Group& group, const sop::GeometryImpl& geo) const
 {
-    switch (group.type)
+    switch (group.GetType())
     {
     case sop::GroupType::Points:
     {
         auto& points = geo.GetAttr().GetPoints();
-        for (auto& f : group.items) {
+        for (auto& f : group.GetItems()) {
             auto pos = m_vp.TransPosProj3ToProj2(points[f]->pos, m_cam_mat);
             m_pt.AddCircleFilled(pos, NODE_RADIUS, LIGHT_SELECT_COLOR);
         }
@@ -170,7 +170,7 @@ void RenderSystem::DrawGroup(const sop::Group& group, const sop::GeometryImpl& g
             for (auto& brush : brush_model->GetBrushes())
             {
                 auto& poly = *brush.impl;
-                for (auto& f : group.items) {
+                for (auto& f : group.GetItems()) {
                     DrawFace(poly, f - f_off, LIGHT_SELECT_COLOR, m_cam_mat);
                 }
                 p_off += poly.Points().size();

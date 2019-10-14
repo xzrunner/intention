@@ -3,7 +3,7 @@
 #include <tessellation/Painter.h>
 #include <painting0/RenderContext.h>
 
-namespace sop { class Node; struct Group; class GeometryImpl; }
+namespace sop { class Node; class Group; class GeometryImpl; }
 namespace bp { class Node; }
 namespace pm3 { class Polytope; }
 namespace pt3 { class Viewport; }

@@ -477,7 +477,7 @@ void WxGeoProperty::LoadGroups(const sop::GroupMgr& groups)
     groups.Traverse([&](const sop::Group& group)->bool
     {
         ListIndex idx = MAX_LIST_COUNT;
-        switch (group.type)
+        switch (group.GetType())
         {
         case sop::GroupType::Points:
             idx = POINT;
@@ -495,14 +495,12 @@ void WxGeoProperty::LoadGroups(const sop::GroupMgr& groups)
 
         auto list = m_lists[idx];
         auto col = list->GetColumnCount();
-        list->InsertColumn(col, "G:" + group.name, wxLIST_FORMAT_LEFT, 100);
+        list->InsertColumn(col, "G:" + group.GetName(), wxLIST_FORMAT_LEFT, 100);
         for (int i = 0, n = list->GetItemCount(); i < n; ++i) {
             list->SetItem(i, col, "0");
         }
         auto n = list->GetItemCount();
-        for (int i = 0, n = group.items.size(); i < n; ++i)
-        {
-            auto idx = group.items[i];
+        for (auto& idx : group.GetItems()) {
             assert(static_cast<int>(idx) < list->GetItemCount());
             list->SetItem(idx, col, "1");
         }

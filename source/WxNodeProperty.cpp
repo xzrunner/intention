@@ -183,10 +183,10 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         group_names.push_back("");
         groups.Traverse([&](const sop::Group& group)->bool
         {
-            if (group.name == group_name.str) {
+            if (group.GetName() == group_name.str) {
                 idx = group_names.size();
             }
-            group_names.push_back(group.name);
+            group_names.push_back(group.GetName());
             return true;
         });
 
@@ -375,7 +375,7 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
             groups.Traverse([&](const sop::Group& group)->bool
             {
                 if (i++ == idx) {
-                    name = group.name;
+                    name = group.GetName();
                     return false;
                 } else {
                     return true;
