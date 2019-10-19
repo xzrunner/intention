@@ -262,12 +262,12 @@ void WxGeoProperty::LoadFromNode(const n0::SceneNodePtr& node)
         return;
     }
     auto sopv_node = std::static_pointer_cast<Node>(bp_node);
-    auto evt_node = m_stree->GetCurrEval()->QueryBackNode(*sopv_node);
-    if (!evt_node) {
+    auto sop_node = m_stree->GetCurrEval()->QueryBackNode(*sopv_node);
+    if (!sop_node) {
         return;
     }
 
-    auto geo = evt_node->GetGeometry();
+    auto geo = sop_node->GetGeometry();
     if (!geo) {
         return;
     }

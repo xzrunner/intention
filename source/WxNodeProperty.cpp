@@ -197,16 +197,16 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     else if (prop_type == rttr::type::get<GroupName>())
     {
         assert(node_type.is_derived_from<Node>());
-        auto evt_node = m_stree->GetCurrEval()->QueryBackNode(*node);
-        if (!evt_node || !evt_node->GetGeometry()) {
+        auto sop_node = m_stree->GetCurrEval()->QueryBackNode(*node);
+        if (!sop_node || !sop_node->GetGeometry()) {
             return false;
         }
         auto group_name = prop.get_value(node).get_value<GroupName>();
-        evt_node = GetGroupNameNode(group_name, evt_node);
-        if (!evt_node) {
+        sop_node = GetGroupNameNode(group_name, sop_node);
+        if (!sop_node) {
             return false;
         }
-        auto& groups = evt_node->GetGeometry()->GetGroup();
+        auto& groups = sop_node->GetGeometry()->GetGroup();
 
         int idx = -1;
 
@@ -221,12 +221,12 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
             return true;
         });
 
-        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, group_names);
+        auto name_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, group_names);
         if (idx < 0) {
             idx = 0;
         }
-        type_prop->SetValue(idx);
-        m_pg->Append(type_prop);
+        name_prop->SetValue(idx);
+        m_pg->Append(name_prop);
     }
     else if (prop_type == rttr::type::get<GroupType>())
     {
@@ -428,15 +428,15 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         const int idx = wxANY_AS(val, int);
 
         assert(node_type.is_derived_from<Node>());
-        auto evt_node = m_stree->GetCurrEval()->QueryBackNode(*m_node);
-        assert(evt_node && evt_node->GetGeometry());
+        auto sop_node = m_stree->GetCurrEval()->QueryBackNode(*m_node);
+        assert(sop_node && sop_node->GetGeometry());
         auto group_name = prop.get_value(m_node).get_value<GroupName>();
-        evt_node = GetGroupNameNode(group_name, evt_node);
-        if (!evt_node) {
+        sop_node = GetGroupNameNode(group_name, sop_node);
+        if (!sop_node) {
             return false;
         }
 
-        auto& groups = evt_node->GetGeometry()->GetGroup();
+        auto& groups = sop_node->GetGeometry()->GetGroup();
 
         std::string name;
         if (idx > 0)
