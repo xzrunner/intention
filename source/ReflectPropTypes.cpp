@@ -84,6 +84,11 @@ rttr::registration::enumeration<sopv::GeoAttrClass>("sopv_geo_attr_cls")
     rttr::value("detail",    sopv::GeoAttrClass::Detail)
 );
 
+rttr::registration::class_<sopv::AttributeName>("sopv_attr_name")
+    .property("cls", &sopv::AttributeName::cls)
+    .property("str", &sopv::AttributeName::str)
+;
+
 rttr::registration::enumeration<sopv::SortKey>("sopv_sort_key")
 (
 	rttr::value("no_change", sopv::SortKey::NoChange),

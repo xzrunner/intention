@@ -75,25 +75,6 @@ TransGroupType(sopv::GroupType type)
     }
 }
 
-sop::GeoAttrClass
-TransGeoAttrClass(sopv::GeoAttrClass cls)
-{
-    switch (cls)
-    {
-    case sopv::GeoAttrClass::Point:
-        return sop::GeoAttrClass::Point;
-    case sopv::GeoAttrClass::Vertex:
-        return sop::GeoAttrClass::Vertex;
-    case sopv::GeoAttrClass::Primitive:
-        return sop::GeoAttrClass::Primitive;
-    case sopv::GeoAttrClass::Detail:
-        return sop::GeoAttrClass::Detail;
-    default:
-        assert(0);
-        return sop::GeoAttrClass::Point;
-    }
-}
-
 sop::GeoAttrType
 TransGeoAttrType(sopv::GeoAttrType type)
 {
@@ -163,7 +144,7 @@ TransGroupExprInst(const sopv::GroupExprInst& src)
 sop::node::AttributeCreate::Item
 TransAttrCreateItem(const sopv::AttrCreateItem& item)
 {
-    auto cls  = TransGeoAttrClass(item.cls);
+    auto cls  = sopv::SOP::TransGeoAttrClass(item.cls);
     auto type = TransGeoAttrType(item.type);
 
     sop::VarValue val;
@@ -269,17 +250,18 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::AttributeTransfer&>(front);
         auto& dst = static_cast<sop::node::AttributeTransfer&>(back);
 
-        if (!src.points_attrs.empty()) {
-            dst.SetCopyAttrs(sop::GeoAttrClass::Point, { src.points_attrs });
+        dst.ClearCopyAttrs();
+        if (!src.points_attrs.str.empty()) {
+            dst.SetCopyAttrs(sop::GeoAttrClass::Point, { src.points_attrs.str });
         }
-        if (!src.vertices_attrs.empty()) {
-            dst.SetCopyAttrs(sop::GeoAttrClass::Vertex, { src.vertices_attrs });
+        if (!src.vertices_attrs.str.empty()) {
+            dst.SetCopyAttrs(sop::GeoAttrClass::Vertex, { src.vertices_attrs.str });
         }
-        if (!src.primitives_attrs.empty()) {
-            dst.SetCopyAttrs(sop::GeoAttrClass::Primitive, { src.primitives_attrs });
+        if (!src.primitives_attrs.str.empty()) {
+            dst.SetCopyAttrs(sop::GeoAttrClass::Primitive, { src.primitives_attrs.str });
         }
-        if (!src.detail_attrs.empty()) {
-            dst.SetCopyAttrs(sop::GeoAttrClass::Detail, { src.detail_attrs });
+        if (!src.detail_attrs.str.empty()) {
+            dst.SetCopyAttrs(sop::GeoAttrClass::Detail, { src.detail_attrs.str });
         }
     }
     else if (type == rttr::type::get<node::AttributeWrangle>())
@@ -749,6 +731,25 @@ sop::NodeVarType SOP::TypeFrontToBack(int pin_type)
     }
 
     return ret;
+}
+
+sop::GeoAttrClass
+SOP::TransGeoAttrClass(sopv::GeoAttrClass cls)
+{
+    switch (cls)
+    {
+    case sopv::GeoAttrClass::Point:
+        return sop::GeoAttrClass::Point;
+    case sopv::GeoAttrClass::Vertex:
+        return sop::GeoAttrClass::Vertex;
+    case sopv::GeoAttrClass::Primitive:
+        return sop::GeoAttrClass::Primitive;
+    case sopv::GeoAttrClass::Detail:
+        return sop::GeoAttrClass::Detail;
+    default:
+        assert(0);
+        return sop::GeoAttrClass::Point;
+    }
 }
 
 int SOP::ParseExprInt(const std::string& src, const sop::Node& dst,

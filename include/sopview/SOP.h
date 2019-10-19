@@ -6,6 +6,7 @@
 #include <sop/typedef.h>
 #include <sop/NodeVar.h>
 #include <sop/VarValue.h>
+#include <sop/GeoAttrClass.h>
 
 namespace sop { class Node; }
 namespace bp { class Node; class Pin; }
@@ -26,6 +27,8 @@ public:
 
     static int TypeBackToFront(sop::NodeVarType type);
     static sop::NodeVarType TypeFrontToBack(int pin_type);
+
+    static sop::GeoAttrClass TransGeoAttrClass(sopv::GeoAttrClass cls);
 
 private:
     static int ParseExprInt(const std::string& src, const sop::Node& dst,

@@ -75,11 +75,11 @@ SOPV_DEFINE_NODE(AttributeCreate, \
     AttrCreateItem item2;         \
     AttrCreateItem item3;         \
 )
-SOPV_DEFINE_NODE(AttributeTransfer, \
-    std::string points_attrs;       \
-    std::string vertices_attrs;     \
-    std::string primitives_attrs;   \
-    std::string detail_attrs;       \
+SOPV_DEFINE_NODE(AttributeTransfer,                           \
+    AttributeName points_attrs     = GeoAttrClass::Point;     \
+    AttributeName vertices_attrs   = GeoAttrClass::Vertex;    \
+    AttributeName primitives_attrs = GeoAttrClass::Primitive; \
+    AttributeName detail_attrs     = GeoAttrClass::Detail;    \
 )
 SOPV_DEFINE_NODE(AttributeWrangle, \
     std::string vex_expr;          \

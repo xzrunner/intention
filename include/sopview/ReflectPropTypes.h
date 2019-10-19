@@ -107,6 +107,19 @@ struct AttrCreateItem
     sm::vec4     value;
 };
 
+struct AttributeName
+{
+    AttributeName(GeoAttrClass cls)
+        : cls(cls)
+    {
+    }
+
+    GeoAttrClass cls;
+
+    std::string str;
+
+}; // AttributeName
+
 enum class SortKey
 {
     NoChange,

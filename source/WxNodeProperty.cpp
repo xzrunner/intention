@@ -22,6 +22,7 @@
 #include <node0/SceneNode.h>
 #include <node2/CompBoundingBox.h>
 #include <sop/GeometryImpl.h>
+#include <sop/node/AttributeTransfer.h>
 
 #include <wx/sizer.h>
 #include <wx/propgrid/propgrid.h>
@@ -76,6 +77,36 @@ sop::NodePtr GetGroupNameNode(const sopv::GroupName& name, const sop::NodePtr& s
         } else {
             return ret;
         }
+    }
+}
+
+sop::NodePtr GetAttrNameNode(const bp::NodePtr& bp_node, const sopv::SceneTree& stree)
+{
+    auto node_type = bp_node->get_type();
+    assert(node_type.is_derived_from<sopv::Node>());
+    if (node_type == rttr::type::get<sopv::node::AttributeTransfer>())
+    {
+        auto sop_node = stree.GetCurrEval()->QueryBackNode(*bp_node);
+        if (!sop_node || !sop_node->GetGeometry()) {
+            return nullptr;
+        }
+
+        auto& conns = sop_node->GetImports()[sop::node::AttributeTransfer::IDX_FROM_GEO].conns;
+        if (conns.empty()) {
+            return nullptr;
+        }
+
+        assert(conns.size() == 1);
+        auto f_node = conns[0].node.lock();
+        if (!f_node || !f_node->GetGeometry()) {
+            return nullptr;
+        } else {
+            return f_node;
+        }
+    }
+    else
+    {
+        assert(0);
     }
 }
 
@@ -268,6 +299,36 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         m_pg->AppendIn(prop, new wxFloatProperty("Val Y", wxPG_LABEL, item.value.y));
         m_pg->AppendIn(prop, new wxFloatProperty("Val Z", wxPG_LABEL, item.value.z));
         m_pg->AppendIn(prop, new wxFloatProperty("Val W", wxPG_LABEL, item.value.w));
+    }
+    else if (prop_type == rttr::type::get<AttributeName>())
+    {
+        auto sop_node = GetAttrNameNode(node, *m_stree);
+        if (!sop_node) {
+            return false;
+        }
+
+        auto attr_name = prop.get_value(node).get_value<AttributeName>();
+        auto cls = SOP::TransGeoAttrClass(attr_name.cls);
+        auto& desc = sop_node->GetGeometry()->GetAttr().GetAttrDesc(cls);
+
+        int idx = -1;
+
+        wxArrayString attr_names;
+        attr_names.push_back("");
+        for (size_t i = 0, n = desc.size(); i < n; ++i)
+        {
+            if (desc[i].GetName() == attr_name.str) {
+                idx = attr_names.size();
+            }
+            attr_names.push_back(desc[i].GetName());
+        }
+
+        auto attr_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, attr_names);
+        if (idx < 0) {
+            idx = 0;
+        }
+        attr_prop->SetValue(idx);
+        m_pg->Append(attr_prop);
     }
     else if (prop_type == rttr::type::get<SortKey>())
     {
@@ -475,6 +536,28 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         }
 
         prop.set_value(m_node, item);
+    }
+    else if (prop_type == rttr::type::get<AttributeName>() && key == ui_info.desc)
+    {
+        const int idx = wxANY_AS(val, int);
+        auto attr_name = prop.get_value(m_node).get_value<AttributeName>();
+        if (idx == 0)
+        {
+            attr_name.str.clear();
+        }
+        else
+        {
+            assert(idx > 0);
+
+            assert(node_type.is_derived_from<Node>());
+            auto sop_node = GetAttrNameNode(m_node, *m_stree);
+            assert(sop_node && sop_node->GetGeometry());
+
+            auto cls = SOP::TransGeoAttrClass(attr_name.cls);
+            auto& desc = sop_node->GetGeometry()->GetAttr().GetAttrDesc(cls);
+            attr_name.str = desc[idx - 1].GetName();
+        }
+        prop.set_value(m_node, attr_name);
     }
     else if (prop_type == rttr::type::get<SortKey>() && key == ui_info.desc)
     {
