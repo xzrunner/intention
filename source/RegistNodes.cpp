@@ -340,6 +340,7 @@ REGIST_NODE_RTTI(PolyExtrude,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SideGroup"))   \
 )
 )
+REGIST_NODE_RTTI_DEFAULT(PolyFill)
 REGIST_NODE_RTTI(PolyFrame,
 .property("entity_type", &sopv::node::PolyFrame::entity_type)              \
 (                                                                          \
