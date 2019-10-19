@@ -107,6 +107,7 @@ sop::NodePtr GetAttrNameNode(const bp::NodePtr& bp_node, const sopv::SceneTree& 
     else
     {
         assert(0);
+        return nullptr;
     }
 }
 
