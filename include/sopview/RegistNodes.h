@@ -75,6 +75,12 @@ ITT_DEFINE_NODE(AttributeCreate, \
     AttrCreateItem item2;        \
     AttrCreateItem item3;        \
 )
+ITT_DEFINE_NODE(AttributeTransfer, \
+    std::string points_attrs;      \
+    std::string vertices_attrs;    \
+    std::string primitives_attrs;  \
+    std::string detail_attrs;      \
+)
 ITT_DEFINE_NODE(AttributeWrangle, \
     std::string vex_expr;         \
 )
@@ -175,6 +181,13 @@ ITT_DEFINE_NODE(PolyExtrude,   \
     std::string side_group;    \
 )
 ITT_DEFINE_NODE(PolyFill, ITT_NODE_PROP)
+ITT_DEFINE_NODE(PolyFrame,                                  \
+    GroupType      entity_type = GroupType::Primitives;     \
+    PolyFrameStyle frame_style = PolyFrameStyle::TwoEdges;  \
+    std::string    normal_name;                             \
+    std::string    tangent_name;                            \
+    std::string    bitangent_name;                          \
+)
 
 // primitive
 ITT_DEFINE_NODE(Box,                         \

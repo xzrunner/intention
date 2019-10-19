@@ -14,6 +14,7 @@
 
 // attribute
 #include <sop/node/AttributeCreate.h>
+#include <sop/node/AttributeTransfer.h>
 #include <sop/node/AttributeWrangle.h>
 #include <sop/node/Sort.h>
 #include <sop/node/Measure.h>
@@ -35,6 +36,7 @@
 #include <sop/node/Knife.h>
 #include <sop/node/Normal.h>
 #include <sop/node/PolyExtrude.h>
+#include <sop/node/PolyFrame.h>
 // primitive
 #include <sop/node/Box.h>
 #include <sop/node/Curve.h>
@@ -132,7 +134,6 @@ TransGeoAttrType(sopv::GeoAttrType type)
 sop::GroupMerge
 TransGroupMerge(sopv::GroupMerge merge_op)
 {
-
     switch (merge_op)
     {
     case sopv::GroupMerge::Replace:
@@ -209,6 +210,31 @@ TransAttrCreateItem(const sopv::AttrCreateItem& item)
     return { item.name, type, cls, val };
 }
 
+sop::node::PolyFrame::FrameStyle
+TransGroupType(sopv::PolyFrameStyle style)
+{
+    switch (style)
+    {
+    case sopv::PolyFrameStyle::FirstEdge:
+        return sop::node::PolyFrame::FrameStyle::FirstEdge;
+    case sopv::PolyFrameStyle::TwoEdges:
+        return sop::node::PolyFrame::FrameStyle::TwoEdges;
+    case sopv::PolyFrameStyle::PrimitiveCentroid:
+        return sop::node::PolyFrame::FrameStyle::PrimitiveCentroid;
+    case sopv::PolyFrameStyle::TextureUV:
+        return sop::node::PolyFrame::FrameStyle::TextureUV;
+    case sopv::PolyFrameStyle::TextureUVGradient:
+        return sop::node::PolyFrame::FrameStyle::TextureUVGradient;
+    case sopv::PolyFrameStyle::AttributeGradient:
+        return sop::node::PolyFrame::FrameStyle::AttributeGradient;
+    case sopv::PolyFrameStyle::MikkT:
+        return sop::node::PolyFrame::FrameStyle::MikkT;
+    default:
+        assert(0);
+        return sop::node::PolyFrame::FrameStyle::FirstEdge;
+    }
+}
+
 }
 
 namespace sopv
@@ -237,6 +263,24 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
             items.push_back(TransAttrCreateItem(src.item3));
         }
         dst.SetAttrItems(items);
+    }
+    else if (type == rttr::type::get<node::AttributeTransfer>())
+    {
+        auto& src = static_cast<const node::AttributeTransfer&>(front);
+        auto& dst = static_cast<sop::node::AttributeTransfer&>(back);
+
+        if (!src.points_attrs.empty()) {
+            dst.SetCopyAttrs(sop::GeoAttrClass::Point, { src.points_attrs });
+        }
+        if (!src.vertices_attrs.empty()) {
+            dst.SetCopyAttrs(sop::GeoAttrClass::Vertex, { src.vertices_attrs });
+        }
+        if (!src.primitives_attrs.empty()) {
+            dst.SetCopyAttrs(sop::GeoAttrClass::Primitive, { src.primitives_attrs });
+        }
+        if (!src.detail_attrs.empty()) {
+            dst.SetCopyAttrs(sop::GeoAttrClass::Detail, { src.detail_attrs });
+        }
     }
     else if (type == rttr::type::get<node::AttributeWrangle>())
     {
@@ -511,6 +555,19 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetFrontGroupName(src.front_group);
         dst.SetBackGroupName(src.back_group);
         dst.SetSideGroupName(src.side_group);
+    }
+    else if (type == rttr::type::get<node::PolyFrame>())
+    {
+        auto& src = static_cast<const node::PolyFrame&>(front);
+        auto& dst = static_cast<sop::node::PolyFrame&>(back);
+
+        dst.SetEntityType(TransGroupType(src.entity_type));
+
+        dst.SetFrameStyle(TransGroupType(src.frame_style));
+
+        dst.SetNormalName(src.normal_name);
+        dst.SetTangentName(src.tangent_name);
+        dst.SetBitangentName(src.bitangent_name);
     }
     // primitive
     else if (type == rttr::type::get<node::Box>())

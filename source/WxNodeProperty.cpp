@@ -293,6 +293,15 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         type_prop->SetValue(static_cast<int>(type));
         m_pg->Append(type_prop);
     }
+    else if (prop_type == rttr::type::get<PolyFrameStyle>())
+    {
+        const wxChar* STYLES[] = { wxT("FirstEdge"), wxT("TwoEdges"), wxT("PrimitiveCentroid"),
+            wxT("TextureUV"), wxT("TextureUVGradient"), wxT("AttributeGradient"), wxT("MikkT"), NULL };
+        auto style_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, STYLES);
+        auto style = prop.get_value(node).get_value<PolyFrameStyle>();
+        style_prop->SetValue(static_cast<int>(style));
+        m_pg->Append(style_prop);
+    }
     else
     {
         ret = false;
@@ -478,6 +487,10 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     else if (prop_type == rttr::type::get<MeasureType>() && key == ui_info.desc)
     {
         prop.set_value(m_node, MeasureType(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<PolyFrameStyle>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, PolyFrameStyle(wxANY_AS(val, int)));
     }
     else
     {

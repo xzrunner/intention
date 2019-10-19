@@ -105,6 +105,17 @@ rttr::registration::enumeration<sopv::MeasureType>("itt_measure_type")
 	rttr::value("area",      sopv::MeasureType::Area)
 );
 
+rttr::registration::enumeration<sopv::PolyFrameStyle>("itt_polyframe_style")
+(
+	rttr::value("first_edge",          sopv::PolyFrameStyle::FirstEdge),
+    rttr::value("two_edges",           sopv::PolyFrameStyle::TwoEdges),
+    rttr::value("primitive_centroid",  sopv::PolyFrameStyle::PrimitiveCentroid),
+    rttr::value("texture_uv",          sopv::PolyFrameStyle::TextureUV),
+    rttr::value("texture_uv_gradient", sopv::PolyFrameStyle::TextureUVGradient),
+    rttr::value("attribute_gradient",  sopv::PolyFrameStyle::AttributeGradient),
+    rttr::value("mikkt",               sopv::PolyFrameStyle::MikkT)
+);
+
 }
 
 namespace sopv

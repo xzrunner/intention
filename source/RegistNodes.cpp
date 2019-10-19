@@ -51,6 +51,24 @@ REGIST_NODE_RTTI(AttributeCreate,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Item3"))     \
 )                                                                      \
 )
+REGIST_NODE_RTTI(AttributeTransfer,
+.property("points_attrs", &sopv::node::AttributeTransfer::points_attrs)         \
+(                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Points"))             \
+)                                                                               \
+.property("vertices_attrs", &sopv::node::AttributeTransfer::vertices_attrs)     \
+(                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vertices"))           \
+)                                                                               \
+.property("primitives_attrs", &sopv::node::AttributeTransfer::primitives_attrs) \
+(                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Primitives"))         \
+)                                                                               \
+.property("detail_attrs", &sopv::node::AttributeTransfer::detail_attrs)         \
+(                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Detail"))             \
+)                                                                               \
+)
 REGIST_NODE_RTTI(AttributeWrangle,
 .property("vex_expr", &sopv::node::AttributeWrangle::vex_expr)        \
 (                                                                     \
@@ -322,7 +340,28 @@ REGIST_NODE_RTTI(PolyExtrude,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SideGroup"))   \
 )
 )
-REGIST_NODE_RTTI_DEFAULT(PolyFill)
+REGIST_NODE_RTTI(PolyFrame,
+.property("entity_type", &sopv::node::PolyFrame::entity_type)              \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("EntityType"))    \
+)                                                                          \
+.property("frame_style", &sopv::node::PolyFrame::frame_style)              \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FrameStyle"))    \
+)                                                                          \
+.property("normal_name", &sopv::node::PolyFrame::normal_name)              \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("NormalName"))    \
+)                                                                          \
+.property("tangent_name", &sopv::node::PolyFrame::tangent_name)            \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TangentName"))   \
+)                                                                          \
+.property("bitangent_name", &sopv::node::PolyFrame::bitangent_name)        \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BitangentName")) \
+)                                                                          \
+)
 
 // primitive
 REGIST_NODE_RTTI(Box,

@@ -128,6 +128,17 @@ enum class MeasureType
     Area
 };
 
+enum class PolyFrameStyle
+{
+    FirstEdge,
+    TwoEdges,
+    PrimitiveCentroid,
+    TextureUV,
+    TextureUVGradient,
+    AttributeGradient,
+    MikkT,
+};
+
 void prop_types_regist_rttr();
 
 }
