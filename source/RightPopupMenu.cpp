@@ -60,8 +60,8 @@ void RightPopupMenu::OnRightPopupMenu(int id)
         auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
         if (bp_node->get_type().is_derived_from<Node>())
         {
-            auto itt_node = std::static_pointer_cast<Node>(bp_node);
-            auto& props = itt_node->GetProps();
+            auto sopv_node = std::static_pointer_cast<Node>(bp_node);
+            auto& props = sopv_node->GetProps();
             if (props) {
                 WxNodePropsDlg dlg(m_stage, *props);
                 if (dlg.ShowModal() == wxID_OK) {

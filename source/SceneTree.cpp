@@ -126,9 +126,9 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
 
         // update flags
         if (type.is_derived_from<Node>()) {
-            auto itt_node = std::static_pointer_cast<Node>(bp_node);
+            auto sopv_node = std::static_pointer_cast<Node>(bp_node);
             if (m_enable_set_node_display) {
-                itt_node->SetDisplay(true);
+                sopv_node->SetDisplay(true);
             }
         }
     }
@@ -324,8 +324,8 @@ void SceneTree::ClearNodeDisplayTag()
         auto bp_node = itr.first;
         if (bp_node->get_type().is_derived_from<Node>())
         {
-            auto itt_node = static_cast<const Node*>(bp_node);
-            const_cast<Node*>(itt_node)->SetDisplay(false);
+            auto sopv_node = static_cast<const Node*>(bp_node);
+            const_cast<Node*>(sopv_node)->SetDisplay(false);
         }
     }
 }

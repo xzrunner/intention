@@ -40,9 +40,9 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
         return;
     }
 
-    auto& itt_node = static_cast<const Node&>(front);
-    if (!itt_node.GetDisplay() &&
-        !itt_node.GetTemplate()) {
+    auto& sopv_node = static_cast<const Node&>(front);
+    if (!sopv_node.GetDisplay() &&
+        !sopv_node.GetTemplate()) {
         return;
     }
 
@@ -61,7 +61,7 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
     rp.viewport = &m_vp;
     rp.cam_mat  = &m_cam_mat;
 
-    if (itt_node.GetDisplay())
+    if (sopv_node.GetDisplay())
     {
         // draw face
         rp.type = pt3::RenderParams::DRAW_MESH;
@@ -75,8 +75,8 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
 
 void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) const
 {
-    auto& itt_node = static_cast<const Node&>(front);
-    if (!itt_node.GetDisplay()) {
+    auto& sopv_node = static_cast<const Node&>(front);
+    if (!sopv_node.GetDisplay()) {
         return;
     }
 

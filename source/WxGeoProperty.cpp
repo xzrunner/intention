@@ -261,8 +261,8 @@ void WxGeoProperty::LoadFromNode(const n0::SceneNodePtr& node)
     if (!bp_node->get_type().is_derived_from<Node>()) {
         return;
     }
-    auto itt_node = std::static_pointer_cast<Node>(bp_node);
-    auto evt_node = m_stree->GetCurrEval()->QueryBackNode(*itt_node);
+    auto sopv_node = std::static_pointer_cast<Node>(bp_node);
+    auto evt_node = m_stree->GetCurrEval()->QueryBackNode(*sopv_node);
     if (!evt_node) {
         return;
     }

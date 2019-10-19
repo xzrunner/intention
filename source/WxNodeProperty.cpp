@@ -118,8 +118,8 @@ void WxNodeProperty::LoadFromNode(const n0::SceneNodePtr& obj, const bp::NodePtr
         return;
     }
 
-    auto itt_node = std::static_pointer_cast<sopv::Node>(node);
-    auto& props = itt_node->GetProps();
+    auto sopv_node = std::static_pointer_cast<sopv::Node>(node);
+    auto& props = sopv_node->GetProps();
     if (!props) {
         return;
     }
@@ -506,8 +506,8 @@ bool WxNodeProperty::UpdateView(wxPropertyGridEvent& event)
         return false;
     }
 
-    auto itt_node = std::static_pointer_cast<sopv::Node>(m_node);
-    auto& props = itt_node->GetProps();
+    auto sopv_node = std::static_pointer_cast<sopv::Node>(m_node);
+    auto& props = sopv_node->GetProps();
     if (!props) {
         return false;
     }

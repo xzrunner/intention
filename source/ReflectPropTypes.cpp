@@ -5,17 +5,17 @@
 RTTR_REGISTRATION
 {
 
-rttr::registration::class_<sopv::StrVec3>("itt_str_vec3")
+rttr::registration::class_<sopv::StrVec3>("sopv_str_vec3")
     .property("x", &sopv::StrVec3::x)
     .property("y", &sopv::StrVec3::y)
     .property("z", &sopv::StrVec3::z)
 ;
 
-rttr::registration::class_<sopv::GroupName>("itt_group_name")
+rttr::registration::class_<sopv::GroupName>("sopv_group_name")
     .property("str", &sopv::GroupName::str)
 ;
 
-rttr::registration::enumeration<sopv::GroupType>("itt_group_type")
+rttr::registration::enumeration<sopv::GroupType>("sopv_group_type")
 (
     rttr::value("guess_from_group", sopv::GroupType::GuessFromGroup),
 	rttr::value("primitives",       sopv::GroupType::Primitives),
@@ -24,7 +24,7 @@ rttr::registration::enumeration<sopv::GroupType>("itt_group_type")
     rttr::value("vertices",         sopv::GroupType::Vertices)
 );
 
-rttr::registration::enumeration<sopv::GroupMerge>("itt_group_merge")
+rttr::registration::enumeration<sopv::GroupMerge>("sopv_group_merge")
 (
 	rttr::value("replace",   sopv::GroupMerge::Replace),
     rttr::value("union",     sopv::GroupMerge::Union),
@@ -32,27 +32,27 @@ rttr::registration::enumeration<sopv::GroupMerge>("itt_group_merge")
     rttr::value("subtract",  sopv::GroupMerge::Subtract)
 );
 
-rttr::registration::class_<sopv::GroupExprInst>("itt_group_expr_inst")
+rttr::registration::class_<sopv::GroupExprInst>("sopv_group_expr_inst")
     .property("group_name", &sopv::GroupExprInst::group_name)
     .property("expr_str",   &sopv::GroupExprInst::expr_str)
     .property("merge_op",   &sopv::GroupExprInst::merge_op)
 ;
 
-rttr::registration::enumeration<sopv::BooleanOperator>("itt_boolean_operator")
+rttr::registration::enumeration<sopv::BooleanOperator>("sopv_boolean_operator")
 (
 	rttr::value("union",     sopv::BooleanOperator::Union),
 	rttr::value("intersect", sopv::BooleanOperator::Intersect),
     rttr::value("subtract",  sopv::BooleanOperator::Subtract)
 );
 
-rttr::registration::enumeration<sopv::KnifeKeep>("itt_knife_keep")
+rttr::registration::enumeration<sopv::KnifeKeep>("sopv_knife_keep")
 (
 	rttr::value("above", sopv::KnifeKeep::KeepAbove),
 	rttr::value("below", sopv::KnifeKeep::KeepBelow),
     rttr::value("all",   sopv::KnifeKeep::KeepAll)
 );
 
-rttr::registration::enumeration<sopv::GeoAttrType>("itt_geo_attr_type")
+rttr::registration::enumeration<sopv::GeoAttrType>("sopv_geo_attr_type")
 (
 	rttr::value("int",     sopv::GeoAttrType::Int),
     rttr::value("bool",    sopv::GeoAttrType::Bool),
@@ -69,14 +69,14 @@ rttr::registration::enumeration<sopv::GeoAttrType>("itt_geo_attr_type")
     rttr::value("matrix4", sopv::GeoAttrType::Matrix4)
 );
 
-rttr::registration::class_<sopv::AttrCreateItem>("itt_attr_create_item")
+rttr::registration::class_<sopv::AttrCreateItem>("sopv_attr_create_item")
     .property("name",  &sopv::AttrCreateItem::name)
     .property("cls",   &sopv::AttrCreateItem::cls)
     .property("type",  &sopv::AttrCreateItem::type)
     .property("value", &sopv::AttrCreateItem::value)
 ;
 
-rttr::registration::enumeration<sopv::GeoAttrClass>("itt_geo_attr_cls")
+rttr::registration::enumeration<sopv::GeoAttrClass>("sopv_geo_attr_cls")
 (
 	rttr::value("point",     sopv::GeoAttrClass::Point),
     rttr::value("vertex",    sopv::GeoAttrClass::Vertex),
@@ -84,7 +84,7 @@ rttr::registration::enumeration<sopv::GeoAttrClass>("itt_geo_attr_cls")
     rttr::value("detail",    sopv::GeoAttrClass::Detail)
 );
 
-rttr::registration::enumeration<sopv::SortKey>("itt_sort_key")
+rttr::registration::enumeration<sopv::SortKey>("sopv_sort_key")
 (
 	rttr::value("no_change", sopv::SortKey::NoChange),
 	rttr::value("x", sopv::SortKey::X),
@@ -92,20 +92,20 @@ rttr::registration::enumeration<sopv::SortKey>("itt_sort_key")
     rttr::value("z", sopv::SortKey::Z)
 );
 
-rttr::registration::enumeration<sopv::DeleteEntityType>("itt_delete_entity_type")
+rttr::registration::enumeration<sopv::DeleteEntityType>("sopv_delete_entity_type")
 (
 	rttr::value("points", sopv::DeleteEntityType::Points),
 	rttr::value("edges",  sopv::DeleteEntityType::Edges),
     rttr::value("faces",  sopv::DeleteEntityType::Faces)
 );
 
-rttr::registration::enumeration<sopv::MeasureType>("itt_measure_type")
+rttr::registration::enumeration<sopv::MeasureType>("sopv_measure_type")
 (
 	rttr::value("perimeter", sopv::MeasureType::Perimeter),
 	rttr::value("area",      sopv::MeasureType::Area)
 );
 
-rttr::registration::enumeration<sopv::PolyFrameStyle>("itt_polyframe_style")
+rttr::registration::enumeration<sopv::PolyFrameStyle>("sopv_polyframe_style")
 (
 	rttr::value("first_edge",          sopv::PolyFrameStyle::FirstEdge),
     rttr::value("two_edges",           sopv::PolyFrameStyle::TwoEdges),

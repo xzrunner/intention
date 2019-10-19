@@ -105,8 +105,8 @@ void WxToolbarPanel::OnRootToNextLevel(const ee0::VariantSet& variants)
         return;
     }
 
-    auto itt_node = std::static_pointer_cast<Node>(bp_node);
-    m_nav_bar->Push(itt_node->GetName());
+    auto sopv_node = std::static_pointer_cast<Node>(bp_node);
+    m_nav_bar->Push(sopv_node->GetName());
 }
 
 }
