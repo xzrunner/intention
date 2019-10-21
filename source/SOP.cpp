@@ -588,6 +588,8 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Primitive&>(front);
         auto& dst = static_cast<sop::node::Primitive&>(back);
 
+        dst.SetGroupName(src.group_name.str);
+
         dst.SetTranslate(src.translate);
         dst.SetRotate(src.rotate);
         dst.SetScale(src.scale);

@@ -404,6 +404,10 @@ REGIST_NODE_RTTI(Line,
 )                                                                      \
 )
 REGIST_NODE_RTTI(Primitive,
+.property("group_name", &sopv::node::Primitive::group_name)              \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
+)
 .property("translate", &sopv::node::Primitive::translate)              \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Translate")) \

@@ -205,6 +205,7 @@ SOPV_DEFINE_NODE(Line,                         \
     size_t      points    = 2;                 \
 )
 SOPV_DEFINE_NODE(Primitive,                 \
+    GroupName group_name;                   \
     sm::vec3 translate = sm::vec3(0, 0, 0); \
     sm::vec3 rotate    = sm::vec3(0, 0, 0); \
     sm::vec3 scale     = sm::vec3(1, 1, 1); \
