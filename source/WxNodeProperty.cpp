@@ -300,6 +300,10 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         m_pg->AppendIn(prop, new wxFloatProperty("Val Y", wxPG_LABEL, item.value.y));
         m_pg->AppendIn(prop, new wxFloatProperty("Val Z", wxPG_LABEL, item.value.z));
         m_pg->AppendIn(prop, new wxFloatProperty("Val W", wxPG_LABEL, item.value.w));
+        m_pg->AppendIn(prop, new wxFloatProperty("Default X", wxPG_LABEL, item.default_val.x));
+        m_pg->AppendIn(prop, new wxFloatProperty("Default Y", wxPG_LABEL, item.default_val.y));
+        m_pg->AppendIn(prop, new wxFloatProperty("Default Z", wxPG_LABEL, item.default_val.z));
+        m_pg->AppendIn(prop, new wxFloatProperty("Default W", wxPG_LABEL, item.default_val.w));
     }
     else if (prop_type == rttr::type::get<AttributeName>())
     {

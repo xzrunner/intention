@@ -105,6 +105,7 @@ struct AttrCreateItem
     GeoAttrClass cls  = GeoAttrClass::Point;
     GeoAttrType  type = GeoAttrType::Float;
     sm::vec4     value;
+    sm::vec4     default_val;
 };
 
 struct AttributeName

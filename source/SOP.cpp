@@ -141,41 +141,37 @@ TransGroupExprInst(const sopv::GroupExprInst& src)
     return dst;
 }
 
-sop::node::AttributeCreate::Item
-TransAttrCreateItem(const sopv::AttrCreateItem& item)
+sop::VarValue TransAttrCreateVal(sopv::GeoAttrType type, const sm::vec4& value)
 {
-    auto cls  = sopv::SOP::TransGeoAttrClass(item.cls);
-    auto type = TransGeoAttrType(item.type);
-
     sop::VarValue val;
-    switch (item.type)
+    switch (type)
     {
     case sopv::GeoAttrType::Int:
-        val = sop::VarValue(static_cast<int>(item.value.x));
+        val = sop::VarValue(static_cast<int>(value.x));
         break;
 
     case sopv::GeoAttrType::Bool:
-        val = sop::VarValue(item.value.x == 0 ? false : true);
+        val = sop::VarValue(value.x == 0 ? false : true);
         break;
     case sopv::GeoAttrType::Double:
-        val = sop::VarValue(static_cast<double>(item.value.x));
+        val = sop::VarValue(static_cast<double>(value.x));
         break;
 
     case sopv::GeoAttrType::Float:
-        val = sop::VarValue(item.value.x);
+        val = sop::VarValue(value.x);
         break;
     case sopv::GeoAttrType::Float2:
         assert(0);
         break;
     case sopv::GeoAttrType::Float3:
-        val = sop::VarValue(sm::vec3(item.value.x, item.value.y, item.value.z));
+        val = sop::VarValue(sm::vec3(value.x, value.y, value.z));
         break;
     case sopv::GeoAttrType::Float4:
         assert(0);
         break;
 
     case sopv::GeoAttrType::Vector:
-        val = sop::VarValue(sm::vec3(item.value.x, item.value.y, item.value.z));
+        val = sop::VarValue(sm::vec3(value.x, value.y, value.z));
         break;
     case sopv::GeoAttrType::Vector4:
         assert(0);
@@ -187,8 +183,18 @@ TransAttrCreateItem(const sopv::AttrCreateItem& item)
         assert(0);
         break;
     }
+    return val;
+}
 
-    return { item.name, type, cls, val };
+sop::node::AttributeCreate::Item
+TransAttrCreateItem(const sopv::AttrCreateItem& item)
+{
+    auto cls   = sopv::SOP::TransGeoAttrClass(item.cls);
+    auto type  = TransGeoAttrType(item.type);
+    auto val   = TransAttrCreateVal(item.type, item.value);
+    auto d_val = TransAttrCreateVal(item.type, item.default_val);
+
+    return { item.name, type, cls, val, d_val };
 }
 
 sop::node::PolyFrame::FrameStyle

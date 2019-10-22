@@ -70,10 +70,11 @@ rttr::registration::enumeration<sopv::GeoAttrType>("sopv_geo_attr_type")
 );
 
 rttr::registration::class_<sopv::AttrCreateItem>("sopv_attr_create_item")
-    .property("name",  &sopv::AttrCreateItem::name)
-    .property("cls",   &sopv::AttrCreateItem::cls)
-    .property("type",  &sopv::AttrCreateItem::type)
-    .property("value", &sopv::AttrCreateItem::value)
+    .property("name",        &sopv::AttrCreateItem::name)
+    .property("cls",         &sopv::AttrCreateItem::cls)
+    .property("type",        &sopv::AttrCreateItem::type)
+    .property("value",       &sopv::AttrCreateItem::value)
+    .property("default_val", &sopv::AttrCreateItem::default_val)
 ;
 
 rttr::registration::enumeration<sopv::GeoAttrClass>("sopv_geo_attr_cls")
