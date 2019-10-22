@@ -236,6 +236,10 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
     {
         auto& src = static_cast<const node::AttributeCreate&>(front);
         auto& dst = static_cast<sop::node::AttributeCreate&>(back);
+
+        dst.SetGroupName(src.group_name.str);
+        dst.SetGroupType(TransGroupType(src.group_type));
+
         std::vector<sop::node::AttributeCreate::Item> items;
         if (!src.item0.name.empty()) {
             items.push_back(TransAttrCreateItem(src.item0));

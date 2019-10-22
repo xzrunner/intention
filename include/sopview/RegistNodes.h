@@ -69,11 +69,13 @@ SOPV_DEFINE_PROPS_NODE(Geometry,       \
 )
 
 // attribute
-SOPV_DEFINE_NODE(AttributeCreate, \
-    AttrCreateItem item0;         \
-    AttrCreateItem item1;         \
-    AttrCreateItem item2;         \
-    AttrCreateItem item3;         \
+SOPV_DEFINE_NODE(AttributeCreate,                     \
+    GroupName group_name;                             \
+    GroupType group_type = GroupType::GuessFromGroup; \
+    AttrCreateItem item0;                             \
+    AttrCreateItem item1;                             \
+    AttrCreateItem item2;                             \
+    AttrCreateItem item3;                             \
 )
 SOPV_DEFINE_NODE(AttributeTransfer,                           \
     AttributeName points_attrs     = GeoAttrClass::Point;     \

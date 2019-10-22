@@ -34,6 +34,14 @@ REGIST_NODE_RTTI_DEFAULT(Geometry)
 
 // attribute
 REGIST_NODE_RTTI(AttributeCreate,
+.property("group_name", &sopv::node::AttributeCreate::group_name)      \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
+)                                                                      \
+.property("group_type", &sopv::node::AttributeCreate::group_type)      \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType")) \
+)                                                                      \
 .property("item0", &sopv::node::AttributeCreate::item0)                \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Item0"))     \
