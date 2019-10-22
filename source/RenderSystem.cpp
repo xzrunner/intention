@@ -2,6 +2,7 @@
 #include "sopview/Node.h"
 #include "sopview/RegistNodes.h"
 
+#include <geoshape/Box.h>
 #include <polymesh3/Geometry.h>
 #include <sop/Node.h>
 #include <sop/GeometryImpl.h>
@@ -112,6 +113,31 @@ void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) cons
         auto group = geo->GetGroup().Query(group_create.group_name);
         if (group) {
             DrawGroup(*group, *geo);
+        }
+
+        pt3::RenderParams rp;
+        rp.painter = &m_pt;
+        rp.viewport = &m_vp;
+        rp.cam_mat = &m_cam_mat;
+        rp.radius = NODE_RADIUS;
+        rp.color = 0xffff0000;
+        rp.draw_ctrl_node = true;
+
+        // draw bounding
+        if (group_create.keep_in_bounding)
+        {
+            auto& bound_conns = back.GetImports()[sop::node::GroupCreate::IDX_BOUNDING_OBJ].conns;
+            if (!bound_conns.empty()) {
+                assert(bound_conns.size() == 1);
+                auto bound_node = bound_conns.front().node.lock();
+                if (bound_node) {
+                    auto bound_geo = bound_node->GetGeometry();
+                    if (bound_geo) {
+                        auto& b_aabb = bound_geo->GetAttr().GetAABB();
+                        pt3::RenderSystem::DrawShape(gs::Box(b_aabb), rp);
+                    }
+                }
+            }
         }
     }
     else if (type == rttr::type::get<node::GroupExpression>())
