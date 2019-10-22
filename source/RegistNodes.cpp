@@ -477,6 +477,18 @@ REGIST_NODE_RTTI(ForeachPrimEnd,
 )
 REGIST_NODE_RTTI_DEFAULT(Merge)
 REGIST_NODE_RTTI_DEFAULT(Null)
+REGIST_NODE_RTTI(Output,
+.property("output_idx", &sopv::node::Output::output_idx)               \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputIdx")) \
+)                                                                      \
+)
+REGIST_NODE_RTTI(Split,
+.property("group_name", &sopv::node::Split::group_name)                \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
+)                                                                      \
+)
 REGIST_NODE_RTTI(Switch,
 .property("selected", &sopv::node::Switch::selected)                  \
 (                                                                     \

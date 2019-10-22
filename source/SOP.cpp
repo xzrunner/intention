@@ -47,6 +47,7 @@
 #include <sop/node/Blast.h>
 #include <sop/node/CopyToPoints.h>
 #include <sop/node/ForeachPrimEnd.h>
+#include <sop/node/Split.h>
 #include <sop/node/Switch.h>
 
 #include <boost/lexical_cast.hpp>
@@ -631,6 +632,12 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
 
         dst.EnableSinglePass(src.do_single_pass);
         dst.SetSinglePassOffset(src.single_pass_offset);
+    }
+    else if (type == rttr::type::get<node::Split>())
+    {
+        auto& src = static_cast<const node::Split&>(front);
+        auto& dst = static_cast<sop::node::Split&>(back);
+        dst.SetGroupName(src.group_name.str);
     }
     else if (type == rttr::type::get<node::Switch>())
     {

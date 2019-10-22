@@ -233,6 +233,12 @@ SOPV_DEFINE_NODE(ForeachPrimEnd,     \
 )
 SOPV_DEFINE_IMPORT_EXT_NODE(Merge, SOPV_NODE_PROP)
 SOPV_DEFINE_PROPS_NODE(Null, SOPV_NODE_PROP)
+SOPV_DEFINE_NODE(Output, \
+    int output_idx = -1; \
+)
+SOPV_DEFINE_IMPORT_EXT_NODE(Split, \
+    GroupName group_name;          \
+)
 SOPV_DEFINE_IMPORT_EXT_NODE(Switch, \
     std::string selected = "0";     \
 )
