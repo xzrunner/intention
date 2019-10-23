@@ -3,6 +3,8 @@
 #include "sopview/SceneTree.h"
 #include "sopview/Evaluator.h"
 
+#include <ee0/MessageID.h>
+#include <ee0/WxStageCanvas.h>
 #include <blueprint/CompNode.h>
 
 #include <node0/SceneNode.h>
@@ -275,11 +277,56 @@ void WxGeoProperty::LoadFromNode(const n0::SceneNodePtr& node)
     LoadGroups(geo->GetGroup());
 }
 
+std::vector<size_t>
+WxGeoProperty::GetSelectedIndices(GeoAttrClass cls) const
+{
+    std::vector<size_t> ret;
+
+    int idx = -1;
+    switch (cls)
+    {
+    case GeoAttrClass::Point:
+        idx = POINT;
+        break;
+    case GeoAttrClass::Vertex:
+        idx = VERTEX;
+        break;
+    case GeoAttrClass::Primitive:
+        idx = PRIMITIVE;
+        break;
+    case GeoAttrClass::Detail:
+        idx = DETAIL;
+        break;
+    }
+
+    if (idx < 0) {
+        return ret;
+    }
+
+    auto list = m_lists[idx];
+    int item = -1;
+    for (;;)
+    {
+        item = list->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+        if (item == -1) {
+            break;
+        }
+
+        ret.push_back(item);
+    }
+
+    return ret;
+}
+
 void WxGeoProperty::InitLayout()
 {
-    for (int i = 0; i < MAX_LIST_COUNT; ++i) {
-        m_lists[i] = new wxListCtrl(this, wxID_ANY, wxDefaultPosition,
+    for (int i = 0; i < MAX_LIST_COUNT; ++i)
+    {
+        auto list = new wxListCtrl(this, wxID_ANY, wxDefaultPosition,
             wxDefaultSize, wxLC_REPORT);
+        Bind(wxEVT_LIST_ITEM_SELECTED, &WxGeoProperty::SetPreviewCanvasDirty, this, list->GetId());
+        Bind(wxEVT_LIST_ITEM_DESELECTED, &WxGeoProperty::SetPreviewCanvasDirty, this, list->GetId());
+        m_lists[i] = list;
     }
     AddPage(m_lists[POINT],     "Points");
     AddPage(m_lists[VERTEX],    "Vertices");
@@ -507,6 +554,11 @@ void WxGeoProperty::LoadGroups(const sop::GroupMgr& groups)
 
         return true;
     });
+}
+
+void WxGeoProperty::SetPreviewCanvasDirty(wxListEvent& event)
+{
+    m_preview_canvas->SetDirty();
 }
 
 }

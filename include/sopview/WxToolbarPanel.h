@@ -21,6 +21,8 @@ public:
 
 	virtual void OnNotify(uint32_t msg, const ee0::VariantSet& variants) override;
 
+    auto GetGeoPropView() const { return m_geo_prop; }
+
 private:
 	void InitLayout(const std::shared_ptr<SceneTree>& stree);
 

@@ -2,10 +2,13 @@
 
 #include <ee3/WxStageCanvas.h>
 
+namespace tess { class Painter; }
+
 namespace sopv
 {
 
 class SceneTree;
+class WxGeoProperty;
 
 class WxStageCanvas : public ee3::WxStageCanvas
 {
@@ -17,6 +20,10 @@ public:
         m_stree = stree;
     }
 
+    void SetPropView(WxGeoProperty* view) { m_prop_view = view; }
+
+    void SetGraphStage(ee0::WxStagePage* stage) { m_graph_stage = stage; }
+
 protected:
     virtual bool OnUpdate() override;
 
@@ -25,7 +32,14 @@ protected:
     virtual void DrawForeground2D() const override;
 
 private:
+    void DrawAttrSelected(tess::Painter& pt, const sm::mat4& cam_mat) const;
+
+private:
     std::shared_ptr<SceneTree> m_stree = nullptr;
+
+    WxGeoProperty* m_prop_view = nullptr;
+
+    ee0::WxStagePage* m_graph_stage = nullptr;
 
 }; // WxStageCanvas
 
