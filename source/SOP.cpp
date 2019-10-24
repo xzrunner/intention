@@ -500,6 +500,24 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Fuse&>(front);
         auto& dst = static_cast<sop::node::Fuse&>(back);
 
+        sop::node::Fuse::Operator op;
+        switch (src.op)
+        {
+        case sopv::FuseOperator::Consolidate:
+            op = sop::node::Fuse::Operator::Consolidate;
+            break;
+        case sopv::FuseOperator::UniquePoints:
+            op = sop::node::Fuse::Operator::UniquePoints;
+            break;
+        case sopv::FuseOperator::Snap:
+            op = sop::node::Fuse::Operator::Snap;
+            break;
+        default:
+            assert(0);
+            op = sop::node::Fuse::Operator::Consolidate;
+        }
+        dst.SetFuseOP(op);
+
         dst.SetDistance(src.distance);
     }
     else if (type == rttr::type::get<node::Knife>())

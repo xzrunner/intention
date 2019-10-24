@@ -161,8 +161,9 @@ SOPV_DEFINE_NODE(Add,    \
 SOPV_DEFINE_NODE(Boolean,                            \
     BooleanOperator op = BooleanOperator::Intersect; \
 )
-SOPV_DEFINE_NODE(Fuse,       \
-    float distance = 0.001f; \
+SOPV_DEFINE_NODE(Fuse,                           \
+    FuseOperator op = FuseOperator::Consolidate; \
+    float distance = 0.001f;                     \
 )
 SOPV_DEFINE_NODE(Knife,                     \
     sm::vec3 origin;                        \

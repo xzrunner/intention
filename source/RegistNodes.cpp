@@ -289,6 +289,10 @@ REGIST_NODE_RTTI(Boolean,
 )                                                                     \
 )
 REGIST_NODE_RTTI(Fuse,
+.property("op", &sopv::node::Fuse::op)                                \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("op"))       \
+)                                                                     \
 .property("distance", &sopv::node::Fuse::distance)                    \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance")) \

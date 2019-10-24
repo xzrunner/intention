@@ -153,6 +153,13 @@ enum class PolyFrameStyle
     MikkT,
 };
 
+enum class FuseOperator
+{
+    Consolidate,
+    UniquePoints,
+    Snap,
+};
+
 void prop_types_regist_rttr();
 
 }

@@ -122,6 +122,13 @@ rttr::registration::enumeration<sopv::PolyFrameStyle>("sopv_polyframe_style")
     rttr::value("mikkt",               sopv::PolyFrameStyle::MikkT)
 );
 
+rttr::registration::enumeration<sopv::FuseOperator>("sopv_fuse_op")
+(
+	rttr::value("consolidate",   sopv::FuseOperator::Consolidate),
+	rttr::value("unique_points", sopv::FuseOperator::UniquePoints),
+    rttr::value("snap",          sopv::FuseOperator::Snap)
+);
+
 }
 
 namespace sopv

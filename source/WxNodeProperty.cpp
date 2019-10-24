@@ -368,6 +368,14 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         style_prop->SetValue(static_cast<int>(style));
         m_pg->Append(style_prop);
     }
+    else if (prop_type == rttr::type::get<FuseOperator>())
+    {
+        const wxChar* OPS[] = { wxT("Consolidate"), wxT("UniquePoints"), wxT("Snap"), NULL };
+        auto op_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, OPS);
+        auto op = prop.get_value(node).get_value<FuseOperator>();
+        op_prop->SetValue(static_cast<int>(op));
+        m_pg->Append(op_prop);
+    }
     else
     {
         ret = false;
@@ -579,6 +587,10 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     else if (prop_type == rttr::type::get<PolyFrameStyle>() && key == ui_info.desc)
     {
         prop.set_value(m_node, PolyFrameStyle(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<FuseOperator>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, FuseOperator(wxANY_AS(val, int)));
     }
     else
     {
