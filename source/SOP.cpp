@@ -646,7 +646,13 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::CopyToPoints&>(back);
 
         dst.SetSrcGroup(src.src_group.str);
-        dst.SetTargetGroup(src.target_group.str);
+
+        if (!src.target_group.str.empty()) {
+            dst.SetTargetGroup(src.target_group.str);
+        } else {
+            dst.SetTargetGroup(src.target_group_str);
+        }
+
         dst.EnableUsePointDir(src.use_pt_dir);
     }
     else if (type == rttr::type::get<node::ForeachPrimEnd>())

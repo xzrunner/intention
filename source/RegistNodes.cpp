@@ -459,18 +459,22 @@ REGIST_NODE_RTTI(Blast,
 )
 )
 REGIST_NODE_RTTI(CopyToPoints,
-.property("src_group", &sopv::node::CopyToPoints::src_group)             \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SrcGroup"))    \
-)                                                                        \
-.property("target_group", &sopv::node::CopyToPoints::target_group)       \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TargetGroup")) \
-)                                                                        \
-.property("use_pt_dir", &sopv::node::CopyToPoints::use_pt_dir)           \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UsePtDir"))    \
-)                                                                        \
+.property("src_group", &sopv::node::CopyToPoints::src_group)                \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SrcGroup"))       \
+)                                                                           \
+.property("target_group", &sopv::node::CopyToPoints::target_group)          \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TargetGroup"))    \
+)                                                                           \
+.property("target_group_str", &sopv::node::CopyToPoints::target_group_str)  \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TargetGroupStr")) \
+)                                                                           \
+.property("use_pt_dir", &sopv::node::CopyToPoints::use_pt_dir)              \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UsePtDir"))       \
+)                                                                           \
 )
 REGIST_NODE_RTTI_DEFAULT(ForeachPrimBegin)
 REGIST_NODE_RTTI(ForeachPrimEnd,

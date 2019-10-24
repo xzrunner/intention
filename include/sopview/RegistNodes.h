@@ -223,10 +223,11 @@ SOPV_DEFINE_NODE(Blast,                               \
     GroupType group_type = GroupType::GuessFromGroup; \
     bool delete_non_selected = false;                 \
 )
-SOPV_DEFINE_NODE(CopyToPoints,             \
-    GroupName src_group    = GroupName(0); \
-    GroupName target_group = GroupName(1); \
-    bool use_pt_dir = false;               \
+SOPV_DEFINE_NODE(CopyToPoints,               \
+    GroupName   src_group    = GroupName(0); \
+    GroupName   target_group = GroupName(1); \
+    std::string target_group_str;            \
+    bool        use_pt_dir = false;          \
 )
 SOPV_DEFINE_NODE(ForeachPrimBegin, SOPV_NODE_PROP)
 SOPV_DEFINE_NODE(ForeachPrimEnd,     \
