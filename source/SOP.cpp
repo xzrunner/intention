@@ -322,10 +322,16 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         case SortKey::Z:
             key = sop::node::Sort::Key::Z;
             break;
+        case SortKey::Shift:
+            key = sop::node::Sort::Key::Shift;
+            break;
         default:
             assert(0);
         }
         dst.SetKey(key);
+
+        dst.SetPointOffset(ParseExprInt(src.point_offset, back,
+            sop::node::Sort::POINT_OFFSET, 0, eval));
     }
     // group
     else if (type == rttr::type::get<node::GroupCreate>())

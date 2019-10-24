@@ -126,7 +126,8 @@ enum class SortKey
     NoChange,
     X,
     Y,
-    Z
+    Z,
+    Shift,
 };
 
 enum class DeleteEntityType

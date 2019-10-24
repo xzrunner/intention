@@ -95,10 +95,14 @@ REGIST_NODE_RTTI(Measure,
 )                                                                        \
 )
 REGIST_NODE_RTTI(Sort,
-.property("key", &sopv::node::Sort::key)                         \
-(                                                                \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Key")) \
-)                                                                \
+.property("key", &sopv::node::Sort::key)                                 \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Key"))         \
+)                                                                        \
+.property("point_offset", &sopv::node::Sort::point_offset)               \
+(                                                                        \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PointOffset")) \
+)                                                                        \
 )
 
 // group

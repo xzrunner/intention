@@ -93,9 +93,10 @@ rttr::registration::class_<sopv::AttributeName>("sopv_attr_name")
 rttr::registration::enumeration<sopv::SortKey>("sopv_sort_key")
 (
 	rttr::value("no_change", sopv::SortKey::NoChange),
-	rttr::value("x", sopv::SortKey::X),
-    rttr::value("y", sopv::SortKey::Y),
-    rttr::value("z", sopv::SortKey::Z)
+	rttr::value("x",         sopv::SortKey::X),
+    rttr::value("y",         sopv::SortKey::Y),
+    rttr::value("z",         sopv::SortKey::Z),
+    rttr::value("shift",     sopv::SortKey::Shift)
 );
 
 rttr::registration::enumeration<sopv::DeleteEntityType>("sopv_delete_entity_type")

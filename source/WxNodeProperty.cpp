@@ -337,7 +337,7 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
     }
     else if (prop_type == rttr::type::get<SortKey>())
     {
-        const wxChar* KEYS[] = { wxT("NoChange"), wxT("X"), wxT("Y"), wxT("Z"), NULL };
+        const wxChar* KEYS[] = { wxT("NoChange"), wxT("X"), wxT("Y"), wxT("Z"), wxT("Shift"), NULL };
         auto key_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, KEYS);
         auto key = prop.get_value(node).get_value<SortKey>();
         key_prop->SetValue(static_cast<int>(key));

@@ -90,8 +90,9 @@ SOPV_DEFINE_NODE(Measure,                         \
     MeasureType ms_type = MeasureType::Perimeter; \
     std::string ms_name;                          \
 )
-SOPV_DEFINE_NODE(Sort,               \
-    SortKey key = SortKey::NoChange; \
+SOPV_DEFINE_NODE(Sort,                            \
+    SortKey     key          = SortKey::NoChange; \
+    std::string point_offset = "0";               \
 )
 
 // group
