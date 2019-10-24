@@ -531,7 +531,9 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Knife&>(front);
         auto& dst = static_cast<sop::node::Knife&>(back);
 
-        dst.SetOrigin(src.origin);
+        sm::ivec3 origin_idx(sop::node::Knife::ORIGINX_X, sop::node::Knife::ORIGINX_Y, sop::node::Knife::ORIGINX_Z);
+        dst.SetOrigin(ParseExprFloat3(src.origin, back, origin_idx, sm::vec3(0, 0, 0), eval));
+
         dst.SetDirection(src.direction);
 
         sop::node::Knife::KeepType keep;

@@ -166,10 +166,10 @@ SOPV_DEFINE_NODE(Fuse,                           \
     FuseOperator op = FuseOperator::Consolidate; \
     float distance = 0.001f;                     \
 )
-SOPV_DEFINE_NODE(Knife,                     \
-    sm::vec3 origin;                        \
-    sm::vec3 direction = sm::vec3(0, 1, 0); \
-    KnifeKeep keep = KnifeKeep::KeepAll;    \
+SOPV_DEFINE_NODE(Knife,                      \
+    StrVec3 origin = StrVec3("0", "0", "0"); \
+    sm::vec3 direction = sm::vec3(0, 1, 0);  \
+    KnifeKeep keep = KnifeKeep::KeepAll;     \
 )
 SOPV_DEFINE_NODE(Normal,                                  \
     GeoAttrClass attr_add_norm_to = GeoAttrClass::Vertex; \
