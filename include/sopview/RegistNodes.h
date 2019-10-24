@@ -78,10 +78,10 @@ SOPV_DEFINE_NODE(AttributeCreate,                     \
     AttrCreateItem item3;                             \
 )
 SOPV_DEFINE_NODE(AttributeTransfer,                           \
-    AttributeName points_attrs     = GeoAttrClass::Point;     \
-    AttributeName vertices_attrs   = GeoAttrClass::Vertex;    \
+    AttributeName points_attrs = GeoAttrClass::Point;         \
+    AttributeName vertices_attrs = GeoAttrClass::Vertex;      \
     AttributeName primitives_attrs = GeoAttrClass::Primitive; \
-    AttributeName detail_attrs     = GeoAttrClass::Detail;    \
+    AttributeName detail_attrs = GeoAttrClass::Detail;        \
 )
 SOPV_DEFINE_NODE(AttributeWrangle, \
     std::string vex_expr;          \
@@ -96,16 +96,16 @@ SOPV_DEFINE_NODE(Sort,                            \
 )
 
 // group
-SOPV_DEFINE_NODE(GroupCreate,                         \
-    std::string group_name;                           \
-    GroupType   group_type = GroupType::Primitives;   \
-    GroupMerge  merge_op   = GroupMerge::Replace;     \
-    bool        base_group = false;                   \
-    std::string base_group_expr;                      \
-    bool        keep_in_bounding = false;             \
-    bool        keep_by_normals  = false;             \
-    sm::vec3    direction        = sm::vec3(0, 0, 1); \
-    float       spread_angle     = 180;               \
+SOPV_DEFINE_NODE(GroupCreate,                       \
+    std::string group_name;                         \
+    GroupType   group_type = GroupType::Primitives; \
+    GroupMerge  merge_op = GroupMerge::Replace;     \
+    bool        base_group = false;                 \
+    std::string base_group_expr;                    \
+    bool        keep_in_bounding = false;           \
+    bool        keep_by_normals = false;            \
+    sm::vec3    direction = sm::vec3(0, 0, 1);      \
+    float       spread_angle = 180;                 \
 )
 SOPV_DEFINE_NODE(GroupExpression,                   \
     GroupType   group_type = GroupType::Primitives; \
@@ -142,9 +142,9 @@ SOPV_DEFINE_NODE(Color,                          \
 
 // NURBs
 SOPV_DEFINE_NODE(Carve,         \
-    std::string first_u  = "0"; \
+    std::string first_u = "0";  \
     std::string second_u = "1"; \
-    std::string first_v  = "0"; \
+    std::string first_v = "0";  \
     std::string second_v = "1"; \
 )
 
