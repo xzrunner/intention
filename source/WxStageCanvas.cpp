@@ -141,6 +141,9 @@ void WxStageCanvas::DrawAttrSelected(tess::Painter& pt, const sm::mat4& cam_mat)
 
     auto& cnode = node->GetUniqueComp<bp::CompNode>();
     auto sop_node = eval->QueryBackNode(*cnode.GetNode());
+    if (!sop_node) {
+        return;
+    }
     auto geo = sop_node->GetGeometry();
     if (!geo) {
         return;
