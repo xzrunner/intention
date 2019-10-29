@@ -24,6 +24,7 @@
 #include <sop/node/GroupPromote.h>
 // manipulate
 #include <sop/node/Delete.h>
+#include <sop/node/Peak.h>
 #include <sop/node/Transform.h>
 // material
 #include <sop/node/Color.h>
@@ -40,6 +41,7 @@
 // primitive
 #include <sop/node/Box.h>
 #include <sop/node/Curve.h>
+#include <sop/node/Grid.h>
 #include <sop/node/Line.h>
 #include <sop/node/Primitive.h>
 #include <sop/node/Sphere.h>
@@ -417,6 +419,17 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
 
         dst.SetFilterExpr(src.filter_exp);
     }
+    else if (type == rttr::type::get<node::Peak>())
+    {
+        auto& src = static_cast<const node::Peak&>(front);
+        auto& dst = static_cast<sop::node::Peak&>(back);
+
+        dst.SetGroupName(src.group_name.str);
+        dst.SetGroupType(TransGroupType(src.group_type));
+
+        dst.SetDistance(ParseExprFloat(src.distance, back,
+            sop::node::Peak::DIST, 0, eval));
+    }
     else if (type == rttr::type::get<node::Transform>())
     {
         auto& src = static_cast<const node::Transform&>(front);
@@ -608,6 +621,16 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Curve&>(front);
         auto& dst = static_cast<sop::node::Curve&>(back);
         dst.SetVertices(src.vertices);
+    }
+    else if (type == rttr::type::get<node::Grid>())
+    {
+        auto& src = static_cast<const node::Grid&>(front);
+        auto& dst = static_cast<sop::node::Grid&>(back);
+
+        dst.SetSize(sm::ivec2(src.size_x, src.size_y));
+
+        dst.SetRows(src.rows);
+        dst.SetColumns(src.columns);
     }
     else if (type == rttr::type::get<node::Line>())
     {

@@ -126,6 +126,11 @@ SOPV_DEFINE_NODE(Delete,                                     \
     DeleteEntityType entity_type = DeleteEntityType::Points; \
     std::string      filter_exp;                             \
 )
+SOPV_DEFINE_NODE(Peak,                                  \
+    GroupName   group_name;                             \
+    GroupType   group_type = GroupType::GuessFromGroup; \
+    std::string distance = "0";                         \
+)
 SOPV_DEFINE_NODE(Transform,                           \
     GroupName group_name;                             \
     GroupType group_type = GroupType::GuessFromGroup; \
@@ -142,9 +147,9 @@ SOPV_DEFINE_NODE(Color,                          \
 
 // NURBs
 SOPV_DEFINE_NODE(Carve,         \
-    std::string first_u = "0";  \
+    std::string first_u  = "0"; \
     std::string second_u = "1"; \
-    std::string first_v = "0";  \
+    std::string first_v  = "0"; \
     std::string second_v = "1"; \
 )
 
@@ -166,10 +171,10 @@ SOPV_DEFINE_NODE(Fuse,                           \
     FuseOperator op = FuseOperator::Consolidate; \
     float distance = 0.001f;                     \
 )
-SOPV_DEFINE_NODE(Knife,                      \
-    StrVec3 origin = StrVec3("0", "0", "0"); \
-    sm::vec3 direction = sm::vec3(0, 1, 0);  \
-    KnifeKeep keep = KnifeKeep::KeepAll;     \
+SOPV_DEFINE_NODE(Knife,                           \
+    StrVec3   origin    = StrVec3("0", "0", "0"); \
+    sm::vec3  direction = sm::vec3(0, 1, 0);      \
+    KnifeKeep keep      = KnifeKeep::KeepAll;     \
 )
 SOPV_DEFINE_NODE(Normal,                                  \
     GeoAttrClass attr_add_norm_to = GeoAttrClass::Vertex; \
@@ -201,6 +206,12 @@ SOPV_DEFINE_NODE(Box,                        \
 )
 SOPV_DEFINE_NODE(Curve,             \
     std::vector<sm::vec3> vertices; \
+)
+SOPV_DEFINE_NODE(Grid,   \
+    size_t size_x  = 10; \
+    size_t size_y  = 10; \
+    size_t rows    = 10; \
+    size_t columns = 10; \
 )
 SOPV_DEFINE_NODE(Line,                         \
     sm::vec3    origin    = sm::vec3(0, 0, 0); \

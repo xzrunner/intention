@@ -196,6 +196,20 @@ REGIST_NODE_RTTI(Delete,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FilterExp"))      \
 )                                                                           \
 )
+REGIST_NODE_RTTI(Peak,
+.property("group_name", &sopv::node::Peak::group_name)                 \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
+)                                                                      \
+.property("group_type", &sopv::node::Peak::group_type)                 \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType")) \
+)                                                                      \
+.property("distance", &sopv::node::Peak::distance)                     \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance"))  \
+)                                                                      \
+)
 REGIST_NODE_RTTI(Transform,
 .property("group_name", &sopv::node::Transform::group_name)            \
 (                                                                      \
@@ -400,6 +414,24 @@ REGIST_NODE_RTTI(Curve,
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vertices")) \
 )                                                                     \
+)
+REGIST_NODE_RTTI(Grid,
+.property("size_x", &sopv::node::Grid::size_x)                       \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Size X"))  \
+)                                                                    \
+.property("size_y", &sopv::node::Grid::size_y)                       \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Size Y"))  \
+)                                                                    \
+.property("rows", &sopv::node::Grid::rows)                           \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Rows"))    \
+)                                                                    \
+.property("columns", &sopv::node::Grid::columns)                     \
+(                                                                    \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Columns")) \
+)                                                                    \
 )
 REGIST_NODE_RTTI(Line,
 .property("origin", &sopv::node::Line::origin)                         \
