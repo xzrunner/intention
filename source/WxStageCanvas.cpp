@@ -5,6 +5,7 @@
 #include "sopview/WxGeoProperty.h"
 
 #include <ee0/WxStagePage.h>
+#include <ee0/EditOP.h>
 #include <blueprint/CompNode.h>
 
 #include <geoshape/Point3D.h>
@@ -15,6 +16,7 @@
 #include <painting3/Blackboard.h>
 #include <painting3/WindowContext.h>
 #include <painting3/PerspCam.h>
+#include <painting3/OrthoCam.h>
 #include <sop/GeometryImpl.h>
 
 namespace
@@ -31,6 +33,7 @@ namespace sopv
 WxStageCanvas::WxStageCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
                              const ee0::RenderContext& rc)
     : ee3::WxStageCanvas(stage, ECS_WORLD_VAR &rc, nullptr, true)
+    , m_viewports(*this)
 {
 }
 
@@ -111,6 +114,34 @@ void WxStageCanvas::DrawForeground2D() const
     pt2::RenderSystem::DrawPainter(rs.GetPainter());
 }
 
+void WxStageCanvas::OnKeyDownImpl(wxKeyEvent& event)
+{
+    ee3::WxStageCanvas::OnKeyDownImpl(event);
+
+    switch (event.GetKeyCode())
+    {
+    case '1':
+        m_viewports.ChangeVP(ViewportType::Perspective);
+        break;
+
+    case '2':
+        m_viewports.ChangeVP(ViewportType::Top);
+        break;
+
+    case '3':
+        m_viewports.ChangeVP(ViewportType::Front);
+        break;
+
+    case '4':
+        m_viewports.ChangeVP(ViewportType::Right);
+        break;
+
+    case '5':
+        m_viewports.ChangeVP(ViewportType::UV);
+        break;
+    }
+}
+
 void WxStageCanvas::DrawAttrSelected(tess::Painter& pt, const sm::mat4& cam_mat) const
 {
     if (!m_prop_view || !m_graph_stage) {
@@ -189,6 +220,65 @@ void WxStageCanvas::DrawAttrSelected(tess::Painter& pt, const sm::mat4& cam_mat)
             pt3::RenderSystem::DrawShape(gs::Polygon3D(vts), rp);
         }
     }
+}
+
+//////////////////////////////////////////////////////////////////////////
+// class WxStageCanvas::Viewports
+//////////////////////////////////////////////////////////////////////////
+
+WxStageCanvas::Viewports::Viewports(ee3::WxStageCanvas& canvas)
+    : m_canvas(canvas)
+{
+    m_cam_3d = canvas.GetCamera();
+
+    m_cam_xz = std::make_shared<pt3::OrthoCam>(pt3::OrthoCam::VP_XZ);
+    m_cam_xy = std::make_shared<pt3::OrthoCam>(pt3::OrthoCam::VP_XY);
+    m_cam_zy = std::make_shared<pt3::OrthoCam>(pt3::OrthoCam::VP_ZY);
+}
+
+void WxStageCanvas::Viewports::ChangeVP(ViewportType type)
+{
+    if (type == m_curr_vp) {
+        return;
+    }
+
+    pt0::CameraPtr cam = nullptr;
+    switch (type)
+    {
+    case ViewportType::Perspective:
+        cam = m_cam_3d;
+        break;
+    case ViewportType::Top:
+        cam = m_cam_xz;
+        break;
+    case ViewportType::Front:
+        cam = m_cam_xy;
+        break;
+    case ViewportType::Right:
+        cam = m_cam_zy;
+        break;
+    case ViewportType::UV:
+        break;
+    }
+
+    if (cam)
+    {
+        auto stage = m_canvas.GetStagePage();
+        assert(stage);
+        stage->GetImpl().GetEditOP()->SetCamera(cam);
+
+        auto& vp = m_canvas.GetViewport();
+        cam->OnSize(vp.Width(), vp.Height());
+
+        auto& wc = pt3::Blackboard::Instance()->GetWindowContext();
+        if (wc) {
+            wc->SetProjection(cam->GetProjectionMat());
+        }
+
+        m_canvas.SetCamera(cam);
+    }
+
+    m_curr_vp = type;
 }
 
 }
