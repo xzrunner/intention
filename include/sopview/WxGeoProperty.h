@@ -3,10 +3,10 @@
 #include "sopview/ReflectPropTypes.h"
 
 #include <node0/typedef.h>
+#include <sop/GeoAttrClass.h>
 
 #include <wx/notebook.h>
 
-class wxListCtrl;
 class wxListEvent;
 
 namespace sop { class GeoAttribute; class GroupMgr; }
@@ -16,6 +16,7 @@ namespace sopv
 {
 
 class SceneTree;
+class WxGeoPropList;
 
 class WxGeoProperty : public wxNotebook
 {
@@ -35,22 +36,10 @@ private:
 
     void Clear();
 
-    void LoadDefault(const sop::GeoAttribute& attr);
-    void LoadGroups(const sop::GroupMgr& groups);
-
     void SetPreviewCanvasDirty(wxListEvent& event);
 
 private:
-    enum ListIndex
-    {
-        POINT = 0,
-        VERTEX,
-        PRIMITIVE,
-        DETAIL,
-
-        MAX_LIST_COUNT,
-    };
-    wxListCtrl* m_lists[MAX_LIST_COUNT];
+    WxGeoPropList* m_lists2[static_cast<int>(sop::GeoAttrClass::MaxTypeNum)];
 
     std::shared_ptr<SceneTree> m_stree = nullptr;
 

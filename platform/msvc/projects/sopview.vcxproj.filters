@@ -34,20 +34,17 @@
     <Filter Include="view\blueprint">
       <UniqueIdentifier>{37717c11-dc74-4af9-bb4e-18b0f9892744}</UniqueIdentifier>
     </Filter>
+    <Filter Include="view\toolbar\geo">
+      <UniqueIdentifier>{e8fbf975-be0a-4cdf-ade7-7f8628b481c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\toolbar\node">
+      <UniqueIdentifier>{e6aa90d8-1d6a-4296-93b6-7d4358230211}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\sopview\SOPView.h" />
     <ClInclude Include="..\..\..\include\sopview\SOP.h">
       <Filter>tools\trans</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\sopview\WxGeoProperty.h">
-      <Filter>view\toolbar</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\sopview\WxNodeProperty.h">
-      <Filter>view\toolbar</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\sopview\WxNodePropsDlg.h">
-      <Filter>view\toolbar</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\WxToolbarPanel.h">
       <Filter>view\toolbar</Filter>
@@ -94,6 +91,18 @@
     <ClInclude Include="..\..\..\include\sopview\MessageID.h">
       <Filter>dataset</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\WxGeoProperty.h">
+      <Filter>view\toolbar\geo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\WxNodeProperty.h">
+      <Filter>view\toolbar\node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\WxNodePropsDlg.h">
+      <Filter>view\toolbar\node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\WxGeoPropList.h">
+      <Filter>view\toolbar\geo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -120,12 +129,6 @@
     <ClCompile Include="..\..\..\source\RenderSystem.cpp">
       <Filter>view\stage</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\WxNodeProperty.cpp">
-      <Filter>view\toolbar</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\WxNodePropsDlg.cpp">
-      <Filter>view\toolbar</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\SceneTree.cpp">
       <Filter>view\blueprint</Filter>
     </ClCompile>
@@ -141,12 +144,21 @@
     <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp">
       <Filter>view\toolbar</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\WxGeoProperty.cpp">
-      <Filter>view\toolbar</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\SOP.cpp">
       <Filter>tools\trans</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\SOPView.cpp" />
+    <ClCompile Include="..\..\..\source\WxGeoProperty.cpp">
+      <Filter>view\toolbar\geo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxNodeProperty.cpp">
+      <Filter>view\toolbar\node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxNodePropsDlg.cpp">
+      <Filter>view\toolbar\node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxGeoPropList.cpp">
+      <Filter>view\toolbar\geo</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
