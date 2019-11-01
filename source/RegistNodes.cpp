@@ -2,6 +2,8 @@
 
 #include <ee0/ReflectPropTypes.h>
 
+#include <js/RTTR.h>
+
 #define REGIST_NODE_RTTI(name, prop)                            \
 	rttr::registration::class_<sopv::node::name>("sopv::"#name) \
 		.constructor<>()                                        \
@@ -103,6 +105,16 @@ REGIST_NODE_RTTI(Sort,
 (                                                                        \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PointOffset")) \
 )                                                                        \
+)
+
+// export
+REGIST_NODE_RTTI(File,
+.property("filepath", &sopv::node::File::filepath)                     \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filepath")), \
+    rttr::metadata(js::RTTR::FilePathTag(), true),                     \
+    rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))   \
+)                                                                      \
 )
 
 // group

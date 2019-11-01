@@ -18,6 +18,8 @@
 #include <sop/node/AttributeWrangle.h>
 #include <sop/node/Sort.h>
 #include <sop/node/Measure.h>
+// export
+#include <sop/node/File.h>
 // group
 #include <sop/node/GroupCreate.h>
 #include <sop/node/GroupExpression.h>
@@ -334,6 +336,13 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
 
         dst.SetPointOffset(ParseExprInt(src.point_offset, back,
             sop::node::Sort::POINT_OFFSET, 0, eval));
+    }
+    // export
+    else if (type == rttr::type::get<node::File>())
+    {
+        auto& src = static_cast<const node::File&>(front);
+        auto& dst = static_cast<sop::node::File&>(back);
+        dst.SetFilepath(src.filepath);
     }
     // group
     else if (type == rttr::type::get<node::GroupCreate>())

@@ -95,6 +95,11 @@ SOPV_DEFINE_NODE(Sort,                            \
     std::string point_offset = "0";               \
 )
 
+// export
+SOPV_DEFINE_NODE(File,    \
+    std::string filepath; \
+)
+
 // group
 SOPV_DEFINE_NODE(GroupCreate,                       \
     std::string group_name;                         \
