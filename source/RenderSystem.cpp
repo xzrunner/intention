@@ -1,7 +1,10 @@
 #include "sopview/RenderSystem.h"
 #include "sopview/Node.h"
 #include "sopview/RegistNodes.h"
+#include "sopview/WxGeoProperty.h"
 
+#include <geoshape/Point3D.h>
+#include <geoshape/Polygon3D.h>
 #include <geoshape/Box.h>
 #include <polymesh3/Geometry.h>
 #include <sop/Node.h>
@@ -25,6 +28,8 @@ const uint32_t LIGHT_SELECT_COLOR   = 0x88000088;
 
 namespace sopv
 {
+
+const float RenderSystem::UV_SCALE = 512;
 
 RenderSystem::RenderSystem(const pt3::Viewport& vp,
                            const sm::mat4& cam_mat)
@@ -166,6 +171,80 @@ void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) cons
         auto group = geo->GetGroup().Query(group_promote.group_name.str);
         if (group) {
             DrawGroup(*group, *geo);
+        }
+    }
+}
+
+void RenderSystem::DrawNodeAttr(const sop::Node& node, const WxGeoProperty& prop_view)
+{
+    auto geo = node.GetGeometry();
+    if (!geo) {
+        return;
+    }
+
+    pt3::RenderParams rp;
+    rp.painter  = &m_pt;
+    rp.viewport = &m_vp;
+    rp.cam_mat  = &m_cam_mat;
+    rp.radius   = NODE_RADIUS;
+    rp.color    = LIGHT_SELECT_COLOR;
+
+    auto sel_pts = prop_view.GetSelectedIndices(GeoAttrClass::Point);
+    if (!sel_pts.empty())
+    {
+        auto& pts = geo->GetAttr().GetPoints();
+        for (auto i : sel_pts) {
+            pt3::RenderSystem::DrawShape(gs::Point3D(pts[i]->pos), rp);
+        }
+    }
+
+    auto sel_vts = prop_view.GetSelectedIndices(GeoAttrClass::Vertex);
+    if (!sel_vts.empty())
+    {
+        auto& vts = geo->GetAttr().GetVertices();
+        for (auto i : sel_vts) {
+            pt3::RenderSystem::DrawShape(gs::Point3D(vts[i]->point->pos), rp);
+        }
+    }
+
+    auto sel_prims = prop_view.GetSelectedIndices(GeoAttrClass::Primitive);
+    if (!sel_prims.empty())
+    {
+        auto& prims = geo->GetAttr().GetPrimtives();
+        for (auto i : sel_prims)
+        {
+            auto& prim = prims[i];
+            std::vector<sm::vec3> vts;
+            vts.reserve(prim->vertices.size());
+            for (auto& v : prim->vertices) {
+                vts.push_back(v->point->pos);
+            }
+            pt3::RenderSystem::DrawShape(gs::Polygon3D(vts), rp);
+        }
+    }
+}
+
+void RenderSystem::DrawNodeUV(const sop::Node& node)
+{
+    auto geo = node.GetGeometry();
+    if (!geo) {
+        return;
+    }
+
+    auto& attr = geo->GetAttr();
+    auto uv_idx = attr.QueryAttrIdx(sop::GeoAttrClass::Point, sop::GeoAttr::GEO_ATTR_UV);
+    if (uv_idx >= 0)
+    {
+        auto& pts = attr.GetPoints();
+        for (auto& prim : attr.GetPrimtives())
+        {
+            std::vector<sm::vec2> border;
+            border.reserve(prim->vertices.size());
+            for (auto& v : prim->vertices) {
+                auto uv = static_cast<const sm::vec3*>(pts[v->point->attr_idx]->vars[uv_idx].p);
+                border.push_back({ uv->x * UV_SCALE, uv->y * UV_SCALE });
+            }
+            m_pt.AddPolygon(border.data(), border.size(), 0xff000000);
         }
     }
 }

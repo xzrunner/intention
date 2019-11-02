@@ -11,6 +11,8 @@ namespace pt3 { class Viewport; }
 namespace sopv
 {
 
+class WxGeoProperty;
+
 class RenderSystem
 {
 public:
@@ -20,7 +22,13 @@ public:
         const sop::Node& back, const bp::Node& front) const;
     void DrawNode2D(const sop::Node& back, const bp::Node& front) const;
 
+    void DrawNodeAttr(const sop::Node& node, const WxGeoProperty& prop_view);
+    void DrawNodeUV(const sop::Node& node);
+
     auto& GetPainter() const { return m_pt; }
+
+public:
+    static const float UV_SCALE;
 
 private:
     void DrawGroup(const sop::Group& group, const sop::GeometryImpl& geo) const;

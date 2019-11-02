@@ -1,6 +1,9 @@
 #pragma once
 
+#include <ee0/typedef.h>
 #include <ee3/WxStageCanvas.h>
+
+#include <sop/typedef.h>
 
 namespace tess { class Painter; }
 
@@ -34,7 +37,8 @@ protected:
     virtual void OnKeyDownImpl(wxKeyEvent& event) override;
 
 private:
-    void DrawAttrSelected(tess::Painter& pt, const sm::mat4& cam_mat) const;
+    sop::NodePtr GetSelectedNode() const;
+    sop::NodePtr GetDisplayNode() const;
 
 private:
     enum class ViewportType
@@ -49,12 +53,12 @@ private:
     class Viewports
     {
     public:
-        Viewports(ee3::WxStageCanvas& canvas);
+        Viewports(WxStageCanvas& canvas);
 
-        void ChangeVP(ViewportType type);
+        bool ChangeVP(ViewportType type);
 
     private:
-        ee3::WxStageCanvas& m_canvas;
+        WxStageCanvas& m_canvas;
 
         ViewportType m_curr_vp = ViewportType::Perspective;
 
@@ -65,7 +69,13 @@ private:
         pt0::CameraPtr m_cam_xz = nullptr;
         pt0::CameraPtr m_cam_xy = nullptr;
         pt0::CameraPtr m_cam_zy = nullptr;
-    };
+
+        // uv
+        pt0::CameraPtr m_cam_uv = nullptr;
+
+        friend class WxStageCanvas;
+
+    }; // Viewports
 
 private:
     std::shared_ptr<SceneTree> m_stree = nullptr;
@@ -75,6 +85,13 @@ private:
     ee0::WxStagePage* m_graph_stage = nullptr;
 
     Viewports m_viewports;
+
+    bool m_uv_mode = false;
+
+    ee0::EditOPPtr m_default_op = nullptr;
+    ee0::EditOPPtr m_uv_op      = nullptr;
+
+    friend class Viewports;
 
 }; // WxStageCanvas
 

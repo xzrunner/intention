@@ -209,7 +209,7 @@ wxString WxGeoPropList::GetVertexItemText(long item, long column) const
     // point idx
     else if (column == 1)
     {
-        return std::to_string(m_geo->GetAttr().QueryIndex(v->point));
+        return std::to_string(v->point->attr_idx);
     }
     // others
     else
@@ -238,7 +238,7 @@ wxString WxGeoPropList::GetPrimitiveItemText(long item, long column) const
     else
     {
         return GetOthersPropText(column, prim->vars);
-    }    
+    }
 }
 
 wxString WxGeoPropList::GetDetailItemText(long item, long column) const
@@ -265,7 +265,7 @@ wxString WxGeoPropList::GetOthersPropText(size_t idx, const std::vector<sop::Var
     const size_t start_offset = BASE_COUNT[static_cast<int>(m_type)];
     int curr_idx = idx - start_offset;
     int var_idx = 0;
-    while (true) 
+    while (true)
     {
         assert(var_idx < static_cast<long>(vars.size()));
         auto var_n = GetAttrVarNum(desc[var_idx].GetType());
