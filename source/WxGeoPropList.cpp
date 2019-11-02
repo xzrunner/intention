@@ -271,6 +271,7 @@ wxString WxGeoPropList::GetOthersPropText(size_t idx, const std::vector<sop::Var
         auto var_n = GetAttrVarNum(desc[var_idx].GetType());
         if (curr_idx >= var_n) {
             curr_idx -= var_n;
+            ++var_idx;
         } else {
             return VarToString(desc[var_idx].GetType(), vars[var_idx], curr_idx);
         }
