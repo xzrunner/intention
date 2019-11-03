@@ -39,7 +39,8 @@ WxStageCanvas::WxStageCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
     : ee3::WxStageCanvas(stage, ECS_WORLD_VAR &rc, nullptr, true)
     , m_viewports(*this)
 {
-    m_uv_op = std::make_shared<ee2::CamControlOP>(m_viewports.m_cam_uv, m_stage->GetSubjectMgr());
+    m_uv_op = std::make_shared<ee2::CamControlOP>(m_viewports.m_cam_uv,
+        m_stage->GetSubjectMgr(), ee2::CamControlOP::MIDDLE_TAP);
 }
 
 bool WxStageCanvas::OnUpdate()
