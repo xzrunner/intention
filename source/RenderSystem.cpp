@@ -246,6 +246,26 @@ void RenderSystem::DrawNodeUV(const sop::Node& node)
             }
             m_pt.AddPolygon(border.data(), border.size(), 0xff000000);
         }
+
+        return;
+    }
+
+    uv_idx = attr.QueryAttrIdx(sop::GeoAttrClass::Vertex, sop::GeoAttr::GEO_ATTR_UV);
+    if (uv_idx >= 0)
+    {
+        auto& vts = attr.GetVertices();
+        for (auto& prim : attr.GetPrimtives())
+        {
+            std::vector<sm::vec2> border;
+            border.reserve(prim->vertices.size());
+            for (auto& v : prim->vertices) {
+                auto uv = static_cast<const sm::vec3*>(vts[v->attr_idx]->vars[uv_idx].p);
+                border.push_back({ uv->x * UV_SCALE, uv->y * UV_SCALE });
+            }
+            m_pt.AddPolygon(border.data(), border.size(), 0xff000000);
+        }
+
+        return;
     }
 }
 
