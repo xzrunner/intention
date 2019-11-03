@@ -149,6 +149,7 @@ SOPV_DEFINE_NODE(Transform,                           \
 SOPV_DEFINE_NODE(Color,                          \
     sm::vec3 color = sm::vec3(1.0f, 1.0f, 1.0f); \
 )
+SOPV_DEFINE_NODE(UVUnwrap, SOPV_NODE_PROP)
 
 // NURBs
 SOPV_DEFINE_NODE(Carve,         \
