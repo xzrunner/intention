@@ -256,6 +256,7 @@ REGIST_NODE_RTTI(Color,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Color")) \
 )                                                                  \
 )
+REGIST_NODE_RTTI_DEFAULT(UVLayout)
 REGIST_NODE_RTTI_DEFAULT(UVUnwrap)
 
 // NURBs
