@@ -525,7 +525,7 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         std::vector<std::string> tokens;
         auto str = wxANY_AS(val, wxString).ToStdString();
         boost::split(tokens, str, boost::is_any_of(";"));
-        assert(tokens.size() == 7);
+        assert(tokens.size() == 11);
 
         for (auto& t : tokens) {
             boost::algorithm::trim(t);
@@ -533,20 +533,24 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
 
         auto item = prop.get_value(m_node).get_value<AttrCreateItem>();
 
-        item.name = tokens[0];
+        size_t idx = 0;
+        item.name = tokens[idx++];
 
-        auto cls_str = tokens[1];
+        auto cls_str = tokens[idx++];
         std::transform(cls_str.begin(), cls_str.end(), cls_str.begin(), tolower);
         item.cls = rttr::type::get<GeoAttrClass>().get_enumeration()
             .name_to_value(cls_str).get_value<GeoAttrClass>();
 
-        auto type_str = tokens[2];
+        auto type_str = tokens[idx++];
         std::transform(type_str.begin(), type_str.end(), type_str.begin(), tolower);
         item.type = rttr::type::get<GeoAttrType>().get_enumeration()
             .name_to_value(type_str).get_value<GeoAttrType>();
 
         for (int i = 0; i < 4; ++i) {
-            item.value.xyzw[i] = std::atof(tokens[3 + i].c_str());
+            item.value.xyzw[i] = std::atof(tokens[idx++].c_str());
+        }
+        for (int i = 0; i < 4; ++i) {
+            item.default_val.xyzw[i] = std::atof(tokens[idx++].c_str());
         }
 
         prop.set_value(m_node, item);
