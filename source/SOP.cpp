@@ -14,6 +14,7 @@
 
 // attribute
 #include <sop/node/AttributeCreate.h>
+#include <sop/node/AttributePromote.h>
 #include <sop/node/AttributeTransfer.h>
 #include <sop/node/AttributeWrangle.h>
 #include <sop/node/Sort.h>
@@ -259,6 +260,17 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
             items.push_back(TransAttrCreateItem(src.item3));
         }
         dst.SetAttrItems(items);
+    }
+    else if (type == rttr::type::get<node::AttributePromote>())
+    {
+        auto& src = static_cast<const node::AttributePromote&>(front);
+        auto& dst = static_cast<sop::node::AttributePromote&>(back);
+
+        dst.SetPromoteType(
+            SOP::TransGeoAttrClass(src.from.cls),
+            SOP::TransGeoAttrClass(src.to)
+        );
+        dst.SetAttrName(src.from.str);
     }
     else if (type == rttr::type::get<node::AttributeTransfer>())
     {

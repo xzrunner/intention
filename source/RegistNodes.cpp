@@ -61,6 +61,16 @@ REGIST_NODE_RTTI(AttributeCreate,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Item3"))     \
 )                                                                      \
 )
+REGIST_NODE_RTTI(AttributePromote,
+.property("from", &sopv::node::AttributePromote::from)            \
+(                                                                 \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("From")) \
+)                                                                 \
+.property("to", &sopv::node::AttributePromote::to)                \
+(                                                                 \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("To"))   \
+)                                                                 \
+)
 REGIST_NODE_RTTI(AttributeTransfer,
 .property("points_attrs", &sopv::node::AttributeTransfer::points_attrs)         \
 (                                                                               \
