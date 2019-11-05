@@ -82,16 +82,14 @@ sop::NodePtr GetGroupNameNode(const sopv::GroupName& name, const sop::NodePtr& s
 
 sop::NodePtr GetAttrNameNode(const bp::NodePtr& bp_node, const sopv::SceneTree& stree)
 {
-    auto node_type = bp_node->get_type();
-    assert(node_type.is_derived_from<sopv::Node>());
-    if (node_type == rttr::type::get<sopv::node::AttributeTransfer>())
+    auto get_input_geo = [](const bp::NodePtr& bp_node, const sopv::SceneTree& stree, size_t input_idx)->sop::NodePtr
     {
         auto sop_node = stree.GetCurrEval()->QueryBackNode(*bp_node);
         if (!sop_node || !sop_node->GetGeometry()) {
             return nullptr;
         }
 
-        auto& conns = sop_node->GetImports()[sop::node::AttributeTransfer::IDX_FROM_GEO].conns;
+        auto& conns = sop_node->GetImports()[input_idx].conns;
         if (conns.empty()) {
             return nullptr;
         }
@@ -103,11 +101,14 @@ sop::NodePtr GetAttrNameNode(const bp::NodePtr& bp_node, const sopv::SceneTree& 
         } else {
             return f_node;
         }
-    }
-    else
-    {
-        assert(0);
-        return nullptr;
+    };
+
+    auto node_type = bp_node->get_type();
+    assert(node_type.is_derived_from<sopv::Node>());
+    if (node_type == rttr::type::get<sopv::node::AttributeTransfer>()) {
+        return get_input_geo(bp_node, stree, sop::node::AttributeTransfer::IDX_FROM_GEO);
+    } else {
+        return get_input_geo(bp_node, stree, 0);
     }
 }
 
