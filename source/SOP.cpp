@@ -334,6 +334,8 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         }
         dst.SetKey(key);
 
+        dst.SetPointReverse(src.point_reverse);
+
         dst.SetPointOffset(ParseExprInt(src.point_offset, back,
             sop::node::Sort::POINT_OFFSET, 0, eval));
     }

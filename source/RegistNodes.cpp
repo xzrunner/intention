@@ -97,14 +97,18 @@ REGIST_NODE_RTTI(Measure,
 )                                                                        \
 )
 REGIST_NODE_RTTI(Sort,
-.property("key", &sopv::node::Sort::key)                                 \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Key"))         \
-)                                                                        \
-.property("point_offset", &sopv::node::Sort::point_offset)               \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PointOffset")) \
-)                                                                        \
+.property("key", &sopv::node::Sort::key)                                  \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Key"))          \
+)                                                                         \
+.property("point_reverse", &sopv::node::Sort::point_reverse)              \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PointReverse")) \
+)                                                                         \
+.property("point_offset", &sopv::node::Sort::point_offset)                \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PointOffset"))  \
+)                                                                         \
 )
 
 // export
