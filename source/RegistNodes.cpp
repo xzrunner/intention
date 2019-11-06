@@ -62,14 +62,18 @@ REGIST_NODE_RTTI(AttributeCreate,
 )                                                                      \
 )
 REGIST_NODE_RTTI(AttributePromote,
-.property("from", &sopv::node::AttributePromote::from)            \
-(                                                                 \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("From")) \
-)                                                                 \
-.property("to", &sopv::node::AttributePromote::to)                \
-(                                                                 \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("To"))   \
-)                                                                 \
+.property("attr_name", &sopv::node::AttributePromote::attr_name)       \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Attr Name")) \
+)                                                                      \
+.property("from_cls", &sopv::node::AttributePromote::from_cls)         \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("From Type")) \
+)                                                                      \
+.property("to_cls", &sopv::node::AttributePromote::to_cls)             \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("To Type"))   \
+)                                                                      \
 )
 REGIST_NODE_RTTI(AttributeTransfer,
 .property("points_attrs", &sopv::node::AttributeTransfer::points_attrs)         \
@@ -271,6 +275,32 @@ REGIST_NODE_RTTI(Color,
 )                                                                  \
 )
 REGIST_NODE_RTTI_DEFAULT(UVLayout)
+REGIST_NODE_RTTI(UVTransform,
+.property("group_name", &sopv::node::UVTransform::group_name)          \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
+)                                                                      \
+.property("group_type", &sopv::node::UVTransform::group_type)          \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType")) \
+)                                                                      \
+.property("translate", &sopv::node::UVTransform::translate)            \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Translate")) \
+)                                                                      \
+.property("rotate", &sopv::node::UVTransform::rotate)                  \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Rotate"))    \
+)                                                                      \
+.property("scale", &sopv::node::UVTransform::scale)                    \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))     \
+)                                                                      \
+.property("shear", &sopv::node::UVTransform::shear)                    \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Shear"))     \
+)                                                                      \
+)
 REGIST_NODE_RTTI_DEFAULT(UVUnwrap)
 
 // NURBs

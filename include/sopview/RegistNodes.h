@@ -77,9 +77,10 @@ SOPV_DEFINE_NODE(AttributeCreate,                     \
     AttrCreateItem item2;                             \
     AttrCreateItem item3;                             \
 )
-SOPV_DEFINE_NODE(AttributePromote,            \
-    AttributeName from = GeoAttrClass::Point; \
-    GeoAttrClass  to   = GeoAttrClass::Point; \
+SOPV_DEFINE_NODE(AttributePromote,                 \
+    AttributeName attr_name = GeoAttrClass::Point; \
+    GeoAttrClass  from_cls  = GeoAttrClass::Point; \
+    GeoAttrClass  to_cls    = GeoAttrClass::Point; \
 )
 SOPV_DEFINE_NODE(AttributeTransfer,                           \
     AttributeName points_attrs     = GeoAttrClass::Point;     \
@@ -155,6 +156,14 @@ SOPV_DEFINE_NODE(Color,                          \
     sm::vec3 color = sm::vec3(1.0f, 1.0f, 1.0f); \
 )
 SOPV_DEFINE_NODE(UVLayout, SOPV_NODE_PROP)
+SOPV_DEFINE_NODE(UVTransform,                         \
+    GroupName group_name;                             \
+    GroupType group_type = GroupType::GuessFromGroup; \
+    StrVec3 translate    = StrVec3("0", "0", "0");    \
+    StrVec3 rotate       = StrVec3("0", "0", "0");    \
+    StrVec3 scale        = StrVec3("1", "1", "1");    \
+    StrVec3 shear        = StrVec3("0", "0", "0");    \
+)
 SOPV_DEFINE_NODE(UVUnwrap, SOPV_NODE_PROP)
 
 // NURBs

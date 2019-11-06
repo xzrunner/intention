@@ -31,6 +31,7 @@
 #include <sop/node/Transform.h>
 // material
 #include <sop/node/Color.h>
+#include <sop/node/UVTransform.h>
 // nurbs
 #include <sop/node/Carve.h>
 // polygon
@@ -479,6 +480,26 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Color&>(front);
         auto& dst = static_cast<sop::node::Color&>(back);
         dst.SetColor(src.color);
+    }
+    else if (type == rttr::type::get<node::UVTransform>())
+    {
+        auto& src = static_cast<const node::UVTransform&>(front);
+        auto& dst = static_cast<sop::node::UVTransform&>(back);
+
+        dst.SetGroupName(src.group_name.str);
+        dst.SetGroupType(TransGroupType(src.group_type));
+
+        sm::ivec3 trans_idx(sop::node::UVTransform::TRANS_X, sop::node::UVTransform::TRANS_Y, sop::node::UVTransform::TRANS_Z);
+        dst.SetTranslate(ParseExprFloat3(src.translate, back, trans_idx, sm::vec3(0, 0, 0), eval));
+
+        sm::ivec3 rot_idx(sop::node::UVTransform::ROT_X, sop::node::UVTransform::ROT_Y, sop::node::UVTransform::ROT_Z);
+        dst.SetRotate(ParseExprFloat3(src.rotate, back, rot_idx, sm::vec3(0, 0, 0), eval));
+
+        sm::ivec3 scale_idx(sop::node::UVTransform::SCALE_X, sop::node::UVTransform::SCALE_Y, sop::node::UVTransform::SCALE_Z);
+        dst.SetScale(ParseExprFloat3(src.scale, back, scale_idx, sm::vec3(1, 1, 1), eval));
+
+        sm::ivec3 shear_idx(sop::node::UVTransform::SHEAR_X, sop::node::UVTransform::SHEAR_Y, sop::node::UVTransform::SHEAR_Z);
+        dst.SetShear(ParseExprFloat3(src.shear, back, shear_idx, sm::vec3(0, 0, 0), eval));
     }
     // NURBs
     else if (type == rttr::type::get<node::Carve>())
