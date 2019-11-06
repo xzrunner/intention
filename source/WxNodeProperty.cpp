@@ -515,6 +515,10 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     else if (prop_type == rttr::type::get<GeoAttrClass>() && key == ui_info.desc)
     {
         prop.set_value(m_node, GeoAttrClass(wxANY_AS(val, int)));
+
+        if (node_type == rttr::type::get<node::AttributePromote>()) {
+            static_cast<node::AttributePromote&>(*m_node).attr_name.cls = GeoAttrClass(wxANY_AS(val, int));
+        }
     }
     else if (prop_type == rttr::type::get<GeoAttrType>() && key == ui_info.desc)
     {

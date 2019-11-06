@@ -267,11 +267,12 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::AttributePromote&>(front);
         auto& dst = static_cast<sop::node::AttributePromote&>(back);
 
+        dst.SetAttrName(src.attr_name.str);
+
         dst.SetPromoteType(
-            SOP::TransGeoAttrClass(src.from.cls),
-            SOP::TransGeoAttrClass(src.to)
+            SOP::TransGeoAttrClass(src.from_cls),
+            SOP::TransGeoAttrClass(src.to_cls)
         );
-        dst.SetAttrName(src.from.str);
     }
     else if (type == rttr::type::get<node::AttributeTransfer>())
     {
