@@ -156,6 +156,9 @@ SOPV_DEFINE_NODE(Color,                          \
     sm::vec3 color = sm::vec3(1.0f, 1.0f, 1.0f); \
 )
 SOPV_DEFINE_NODE(UVLayout, SOPV_NODE_PROP)
+SOPV_DEFINE_NODE(UVQuickShade, \
+    std::string image_file;    \
+)
 SOPV_DEFINE_NODE(UVTransform,                         \
     GroupName group_name;                             \
     GroupType group_type = GroupType::GuessFromGroup; \

@@ -31,6 +31,7 @@
 #include <sop/node/Transform.h>
 // material
 #include <sop/node/Color.h>
+#include <sop/node/UVQuickShade.h>
 #include <sop/node/UVTransform.h>
 // nurbs
 #include <sop/node/Carve.h>
@@ -481,6 +482,12 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Color&>(front);
         auto& dst = static_cast<sop::node::Color&>(back);
         dst.SetColor(src.color);
+    }
+    else if (type == rttr::type::get<node::UVQuickShade>())
+    {
+        auto& src = static_cast<const node::UVQuickShade&>(front);
+        auto& dst = static_cast<sop::node::UVQuickShade&>(back);
+        dst.SetImageFile(src.image_file);
     }
     else if (type == rttr::type::get<node::UVTransform>())
     {

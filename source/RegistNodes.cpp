@@ -275,6 +275,14 @@ REGIST_NODE_RTTI(Color,
 )                                                                  \
 )
 REGIST_NODE_RTTI_DEFAULT(UVLayout)
+REGIST_NODE_RTTI(UVQuickShade,
+.property("image_file", &sopv::node::UVQuickShade::image_file)          \
+(                                                                       \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("ImageFile")), \
+    rttr::metadata(js::RTTR::FilePathTag(), true),                      \
+    rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))    \
+)                                                                       \
+)
 REGIST_NODE_RTTI(UVTransform,
 .property("group_name", &sopv::node::UVTransform::group_name)          \
 (                                                                      \
