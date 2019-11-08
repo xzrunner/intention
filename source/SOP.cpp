@@ -50,6 +50,8 @@
 #include <sop/node/Line.h>
 #include <sop/node/Primitive.h>
 #include <sop/node/Sphere.h>
+// primitive extern
+#include <sop/node/Dungeon.h>
 // utility
 #include <sop/node/Blast.h>
 #include <sop/node/CopyToPoints.h>
@@ -706,6 +708,18 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetRotate(src.rotate);
         dst.SetScale(src.scale);
         dst.SetShear(src.shear);
+    }
+    // primitive extern
+    else if (type == rttr::type::get<node::Dungeon>())
+    {
+        auto& src = static_cast<const node::Dungeon&>(front);
+        auto& dst = static_cast<sop::node::Dungeon&>(back);
+
+        dst.SetSize(src.size);
+        dst.SetSplitSize(src.split_sz);
+        dst.SetMinSize(src.min_sz);
+
+        dst.SetSeed(src.seed);
     }
     // utility
     else if (type == rttr::type::get<node::Blast>())

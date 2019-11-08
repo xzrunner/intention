@@ -540,6 +540,25 @@ REGIST_NODE_RTTI(Primitive,
 )                                                                      \
 )
 REGIST_NODE_RTTI_DEFAULT(Sphere)
+// primitive extern
+REGIST_NODE_RTTI(Dungeon,
+.property("size", &sopv::node::Dungeon::size)                          \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Size"))      \
+)                                                                      \
+.property("split_sz", &sopv::node::Dungeon::split_sz)                  \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SplitSize")) \
+)                                                                      \
+.property("min_size", &sopv::node::Dungeon::min_sz)                    \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MinSize"))   \
+)                                                                      \
+.property("seed", &sopv::node::Dungeon::seed)                          \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Seed"))      \
+)                                                                      \
+)
 
 // utility
 REGIST_NODE_RTTI(Blast,

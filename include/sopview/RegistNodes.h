@@ -251,6 +251,13 @@ SOPV_DEFINE_NODE(Primitive,                 \
     sm::vec3 shear     = sm::vec3(0, 0, 0); \
 )
 SOPV_DEFINE_NODE(Sphere, SOPV_NODE_PROP)
+// primitive extern
+SOPV_DEFINE_NODE(Dungeon,                       \
+    sm::vec2 size     = sm::vec2(1, 1);         \
+    sm::vec2 split_sz = sm::vec2(0.5f, 0.5f);   \
+    sm::vec2 min_sz   = sm::vec2(0.25f, 0.25f); \
+    uint32_t seed     = 0;                      \
+)
 
 // utility
 SOPV_DEFINE_NODE(Blast,                               \
