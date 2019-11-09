@@ -17,6 +17,8 @@ Node::Node(const std::string& title, bool props)
     if (props) {
         m_props = std::make_unique<NodePropArray>();
     }
+
+    m_style.hori = false;
 }
 
 Node::Node(const Node& node)
