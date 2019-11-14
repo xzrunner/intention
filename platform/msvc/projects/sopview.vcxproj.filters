@@ -40,6 +40,9 @@
     <Filter Include="view\toolbar\node">
       <UniqueIdentifier>{e6aa90d8-1d6a-4296-93b6-7d4358230211}</UniqueIdentifier>
     </Filter>
+    <Filter Include="tools\serialize">
+      <UniqueIdentifier>{e6b86047-da07-4a98-aa7a-86680ad8d4c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\sopview\SOPView.h" />
@@ -103,6 +106,15 @@
     <ClInclude Include="..\..\..\include\sopview\WxGeoPropList.h">
       <Filter>view\toolbar\geo</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\PyLoader.h">
+      <Filter>tools\serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\PyNodeProxy.h">
+      <Filter>tools\serialize</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\PyParmValue.h">
+      <Filter>tools\serialize</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -159,6 +171,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxGeoPropList.cpp">
       <Filter>view\toolbar\geo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\PyLoader.cpp">
+      <Filter>tools\serialize</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\PyNodeProxy.cpp">
+      <Filter>tools\serialize</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\PyParmValue.cpp">
+      <Filter>tools\serialize</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
