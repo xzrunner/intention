@@ -234,7 +234,9 @@ void Evaluator::UpdateGroupName()
             assert(itr.second->get_type() == rttr::type::get<sop::node::GroupCreate>());
             auto front = static_cast<const node::GroupCreate*>(itr.first);
             auto back = std::static_pointer_cast<sop::node::GroupCreate>(itr.second);
-            const_cast<node::GroupCreate*>(front)->group_name = back->GetGroupName();
+            auto& name_var = back->GetProps().GetProps()[sop::node::GroupCreate::NAME].Val();
+            assert(name_var.type == sop::VarType::String);
+            const_cast<node::GroupCreate*>(front)->group_name = static_cast<const char*>(name_var.p);
         }
         else if (type == rttr::type::get<node::GroupExpression>())
         {

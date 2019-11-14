@@ -36,7 +36,7 @@ private:
     static float ParseExprFloat(const std::string& src, const sop::Node& dst,
         size_t idx, float expect, const Evaluator& eval);
     static sm::vec3 ParseExprFloat3(const StrVec3& src, const sop::Node& dst,
-        const sm::ivec3& idx, const sm::vec3& expect, const Evaluator& eval);
+        size_t idx, const sm::vec3& expect, const Evaluator& eval);
 
 }; // SOP
 

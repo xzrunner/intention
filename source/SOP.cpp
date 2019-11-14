@@ -466,17 +466,10 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetGroupName(src.group_name.str);
         dst.SetGroupType(TransGroupType(src.group_type));
 
-        sm::ivec3 trans_idx(sop::node::Transform::TRANS_X, sop::node::Transform::TRANS_Y, sop::node::Transform::TRANS_Z);
-        dst.SetTranslate(ParseExprFloat3(src.translate, back, trans_idx, sm::vec3(0, 0, 0), eval));
-
-        sm::ivec3 rot_idx(sop::node::Transform::ROT_X, sop::node::Transform::ROT_Y, sop::node::Transform::ROT_Z);
-        dst.SetRotate(ParseExprFloat3(src.rotate, back, rot_idx, sm::vec3(0, 0, 0), eval));
-
-        sm::ivec3 scale_idx(sop::node::Transform::SCALE_X, sop::node::Transform::SCALE_Y, sop::node::Transform::SCALE_Z);
-        dst.SetScale(ParseExprFloat3(src.scale, back, scale_idx, sm::vec3(1, 1, 1), eval));
-
-        sm::ivec3 shear_idx(sop::node::Transform::SHEAR_X, sop::node::Transform::SHEAR_Y, sop::node::Transform::SHEAR_Z);
-        dst.SetShear(ParseExprFloat3(src.shear, back, shear_idx, sm::vec3(0, 0, 0), eval));
+        dst.SetTranslate(ParseExprFloat3(src.translate, back, sop::node::Transform::TRANS, sm::vec3(0, 0, 0), eval));
+        dst.SetRotate(ParseExprFloat3(src.rotate, back, sop::node::Transform::ROT, sm::vec3(0, 0, 0), eval));
+        dst.SetScale(ParseExprFloat3(src.scale, back, sop::node::Transform::SCALE, sm::vec3(1, 1, 1), eval));
+        dst.SetShear(ParseExprFloat3(src.shear, back, sop::node::Transform::SHEAR, sm::vec3(0, 0, 0), eval));
     }
     // material
     else if (type == rttr::type::get<node::Color>())
@@ -499,17 +492,10 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetGroupName(src.group_name.str);
         dst.SetGroupType(TransGroupType(src.group_type));
 
-        sm::ivec3 trans_idx(sop::node::UVTransform::TRANS_X, sop::node::UVTransform::TRANS_Y, sop::node::UVTransform::TRANS_Z);
-        dst.SetTranslate(ParseExprFloat3(src.translate, back, trans_idx, sm::vec3(0, 0, 0), eval));
-
-        sm::ivec3 rot_idx(sop::node::UVTransform::ROT_X, sop::node::UVTransform::ROT_Y, sop::node::UVTransform::ROT_Z);
-        dst.SetRotate(ParseExprFloat3(src.rotate, back, rot_idx, sm::vec3(0, 0, 0), eval));
-
-        sm::ivec3 scale_idx(sop::node::UVTransform::SCALE_X, sop::node::UVTransform::SCALE_Y, sop::node::UVTransform::SCALE_Z);
-        dst.SetScale(ParseExprFloat3(src.scale, back, scale_idx, sm::vec3(1, 1, 1), eval));
-
-        sm::ivec3 shear_idx(sop::node::UVTransform::SHEAR_X, sop::node::UVTransform::SHEAR_Y, sop::node::UVTransform::SHEAR_Z);
-        dst.SetShear(ParseExprFloat3(src.shear, back, shear_idx, sm::vec3(0, 0, 0), eval));
+        dst.SetTranslate(ParseExprFloat3(src.translate, back, sop::node::UVTransform::TRANS, sm::vec3(0, 0, 0), eval));
+        dst.SetRotate(ParseExprFloat3(src.rotate, back, sop::node::UVTransform::ROT, sm::vec3(0, 0, 0), eval));
+        dst.SetScale(ParseExprFloat3(src.scale, back, sop::node::UVTransform::SCALE, sm::vec3(1, 1, 1), eval));
+        dst.SetShear(ParseExprFloat3(src.shear, back, sop::node::UVTransform::SHEAR, sm::vec3(0, 0, 0), eval));
     }
     // NURBs
     else if (type == rttr::type::get<node::Carve>())
@@ -598,9 +584,7 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Knife&>(front);
         auto& dst = static_cast<sop::node::Knife&>(back);
 
-        sm::ivec3 origin_idx(sop::node::Knife::ORIGINX_X, sop::node::Knife::ORIGINX_Y, sop::node::Knife::ORIGINX_Z);
-        dst.SetOrigin(ParseExprFloat3(src.origin, back, origin_idx, sm::vec3(0, 0, 0), eval));
-
+        dst.SetOrigin(ParseExprFloat3(src.origin, back, sop::node::Knife::ORIGINX, sm::vec3(0, 0, 0), eval));
         dst.SetDirection(src.direction);
 
         sop::node::Knife::KeepType keep;
@@ -662,12 +646,8 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::Box&>(back);
         auto& dst_props = const_cast<sop::NodePropsMgr&>(dst.GetProps());
 
-        sm::ivec3 size_idx(sop::node::Box::SIZE_X, sop::node::Box::SIZE_Y, sop::node::Box::SIZE_Z);
-        dst.SetSize(ParseExprFloat3(src.size, back, size_idx, sm::vec3(1, 1, 1), eval));
-
-        sm::ivec3 pos_idx(sop::node::Box::POS_X, sop::node::Box::POS_Y, sop::node::Box::POS_Z);
-        dst.SetCenter(ParseExprFloat3(src.center, back, pos_idx, sm::vec3(0, 0, 0), eval));
-
+        dst.SetSize(ParseExprFloat3(src.size, back, sop::node::Box::SIZE, sm::vec3(1, 1, 1), eval));
+        dst.SetCenter(ParseExprFloat3(src.center, back, sop::node::Box::POS, sm::vec3(0, 0, 0), eval));
         dst.SetScale(sm::vec3(src.scale, src.scale, src.scale));
     }
     else if (type == rttr::type::get<node::Curve>())
@@ -893,7 +873,7 @@ SOP::TransGeoAttrClass(sopv::GeoAttrClass cls)
 }
 
 int SOP::ParseExprInt(const std::string& src, const sop::Node& dst,
-                             size_t idx, int expect, const Evaluator& eval)
+                      size_t idx, int expect, const Evaluator& eval)
 {
     int ret = expect;
 
@@ -909,7 +889,7 @@ int SOP::ParseExprInt(const std::string& src, const sop::Node& dst,
 }
 
 float SOP::ParseExprFloat(const std::string& src, const sop::Node& dst,
-                                 size_t idx, float expect, const Evaluator& eval)
+                          size_t idx, float expect, const Evaluator& eval)
 {
     float ret = expect;
 
@@ -925,8 +905,7 @@ float SOP::ParseExprFloat(const std::string& src, const sop::Node& dst,
 }
 
 sm::vec3 SOP::ParseExprFloat3(const StrVec3& src, const sop::Node& dst,
-                                     const sm::ivec3& idx, const sm::vec3& expect,
-                                     const Evaluator& eval)
+                              size_t idx, const sm::vec3& expect, const Evaluator& eval)
 {
     sm::vec3 ret = expect;
 
@@ -934,19 +913,19 @@ sm::vec3 SOP::ParseExprFloat3(const StrVec3& src, const sop::Node& dst,
     try {
         ret.x = boost::lexical_cast<float>(src.x);
     } catch (boost::bad_lexical_cast&) {
-        dst_props.SetExpr(idx.x, src.x);
+        dst_props.SetExpr(idx, src.x, 0);
         ret.x = eval.CalcFloat(src.x, dst, 1.0f);
     }
     try {
         ret.y = boost::lexical_cast<float>(src.y);
     } catch (boost::bad_lexical_cast&) {
-        dst_props.SetExpr(idx.y, src.y);
+        dst_props.SetExpr(idx, src.y, 1);
         ret.y = eval.CalcFloat(src.y, dst, 1.0f);
     }
     try {
         ret.z = boost::lexical_cast<float>(src.z);
     } catch (boost::bad_lexical_cast&) {
-        dst_props.SetExpr(idx.z, src.z);
+        dst_props.SetExpr(idx, src.z, 2);
         ret.z = eval.CalcFloat(src.z, dst, 1.0f);
     }
 
