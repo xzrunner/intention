@@ -4,14 +4,14 @@
 
 #include <js/RTTR.h>
 
-#define REGIST_NODE_RTTI(name, prop)                            \
-	rttr::registration::class_<sopv::node::name>("sopv::"#name) \
+#define REGIST_NODE_RTTI(type, name, prop)                      \
+	rttr::registration::class_<sopv::node::type>("sopv::"#name) \
 		.constructor<>()                                        \
 		prop                                                    \
 	;
 
 #define PROP
-#define REGIST_NODE_RTTI_DEFAULT(name) REGIST_NODE_RTTI(name, PROP)
+#define REGIST_NODE_RTTI_DEFAULT(type, name) REGIST_NODE_RTTI(type, name, PROP)
 
 RTTR_REGISTRATION
 {
@@ -32,10 +32,10 @@ rttr::registration::class_<sopv::Node>("sopv::node")
 )
 ;
 
-REGIST_NODE_RTTI_DEFAULT(Geometry)
+REGIST_NODE_RTTI_DEFAULT(Geometry, geometry)
 
 // attribute
-REGIST_NODE_RTTI(AttributeCreate,
+REGIST_NODE_RTTI(AttributeCreate, attribcreate::2.0,
 .property("group_name", &sopv::node::AttributeCreate::group_name)      \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
@@ -61,7 +61,7 @@ REGIST_NODE_RTTI(AttributeCreate,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Item3"))     \
 )                                                                      \
 )
-REGIST_NODE_RTTI(AttributePromote,
+REGIST_NODE_RTTI(AttributePromote, attribpromote,
 .property("attr_name", &sopv::node::AttributePromote::attr_name)       \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Attr Name")) \
@@ -75,7 +75,7 @@ REGIST_NODE_RTTI(AttributePromote,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("To Type"))   \
 )                                                                      \
 )
-REGIST_NODE_RTTI(AttributeTransfer,
+REGIST_NODE_RTTI(AttributeTransfer, attribtransfer,
 .property("points_attrs", &sopv::node::AttributeTransfer::points_attrs)         \
 (                                                                               \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Points"))             \
@@ -93,14 +93,14 @@ REGIST_NODE_RTTI(AttributeTransfer,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Detail"))             \
 )                                                                               \
 )
-REGIST_NODE_RTTI(AttributeWrangle,
+REGIST_NODE_RTTI(AttributeWrangle, attribwrangle,
 .property("vex_expr", &sopv::node::AttributeWrangle::vex_expr)        \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("VexExpr")), \
     rttr::metadata(ee0::PropLongStringTag(), true)                    \
 )                                                                     \
 )
-REGIST_NODE_RTTI(Measure,
+REGIST_NODE_RTTI(Measure, measure,
 .property("ms_type", &sopv::node::Measure::ms_type)                      \
 (                                                                        \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MeasureType")) \
@@ -110,7 +110,7 @@ REGIST_NODE_RTTI(Measure,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MeasureName")) \
 )                                                                        \
 )
-REGIST_NODE_RTTI(Sort,
+REGIST_NODE_RTTI(Sort, sort,
 .property("key", &sopv::node::Sort::key)                                  \
 (                                                                         \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Key"))          \
@@ -125,18 +125,8 @@ REGIST_NODE_RTTI(Sort,
 )                                                                         \
 )
 
-// export
-REGIST_NODE_RTTI(File,
-.property("filepath", &sopv::node::File::filepath)                     \
-(                                                                      \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filepath")), \
-    rttr::metadata(js::RTTR::FilePathTag(), true),                     \
-    rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))   \
-)                                                                      \
-)
-
 // group
-REGIST_NODE_RTTI(GroupCreate,                                               \
+REGIST_NODE_RTTI(GroupCreate, groupcreate,
 .property("group_name", &sopv::node::GroupCreate::group_name)               \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))      \
@@ -174,7 +164,7 @@ REGIST_NODE_RTTI(GroupCreate,                                               \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SpreadAngle"))    \
 )                                                                           \
 )
-REGIST_NODE_RTTI(GroupExpression,                                      \
+REGIST_NODE_RTTI(GroupExpression, groupexpression,
 .property("group_type", &sopv::node::GroupExpression::group_type)      \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType")) \
@@ -196,7 +186,7 @@ REGIST_NODE_RTTI(GroupExpression,                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Inst3"))     \
 )                                                                      \
 )
-REGIST_NODE_RTTI(GroupPromote,                                         \
+REGIST_NODE_RTTI(GroupPromote, grouppromote,
 .property("group_name", &sopv::node::GroupPromote::group_name)         \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
@@ -211,8 +201,18 @@ REGIST_NODE_RTTI(GroupPromote,                                         \
 )                                                                      \
 )
 
+// import
+REGIST_NODE_RTTI(File, file,
+.property("filepath", &sopv::node::File::filepath)                     \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filepath")), \
+    rttr::metadata(js::RTTR::FilePathTag(), true),                     \
+    rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))   \
+)                                                                      \
+)
+
 // manipulate
-REGIST_NODE_RTTI(Delete,
+REGIST_NODE_RTTI(Delete, delete,
 .property("delete_non_selected", &sopv::node::Delete::delete_non_selected)  \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DelNonSelected")) \
@@ -226,7 +226,7 @@ REGIST_NODE_RTTI(Delete,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FilterExp"))      \
 )                                                                           \
 )
-REGIST_NODE_RTTI(Peak,
+REGIST_NODE_RTTI(Peak, peak,
 .property("group_name", &sopv::node::Peak::group_name)                 \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
@@ -240,7 +240,7 @@ REGIST_NODE_RTTI(Peak,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance"))  \
 )                                                                      \
 )
-REGIST_NODE_RTTI(Transform,
+REGIST_NODE_RTTI(Transform, xform,
 .property("group_name", &sopv::node::Transform::group_name)            \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
@@ -268,14 +268,14 @@ REGIST_NODE_RTTI(Transform,
 )
 
 // material
-REGIST_NODE_RTTI(Color,
+REGIST_NODE_RTTI(Color, color,
 .property("color", &sopv::node::Color::color)                      \
 (                                                                  \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Color")) \
 )                                                                  \
 )
-REGIST_NODE_RTTI_DEFAULT(UVLayout)
-REGIST_NODE_RTTI(UVQuickShade,
+REGIST_NODE_RTTI_DEFAULT(UVLayout, uvlayout)
+REGIST_NODE_RTTI(UVQuickShade, uvquickshade,
 .property("image_file", &sopv::node::UVQuickShade::image_file)          \
 (                                                                       \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("ImageFile")), \
@@ -283,7 +283,7 @@ REGIST_NODE_RTTI(UVQuickShade,
     rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))    \
 )                                                                       \
 )
-REGIST_NODE_RTTI(UVTransform,
+REGIST_NODE_RTTI(UVTransform, uvtransform::2.0,
 .property("group_name", &sopv::node::UVTransform::group_name)          \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
@@ -309,10 +309,10 @@ REGIST_NODE_RTTI(UVTransform,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Shear"))     \
 )                                                                      \
 )
-REGIST_NODE_RTTI_DEFAULT(UVUnwrap)
+REGIST_NODE_RTTI_DEFAULT(UVUnwrap, uvunwrap)
 
 // NURBs
-REGIST_NODE_RTTI(Carve,
+REGIST_NODE_RTTI(Carve, carve,
 .property("first_u", &sopv::node::Carve::first_u)                    \
 (                                                                    \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FirstU"))  \
@@ -332,7 +332,7 @@ REGIST_NODE_RTTI(Carve,
 )
 
 // polygon
-REGIST_NODE_RTTI(Add,
+REGIST_NODE_RTTI(Add, add,
 .property("use_p0", &sopv::node::Add::use_p0)                      \
 (                                                                  \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UseP0")) \
@@ -366,13 +366,13 @@ REGIST_NODE_RTTI(Add,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P3"))    \
 )                                                                  \
 )
-REGIST_NODE_RTTI(Boolean,
+REGIST_NODE_RTTI(Boolean, boolean::2.0,
 .property("operator", &sopv::node::Boolean::op)                       \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Operator")) \
 )                                                                     \
 )
-REGIST_NODE_RTTI(Fuse,
+REGIST_NODE_RTTI(Fuse, fuse,
 .property("op", &sopv::node::Fuse::op)                                \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("op"))       \
@@ -382,7 +382,7 @@ REGIST_NODE_RTTI(Fuse,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance")) \
 )                                                                     \
 )
-REGIST_NODE_RTTI(Knife,
+REGIST_NODE_RTTI(Knife, knife,
 .property("origin", &sopv::node::Knife::origin)                        \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Origin"))    \
@@ -396,13 +396,13 @@ REGIST_NODE_RTTI(Knife,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Keep"))      \
 )
 )
-REGIST_NODE_RTTI(Normal,
+REGIST_NODE_RTTI(Normal, normal,
 .property("attr_add_norm_to", &sopv::node::Normal::attr_add_norm_to)   \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("AddNormTo")) \
 )                                                                      \
 )
-REGIST_NODE_RTTI(PolyExtrude,
+REGIST_NODE_RTTI(PolyExtrude, polyextrude::2.0,
 .property("group_name", &sopv::node::PolyExtrude::group_name)            \
 (                                                                        \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))   \
@@ -436,8 +436,8 @@ REGIST_NODE_RTTI(PolyExtrude,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SideGroup"))   \
 )
 )
-REGIST_NODE_RTTI_DEFAULT(PolyFill)
-REGIST_NODE_RTTI(PolyFrame,
+REGIST_NODE_RTTI_DEFAULT(PolyFill, polyfill)
+REGIST_NODE_RTTI(PolyFrame, polyframe,
 .property("entity_type", &sopv::node::PolyFrame::entity_type)              \
 (                                                                          \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("EntityType"))    \
@@ -461,12 +461,12 @@ REGIST_NODE_RTTI(PolyFrame,
 )
 
 // primitive
-REGIST_NODE_RTTI(Box,
+REGIST_NODE_RTTI(Box, box,
 .property("size", &sopv::node::Box::size)                           \
 (                                                                   \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Size"))   \
 )                                                                   \
-.property("center", &sopv::node::Box::center)                       \
+.property("t", &sopv::node::Box::center)                            \
 (                                                                   \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Center")) \
 )                                                                   \
@@ -475,13 +475,13 @@ REGIST_NODE_RTTI(Box,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))  \
 )
 )
-REGIST_NODE_RTTI(Curve,
+REGIST_NODE_RTTI(Curve, curve,
 .property("vertices", &sopv::node::Curve::vertices)                   \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vertices")) \
 )                                                                     \
 )
-REGIST_NODE_RTTI(Grid,
+REGIST_NODE_RTTI(Grid, grid,
 .property("size_x", &sopv::node::Grid::size_x)                       \
 (                                                                    \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Size X"))  \
@@ -499,7 +499,7 @@ REGIST_NODE_RTTI(Grid,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Columns")) \
 )                                                                    \
 )
-REGIST_NODE_RTTI(Line,
+REGIST_NODE_RTTI(Line, line,
 .property("origin", &sopv::node::Line::origin)                         \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Origin"))    \
@@ -517,7 +517,7 @@ REGIST_NODE_RTTI(Line,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Points"))    \
 )                                                                      \
 )
-REGIST_NODE_RTTI(Primitive,
+REGIST_NODE_RTTI(Primitive, primitive,
 .property("group_name", &sopv::node::Primitive::group_name)              \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
@@ -539,9 +539,9 @@ REGIST_NODE_RTTI(Primitive,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Shear"))     \
 )                                                                      \
 )
-REGIST_NODE_RTTI_DEFAULT(Sphere)
+REGIST_NODE_RTTI_DEFAULT(Sphere, sphere)
 // primitive extern
-REGIST_NODE_RTTI(Dungeon,
+REGIST_NODE_RTTI(Dungeon, dungeon,
 .property("size", &sopv::node::Dungeon::size)                          \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Size"))      \
@@ -561,7 +561,7 @@ REGIST_NODE_RTTI(Dungeon,
 )
 
 // utility
-REGIST_NODE_RTTI(Blast,
+REGIST_NODE_RTTI(Blast, blast,
 .property("group_name", &sopv::node::Blast::group_name)                     \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))      \
@@ -575,7 +575,7 @@ REGIST_NODE_RTTI(Blast,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DelNonSelected")) \
 )
 )
-REGIST_NODE_RTTI(CopyToPoints,
+REGIST_NODE_RTTI(CopyToPoints, copytopoints,
 .property("src_group", &sopv::node::CopyToPoints::src_group)                \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SrcGroup"))       \
@@ -593,8 +593,8 @@ REGIST_NODE_RTTI(CopyToPoints,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UsePtDir"))       \
 )                                                                           \
 )
-REGIST_NODE_RTTI_DEFAULT(ForeachPrimBegin)
-REGIST_NODE_RTTI(ForeachPrimEnd,
+REGIST_NODE_RTTI_DEFAULT(ForeachPrimBegin, block_begin)
+REGIST_NODE_RTTI(ForeachPrimEnd, block_end,
 .property("do_single_pass", &sopv::node::ForeachPrimEnd::do_single_pass)         \
 (                                                                                \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SinglePass"))          \
@@ -604,21 +604,21 @@ REGIST_NODE_RTTI(ForeachPrimEnd,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SinglePassOffset"))    \
 )                                                                                \
 )
-REGIST_NODE_RTTI_DEFAULT(Merge)
-REGIST_NODE_RTTI_DEFAULT(Null)
-REGIST_NODE_RTTI(Output,
+REGIST_NODE_RTTI_DEFAULT(Merge, merge)
+REGIST_NODE_RTTI_DEFAULT(Null, null)
+REGIST_NODE_RTTI(Output, output,
 .property("output_idx", &sopv::node::Output::output_idx)               \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputIdx")) \
 )                                                                      \
 )
-REGIST_NODE_RTTI(Split,
+REGIST_NODE_RTTI(Split, split,
 .property("group_name", &sopv::node::Split::group_name)                \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
 )                                                                      \
 )
-REGIST_NODE_RTTI(Switch,
+REGIST_NODE_RTTI(Switch, switch,
 .property("selected", &sopv::node::Switch::selected)                  \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Selected")) \
