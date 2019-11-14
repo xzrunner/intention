@@ -12,14 +12,15 @@ namespace sopv
 {
 
 class WxGeoProperty;
+class SceneTree;
+class Node;
 
 class RenderSystem
 {
 public:
     RenderSystem(const pt3::Viewport& vp, const sm::mat4& cam_mat);
 
-    void DrawNode3D(const pt0::RenderContext& rc,
-        const sop::Node& back, const bp::Node& front) const;
+    void DrawNode3D(const pt0::RenderContext& rc, const std::shared_ptr<SceneTree>& stre) const;
     void DrawNode2D(const sop::Node& back, const bp::Node& front) const;
 
     void DrawNodeAttr(const sop::Node& node, const WxGeoProperty& prop_view);
@@ -31,6 +32,8 @@ public:
     static const float UV_SCALE;
 
 private:
+    void DrawNode3D(const pt0::RenderContext& rc, const sop::Node& back, const Node& front) const;
+
     void DrawGroup(const sop::Group& group, const sop::GeometryImpl& geo) const;
 
     void DrawFace(const pm3::Polytope& poly, size_t face_idx,

@@ -2,6 +2,10 @@
 #include "sopview/Node.h"
 #include "sopview/RegistNodes.h"
 #include "sopview/WxGeoProperty.h"
+#include "sopview/Evaluator.h"
+#include "sopview/SceneTree.h"
+
+#include <blueprint/CompNode.h>
 
 #include <geoshape/Point3D.h>
 #include <geoshape/Polygon3D.h>
@@ -14,6 +18,7 @@
 #include <painting3/RenderSystem.h>
 #include <painting3/Viewport.h>
 #include <node0/SceneNode.h>
+#include <node0/CompComplex.h>
 #include <node3/RenderSystem.h>
 #include <node3/CompShape.h>
 #include <model/BrushBuilder.h>
@@ -39,44 +44,52 @@ RenderSystem::RenderSystem(const pt3::Viewport& vp,
 }
 
 void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
-                              const sop::Node& back,
-                              const bp::Node& front) const
+                              const std::shared_ptr<SceneTree>& stree) const
 {
-    if (!front.get_type().is_derived_from<sopv::Node>()) {
+    auto node = stree->GetCurrNode();
+    if (!node->HasUniqueComp<bp::CompNode>()) {
         return;
     }
+    auto& cnode = node->GetUniqueComp<bp::CompNode>();
+    auto bp_node = cnode.GetNode();
+    assert(bp_node);
+    auto bp_type = bp_node->get_type();
+    assert(bp_type == rttr::type::get<node::Geometry>());
 
-    auto& sopv_node = static_cast<const Node&>(front);
-    if (!sopv_node.GetDisplay() &&
-        !sopv_node.GetTemplate()) {
-        return;
-    }
-
-    auto geo = back.GetGeometry();
-    if (!geo) {
-        return;
-    }
-
-    auto sn = geo->GetNode();
-    if (!sn) {
-        return;
-    }
-
-    pt3::RenderParams rp;
-    rp.painter  = &m_pt;
-    rp.viewport = &m_vp;
-    rp.cam_mat  = &m_cam_mat;
-
-    if (sopv_node.GetDisplay())
+    auto eval = stree->GetCurrEval();
+    assert(node->HasSharedComp<n0::CompComplex>());
+    auto& ccomplex = node->GetSharedComp<n0::CompComplex>();
+    for (auto& c : ccomplex.GetAllChildren())
     {
-        // draw face
-        rp.type = pt3::RenderParams::DRAW_MESH;
-        n3::RenderSystem::Draw(*sn, rp, rc);
-    }
+        if (!c->HasUniqueComp<bp::CompNode>()) {
+            continue;
+        }
 
-    // draw edge
-    rp.type = pt3::RenderParams::DRAW_BORDER_MESH;
-    n3::RenderSystem::Draw(*sn, rp, rc);
+        auto bp_node = c->GetUniqueComp<bp::CompNode>().GetNode();
+        assert(bp_node);
+        auto bp_type = bp_node->get_type();
+        if (!bp_type.is_derived_from<Node>()) {
+            continue;
+        }
+
+        auto sopv_node = std::static_pointer_cast<Node>(bp_node);
+        if (!sopv_node->GetDisplay() &&
+            !sopv_node->GetTemplate()) {
+            continue;
+        }
+
+        if (bp_type == rttr::type::get<node::Geometry>())
+        {
+            stree->Push(c);
+            DrawNode3D(rc, stree);
+            stree->Pop();
+        }
+        else
+        {
+            auto back = eval->QueryBackNode(*bp_node);
+            DrawNode3D(rc, *back, *std::static_pointer_cast<Node>(bp_node));
+        }
+    }
 }
 
 void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) const
@@ -267,6 +280,35 @@ void RenderSystem::DrawNodeUV(const sop::Node& node)
 
         return;
     }
+}
+
+void RenderSystem::DrawNode3D(const pt0::RenderContext& rc, const sop::Node& back, const Node& front) const
+{
+    auto geo = back.GetGeometry();
+    if (!geo) {
+        return;
+    }
+
+    auto sn = geo->GetNode();
+    if (!sn) {
+        return;
+    }
+
+    pt3::RenderParams rp;
+    rp.painter  = &m_pt;
+    rp.viewport = &m_vp;
+    rp.cam_mat  = &m_cam_mat;
+
+    if (front.GetDisplay())
+    {
+        // draw face
+        rp.type = pt3::RenderParams::DRAW_MESH;
+        n3::RenderSystem::Draw(*sn, rp, rc);
+    }
+
+    // draw edge
+    rp.type = pt3::RenderParams::DRAW_BORDER_MESH;
+    n3::RenderSystem::Draw(*sn, rp, rc);
 }
 
 void RenderSystem::DrawGroup(const sop::Group& group, const sop::GeometryImpl& geo) const
