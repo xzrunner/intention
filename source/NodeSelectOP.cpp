@@ -35,7 +35,7 @@ bool NodeSelectOP::OnMouseLeftDClick(int x, int y)
         return true;
     });
 
-    if (m_stree && m_stree->ToNextLevel(node))
+    if (m_stree && m_stree->Push(node))
     {
         ee0::VariantSet vars;
         ee0::Variant var;

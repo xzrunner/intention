@@ -251,7 +251,7 @@ SceneTree::QueryEval(const n0::SceneNodePtr& node) const
     return itr == m_eval_cache.end() ? nullptr : itr->second;
 }
 
-bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
+bool SceneTree::Push(const n0::SceneNodePtr& node)
 {
     if (!node->HasUniqueComp<bp::CompNode>()) {
         return false;

@@ -63,7 +63,7 @@ NodeProxy::CreateNode(const std::string& type, const std::string& name,
 
     m_stree->SetDepth(0);
     for (auto& n : m_paths) {
-        m_stree->ToNextLevel(n);
+        m_stree->Push(n);
     }
     m_stree->Add(scene_node);
 

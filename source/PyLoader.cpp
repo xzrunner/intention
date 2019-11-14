@@ -60,7 +60,7 @@ std::shared_ptr<NodeProxy> hou_get_node(const std::string& path)
                     return std::make_shared<NodeProxy>(STREE, paths);
                 } else {
                     assert(bp_node->get_type() == rttr::type::get<sopv::node::Geometry>());
-                    STREE->ToNextLevel(c);
+                    STREE->Push(c);
                 }
             }
         }
@@ -80,7 +80,7 @@ std::shared_ptr<NodeProxy> hou_get_node(const std::string& path)
 
         STREE->Add(scene_node);
 
-        STREE->ToNextLevel(scene_node);
+        STREE->Push(scene_node);
 
         paths.push_back(scene_node);
     }

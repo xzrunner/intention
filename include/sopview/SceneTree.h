@@ -30,7 +30,7 @@ public:
 
     std::shared_ptr<Evaluator> QueryEval(const n0::SceneNodePtr& node) const;
 
-    bool ToNextLevel(const n0::SceneNodePtr& node);
+    bool Push(const n0::SceneNodePtr& node);
     bool SetDepth(size_t depth);
 
     void ClearNodeDisplayTag();
