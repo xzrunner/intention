@@ -244,6 +244,13 @@ bool SceneTree::Clear()
     return dirty;
 }
 
+std::shared_ptr<Evaluator>
+SceneTree::QueryEval(const n0::SceneNodePtr& node) const
+{
+    auto itr = m_eval_cache.find(node);
+    return itr == m_eval_cache.end() ? nullptr : itr->second;
+}
+
 bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
 {
     if (!node->HasUniqueComp<bp::CompNode>()) {

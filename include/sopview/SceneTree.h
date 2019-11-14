@@ -28,6 +28,8 @@ public:
     auto GetCurrEval() const { return m_path.patrs.empty() ? nullptr : m_path.patrs.back().eval; }
     auto GetCurrNode() const { return m_path.patrs.empty() ? nullptr : m_path.patrs.back().node; }
 
+    std::shared_ptr<Evaluator> QueryEval(const n0::SceneNodePtr& node) const;
+
     bool ToNextLevel(const n0::SceneNodePtr& node);
     bool SetDepth(size_t depth);
 
