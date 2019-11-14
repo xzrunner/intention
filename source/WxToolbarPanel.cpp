@@ -55,6 +55,7 @@ void WxToolbarPanel::InitLayout(const std::shared_ptr<SceneTree>& stree)
 	sizer->Add(m_node_prop = new WxNodeProperty(this, sub_mgr, stree), wxEXPAND);
     // nav bar
     m_nav_bar = new ee0::WxNavigationBar(this);
+    m_nav_bar->Push("obj");
     m_nav_bar->SetSeekCallback([&](size_t depth)
     {
         ee0::VariantSet vars;
@@ -77,7 +78,7 @@ void WxToolbarPanel::OnSelectionInsert(const ee0::VariantSet& variants)
 	GD_ASSERT(var_obj.m_type == ee0::VT_PVOID, "no var in vars: obj");
     const ee0::GameObj obj = *static_cast<const ee0::GameObj*>(var_obj.m_val.pv);
 	GD_ASSERT(GAME_OBJ_VALID(obj), "err scene obj");
-    
+
     m_geo_prop->LoadFromNode(obj);
 
 	auto& cnode = obj->GetUniqueComp<bp::CompNode>();
