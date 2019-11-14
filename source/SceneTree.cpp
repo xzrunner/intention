@@ -64,23 +64,23 @@ void SceneTree::AfterLoadFromFile()
 bool SceneTree::Add(const n0::SceneNodePtr& node)
 {
 #ifndef SOPV_SCENE_TREE_DUMMY_ROOT
-    if (m_path.patrs.empty())
+    if (m_path.parts.empty())
     {
         auto eval = std::make_shared<Evaluator>();
         m_eval_cache.insert({ node, eval });
-        m_path.patrs.push_back(PathPart(node, eval));
+        m_path.parts.push_back(PathPart(node, eval));
 
         return true;
     }
 #endif // SOPV_SCENE_TREE_DUMMY_ROOT
 
-    assert(!m_path.patrs.empty());
+    assert(!m_path.parts.empty());
 
     // reset flags
     ClearNodeDisplayTag();
 
     // update scene node
-    auto& curr = m_path.patrs.back();
+    auto& curr = m_path.parts.back();
     assert(curr.node->HasSharedComp<n0::CompComplex>());
     auto& ccomplex = curr.node->GetSharedComp<n0::CompComplex>();
     ccomplex.AddChild(node);
@@ -88,7 +88,7 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
     if (node->HasUniqueComp<bp::CompNode>())
     {
         auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
-        auto& curr = m_path.patrs.back();
+        auto& curr = m_path.parts.back();
 
         // update front
         if (curr.node->HasUniqueComp<bp::CompNode>())
@@ -102,16 +102,16 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
         }
 
         // front eval cb
-        m_path.patrs.back().eval->OnAddNode(*bp_node);
+        m_path.parts.back().eval->OnAddNode(*bp_node);
 
         // update back
-        if (m_path.patrs.size() > 1)
+        if (m_path.parts.size() > 1)
         {
-            auto& prev_eval = m_path.patrs[m_path.patrs.size() - 2].eval;
-            auto& curr_node = m_path.patrs.back().node;
+            auto& prev_eval = m_path.parts[m_path.parts.size() - 2].eval;
+            auto& curr_node = m_path.parts.back().node;
             assert(curr_node->HasUniqueComp<bp::CompNode>());
             auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
-            auto child = m_path.patrs.back().eval->QueryBackNode(*bp_node);
+            auto child = m_path.parts.back().eval->QueryBackNode(*bp_node);
             assert(parent->get_type() == rttr::type::get<sop::node::Geometry>());
             sop::node::Geometry::AddChild(std::static_pointer_cast<sop::node::Geometry>(parent), child);
         }
@@ -138,18 +138,18 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
 
 bool SceneTree::Remove(const n0::SceneNodePtr& node)
 {
-    if (m_path.patrs.empty()) {
+    if (m_path.parts.empty()) {
         return false;
     }
 
-    if (node == m_path.patrs.front().node)
+    if (node == m_path.parts.front().node)
     {
         return Clear();
     }
     else
     {
         // update scene node
-        auto& curr = m_path.patrs.back();
+        auto& curr = m_path.parts.back();
         assert(curr.node->HasSharedComp<n0::CompComplex>());
         auto& ccomplex = curr.node->GetSharedComp<n0::CompComplex>();
         bool dirty = ccomplex.RemoveChild(node);
@@ -180,18 +180,18 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
             curr.eval->OnRemoveNode(*bp_node);
 
             // update back
-            if (curr.node->HasUniqueComp<bp::CompNode>() && m_path.patrs.size() > 1)
+            if (curr.node->HasUniqueComp<bp::CompNode>() && m_path.parts.size() > 1)
             {
                 auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
                 if (bp_parent && bp_parent->get_type() == rttr::type::get<node::Geometry>())
                 {
                     auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
 
-                    auto& prev_eval = m_path.patrs[m_path.patrs.size() - 2].eval;
-                    auto& curr_node = m_path.patrs.back().node;
+                    auto& prev_eval = m_path.parts[m_path.parts.size() - 2].eval;
+                    auto& curr_node = m_path.parts.back().node;
                     assert(curr_node->HasUniqueComp<bp::CompNode>());
                     auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
-                    auto child = m_path.patrs.back().eval->QueryBackNode(*bp_node);
+                    auto child = m_path.parts.back().eval->QueryBackNode(*bp_node);
                     assert(parent->get_type() == rttr::type::get<sop::node::Geometry>());
                     RebuildBackFromFront(std::static_pointer_cast<sop::node::Geometry>(parent), geo, *curr.eval);
                 }
@@ -204,12 +204,12 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
 
 bool SceneTree::Clear()
 {
-    if (m_path.patrs.empty()) {
+    if (m_path.parts.empty()) {
         return false;
     }
 
     // update scene node
-    auto& curr = m_path.patrs.back();
+    auto& curr = m_path.parts.back();
     assert(curr.node->HasSharedComp<n0::CompComplex>());
     auto& ccomplex = curr.node->GetSharedComp<n0::CompComplex>();
     bool dirty = !ccomplex.GetAllChildren().empty();
@@ -231,10 +231,10 @@ bool SceneTree::Clear()
     curr.eval->OnClearAllNodes();
 
     // update back
-    if (m_path.patrs.size() > 1)
+    if (m_path.parts.size() > 1)
     {
-        auto& prev_eval = m_path.patrs[m_path.patrs.size() - 2].eval;
-        auto& curr_node = m_path.patrs.back().node;
+        auto& prev_eval = m_path.parts[m_path.parts.size() - 2].eval;
+        auto& curr_node = m_path.parts.back().node;
         assert(curr_node->HasUniqueComp<bp::CompNode>());
         auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
         assert(parent->get_type() == rttr::type::get<sop::node::Geometry>());
@@ -292,13 +292,13 @@ bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
         }
 
         m_eval_cache.insert({ node, eval });
-        m_path.patrs.push_back({ node, eval });
+        m_path.parts.push_back({ node, eval });
 
         eval->OnRebuildConnection();
     }
     else
     {
-        m_path.patrs.push_back({ node, itr->second });
+        m_path.parts.push_back({ node, itr->second });
     }
 
     SetupCurrNode();
@@ -308,11 +308,11 @@ bool SceneTree::ToNextLevel(const n0::SceneNodePtr& node)
 
 bool SceneTree::SetDepth(size_t depth)
 {
-    if (depth >= m_path.patrs.size()) {
+    if (depth >= m_path.parts.size()) {
         return false;
     }
 
-    m_path.patrs.erase(m_path.patrs.begin() + depth + 1, m_path.patrs.end());
+    m_path.parts.erase(m_path.parts.begin() + depth + 1, m_path.parts.end());
 
     SetupCurrNode();
 
@@ -321,11 +321,11 @@ bool SceneTree::SetDepth(size_t depth)
 
 void SceneTree::ClearNodeDisplayTag()
 {
-    if (!m_enable_set_node_display || m_path.patrs.empty()) {
+    if (!m_enable_set_node_display || m_path.parts.empty()) {
         return;
     }
 
-    auto curr = m_path.patrs.back();
+    auto curr = m_path.parts.back();
     for (auto& itr : curr.eval->GetAllNodes())
     {
         auto bp_node = itr.first;
@@ -340,9 +340,9 @@ void SceneTree::ClearNodeDisplayTag()
 n0::SceneNodePtr SceneTree::GetRoot() const
 {
 #ifdef SOPV_SCENE_TREE_DUMMY_ROOT
-    return m_path.patrs.size() <= 1 ? nullptr : m_path.patrs[m_path.patrs.size() - 2].node;
+    return m_path.parts.size() <= 1 ? nullptr : m_path.parts[m_path.parts.size() - 2].node;
 #else
-    return m_path.patrs.empty() ? nullptr : m_path.patrs.front().node;
+    return m_path.parts.empty() ? nullptr : m_path.parts.front().node;
 #endif // SOPV_SCENE_TREE_DUMMY_ROOT
 }
 
@@ -354,16 +354,16 @@ void SceneTree::InitDummyRoot()
     auto eval = std::make_shared<Evaluator>();
     m_eval_cache.insert({ node, eval });
 
-    m_path.patrs.push_back(PathPart(node, eval));
+    m_path.parts.push_back(PathPart(node, eval));
 }
 
 bool SceneTree::IsCurrChild(const n0::SceneNodePtr& node) const
 {
-    if (m_path.patrs.empty()) {
+    if (m_path.parts.empty()) {
         return false;
     }
 
-    auto curr = m_path.patrs.back();
+    auto curr = m_path.parts.back();
     assert(curr.node->HasSharedComp<n0::CompComplex>());
     auto& ccomplex = curr.node->GetSharedComp<n0::CompComplex>();
     for (auto& child : ccomplex.GetAllChildren()) {
@@ -376,11 +376,11 @@ bool SceneTree::IsCurrChild(const n0::SceneNodePtr& node) const
 
 void SceneTree::SetupCurrNode()
 {
-    if (m_path.patrs.empty()) {
+    if (m_path.parts.empty()) {
         return;
     }
 
-    auto curr = m_path.patrs.back();
+    auto curr = m_path.parts.back();
     assert(curr.node->HasSharedComp<n0::CompComplex>());
     auto& ccomplex = curr.node->GetSharedComp<n0::CompComplex>();
     for (auto& c : ccomplex.GetAllChildren())

@@ -25,8 +25,8 @@ public:
     bool Remove(const n0::SceneNodePtr& node);
     bool Clear();
 
-    auto GetCurrEval() const { return m_path.patrs.empty() ? nullptr : m_path.patrs.back().eval; }
-    auto GetCurrNode() const { return m_path.patrs.empty() ? nullptr : m_path.patrs.back().node; }
+    auto GetCurrEval() const { return m_path.parts.empty() ? nullptr : m_path.parts.back().eval; }
+    auto GetCurrNode() const { return m_path.parts.empty() ? nullptr : m_path.parts.back().node; }
 
     std::shared_ptr<Evaluator> QueryEval(const n0::SceneNodePtr& node) const;
 
@@ -58,7 +58,7 @@ private:
 
     struct Path
     {
-        std::vector<PathPart> patrs;
+        std::vector<PathPart> parts;
     };
 
 private:
