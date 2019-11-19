@@ -67,6 +67,7 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
     if (m_path.parts.empty())
     {
         auto eval = std::make_shared<Evaluator>();
+        //eval->EnableUpdateSopEval(false);
         m_eval_cache.insert({ node, eval });
         m_path.parts.push_back(PathPart(node, eval));
 
@@ -94,7 +95,7 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
         if (curr.node->HasUniqueComp<bp::CompNode>())
         {
             auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-            if (bp_parent && bp_parent->get_type() == rttr::type::get<node::Geometry>())
+            if (bp_parent && bp_parent->get_type().is_derived_from<node::Geometry>())
             {
                 auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
                 geo->children.push_back(bp_node);
@@ -112,13 +113,15 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
             assert(curr_node->HasUniqueComp<bp::CompNode>());
             auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
             auto child = m_path.parts.back().eval->QueryBackNode(*bp_node);
-            assert(parent->get_type() == rttr::type::get<sop::node::Geometry>());
+            assert(parent->get_type().is_derived_from<sop::node::Geometry>());
             sop::node::Geometry::AddChild(std::static_pointer_cast<sop::node::Geometry>(parent), child);
         }
 
         // prepare ccomplex
         auto type = bp_node->get_type();
-        if (type == rttr::type::get<node::Geometry>()) {
+        if (type.is_derived_from<node::Geometry>() ||
+            type == rttr::type::get<node::AttributeVOP>())
+        {
             if (!node->HasSharedComp<n0::CompComplex>()) {
                 node->AddSharedComp<n0::CompComplex>();
             }
@@ -160,7 +163,7 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
             if (curr.node->HasUniqueComp<bp::CompNode>())
             {
                 auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-                if (bp_parent && bp_parent->get_type() == rttr::type::get<node::Geometry>())
+                if (bp_parent && bp_parent->get_type().is_derived_from<node::Geometry>())
                 {
                     auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
                     auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
@@ -183,7 +186,7 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
             if (curr.node->HasUniqueComp<bp::CompNode>() && m_path.parts.size() > 1)
             {
                 auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-                if (bp_parent && bp_parent->get_type() == rttr::type::get<node::Geometry>())
+                if (bp_parent && bp_parent->get_type().is_derived_from<node::Geometry>())
                 {
                     auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
 
@@ -192,7 +195,7 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
                     assert(curr_node->HasUniqueComp<bp::CompNode>());
                     auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
                     auto child = m_path.parts.back().eval->QueryBackNode(*bp_node);
-                    assert(parent->get_type() == rttr::type::get<sop::node::Geometry>());
+                    assert(parent->get_type().is_derived_from<sop::node::Geometry>());
                     RebuildBackFromFront(std::static_pointer_cast<sop::node::Geometry>(parent), geo, *curr.eval);
                 }
             }
@@ -219,7 +222,7 @@ bool SceneTree::Clear()
     if (curr.node->HasUniqueComp<bp::CompNode>())
     {
         auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-        if (bp_parent && bp_parent->get_type() == rttr::type::get<node::Geometry>())
+        if (bp_parent && bp_parent->get_type().is_derived_from<node::Geometry>())
         {
             auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
             geo->children.clear();
@@ -237,7 +240,7 @@ bool SceneTree::Clear()
         auto& curr_node = m_path.parts.back().node;
         assert(curr_node->HasUniqueComp<bp::CompNode>());
         auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
-        assert(parent->get_type() == rttr::type::get<sop::node::Geometry>());
+        assert(parent->get_type().is_derived_from<sop::node::Geometry>());
         std::static_pointer_cast<sop::node::Geometry>(parent)->ClearChildren();
     }
 
@@ -259,7 +262,7 @@ bool SceneTree::Push(const n0::SceneNodePtr& node)
 
     auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
     auto type = bp_node->get_type();
-    if (type != rttr::type::get<node::Geometry>()) {
+    if (!type.is_derived_from<node::Geometry>()) {
         return false;
     }
 
@@ -268,6 +271,7 @@ bool SceneTree::Push(const n0::SceneNodePtr& node)
     if (itr == m_eval_cache.end())
     {
         auto eval = std::make_shared<Evaluator>();
+        //eval->EnableUpdateSopEval(false);
         if (node->HasSharedComp<n0::CompComplex>())
         {
             for (auto& c : node->GetSharedComp<n0::CompComplex>().GetAllChildren()) {
@@ -280,11 +284,11 @@ bool SceneTree::Push(const n0::SceneNodePtr& node)
             if (node->HasUniqueComp<bp::CompNode>())
             {
                 auto bp_parent = node->GetUniqueComp<bp::CompNode>().GetNode();
-                if (bp_parent->get_type() == rttr::type::get<node::Geometry>())
+                if (bp_parent->get_type().is_derived_from<node::Geometry>())
                 {
                     auto src = std::static_pointer_cast<node::Geometry>(bp_parent);
                     auto dst = GetCurrEval()->QueryBackNode(*src);
-                    assert(dst && dst->get_type() == rttr::type::get<sop::node::Geometry>());
+                    assert(dst && dst->get_type().is_derived_from<sop::node::Geometry>());
                     auto dst_geo = std::static_pointer_cast<sop::node::Geometry>(dst);
                     RebuildBackFromFront(dst_geo, src, *eval);
                 }
@@ -365,6 +369,7 @@ void SceneTree::InitDummyRoot()
     node->AddSharedComp<n0::CompComplex>();
 
     auto eval = std::make_shared<Evaluator>();
+    //eval->EnableUpdateSopEval(false);
     m_eval_cache.insert({ node, eval });
 
     m_path.parts.push_back(PathPart(node, eval));

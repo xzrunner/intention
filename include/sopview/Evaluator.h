@@ -39,6 +39,8 @@ public:
 
     sop::NodePtr QueryBackNode(const bp::Node& front_node) const;
 
+    void EnableUpdateSopEval(bool up);
+
 private:
     void Update();
 
@@ -46,6 +48,8 @@ private:
 
 private:
     sop::Evaluator m_eval;
+
+    bool m_update_sop_eval = true;
 
     std::unordered_map<const bp::Node*, sop::NodePtr> m_nodes_map;
 

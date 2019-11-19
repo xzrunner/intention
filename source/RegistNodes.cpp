@@ -36,11 +36,11 @@ REGIST_NODE_RTTI_DEFAULT(Geometry, geometry)
 
 // attribute
 REGIST_NODE_RTTI(AttributeCreate, attribcreate::2.0,
-.property("group_name", &sopv::node::AttributeCreate::group_name)      \
+.property("group", &sopv::node::AttributeCreate::group_name)           \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
 )                                                                      \
-.property("group_type", &sopv::node::AttributeCreate::group_type)      \
+.property("grouptype", &sopv::node::AttributeCreate::group_type)       \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType")) \
 )                                                                      \
@@ -62,64 +62,85 @@ REGIST_NODE_RTTI(AttributeCreate, attribcreate::2.0,
 )                                                                      \
 )
 REGIST_NODE_RTTI(AttributePromote, attribpromote,
-.property("attr_name", &sopv::node::AttributePromote::attr_name)       \
+.property("inname", &sopv::node::AttributePromote::attr_name)          \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Attr Name")) \
 )                                                                      \
-.property("from_cls", &sopv::node::AttributePromote::from_cls)         \
+.property("inclass", &sopv::node::AttributePromote::from_cls)          \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("From Type")) \
 )                                                                      \
-.property("to_cls", &sopv::node::AttributePromote::to_cls)             \
+.property("outclass", &sopv::node::AttributePromote::to_cls)           \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("To Type"))   \
 )                                                                      \
 )
 REGIST_NODE_RTTI(AttributeTransfer, attribtransfer,
-.property("points_attrs", &sopv::node::AttributeTransfer::points_attrs)         \
+.property("pointattribs", &sopv::node::AttributeTransfer::points_attrs_toggle)  \
+(                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PointsToggle"))       \
+)                                                                               \
+.property("vertexattribs", &sopv::node::AttributeTransfer::vertices_attrs_toggle)   \
+(                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("VerticesToggle"))     \
+)                                                                               \
+.property("primitiveattribs", &sopv::node::AttributeTransfer::prims_attrs_toggle)   \
+(                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PrimsToggle"))        \
+)                                                                               \
+.property("detailattribs", &sopv::node::AttributeTransfer::detail_attrs_toggle) \
+(                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DetailToggle"))       \
+)                                                                               \
+.property("pointattriblist", &sopv::node::AttributeTransfer::points_attrs)      \
 (                                                                               \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Points"))             \
 )                                                                               \
-.property("vertices_attrs", &sopv::node::AttributeTransfer::vertices_attrs)     \
+.property("vertexattriblist", &sopv::node::AttributeTransfer::vertices_attrs)   \
 (                                                                               \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vertices"))           \
 )                                                                               \
-.property("primitives_attrs", &sopv::node::AttributeTransfer::primitives_attrs) \
+.property("primattriblist", &sopv::node::AttributeTransfer::primitives_attrs)   \
 (                                                                               \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Primitives"))         \
 )                                                                               \
-.property("detail_attrs", &sopv::node::AttributeTransfer::detail_attrs)         \
+.property("detailattriblist", &sopv::node::AttributeTransfer::detail_attrs)     \
 (                                                                               \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Detail"))             \
 )                                                                               \
 )
+REGIST_NODE_RTTI_DEFAULT(AttributeVOP, attribvop)
 REGIST_NODE_RTTI(AttributeWrangle, attribwrangle,
-.property("vex_expr", &sopv::node::AttributeWrangle::vex_expr)        \
+.property("snippet", &sopv::node::AttributeWrangle::vex_expr)         \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("VexExpr")), \
     rttr::metadata(ee0::PropLongStringTag(), true)                    \
 )                                                                     \
 )
 REGIST_NODE_RTTI(Measure, measure,
-.property("ms_type", &sopv::node::Measure::ms_type)                      \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MeasureType")) \
-)                                                                        \
-.property("ms_name", &sopv::node::Measure::ms_name)                      \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MeasureName")) \
-)                                                                        \
+.property("type", &sopv::node::Measure::measure_type)                     \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MeasureType"))  \
+)                                                                         \
+.property("override", &sopv::node::Measure::override_name)                \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OverrideName")) \
+)                                                                         \
+.property("attribname", &sopv::node::Measure::attr_name)                  \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Attribute"))    \
+)                                                                         \
 )
 REGIST_NODE_RTTI(Sort, sort,
-.property("key", &sopv::node::Sort::key)                                  \
+.property("ptsort", &sopv::node::Sort::key)                               \
 (                                                                         \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Key"))          \
 )                                                                         \
-.property("point_reverse", &sopv::node::Sort::point_reverse)              \
+.property("pointreverse", &sopv::node::Sort::point_reverse)               \
 (                                                                         \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PointReverse")) \
 )                                                                         \
-.property("point_offset", &sopv::node::Sort::point_offset)                \
+.property("pointoffset", &sopv::node::Sort::point_offset)                 \
 (                                                                         \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PointOffset"))  \
 )                                                                         \
@@ -127,47 +148,55 @@ REGIST_NODE_RTTI(Sort, sort,
 
 // group
 REGIST_NODE_RTTI(GroupCreate, groupcreate,
-.property("group_name", &sopv::node::GroupCreate::group_name)               \
+.property("groupname", &sopv::node::GroupCreate::group_name)                \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))      \
 )                                                                           \
-.property("group_type", &sopv::node::GroupCreate::group_type)               \
+.property("grouptype", &sopv::node::GroupCreate::group_type)                \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType"))      \
 )                                                                           \
-.property("merge_op", &sopv::node::GroupCreate::merge_op)                   \
+.property("mergeop", &sopv::node::GroupCreate::merge_op)                    \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MergeOp"))        \
 )                                                                           \
-.property("base_group", &sopv::node::GroupCreate::base_group)               \
+.property("groupbase", &sopv::node::GroupCreate::base_group)                \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BaseGroup"))      \
 )                                                                           \
-.property("base_group_expr", &sopv::node::GroupCreate::base_group_expr)     \
+.property("basegroup", &sopv::node::GroupCreate::base_group_expr)           \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BaseGroupExpr"))  \
 )                                                                           \
-.property("keep_in_bounding", &sopv::node::GroupCreate::keep_in_bounding)   \
+.property("groupbounding", &sopv::node::GroupCreate::keep_in_bounding)      \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("KeepInBounding")) \
 )                                                                           \
-.property("keep_by_normals", &sopv::node::GroupCreate::keep_by_normals)     \
+.property("boundtype", &sopv::node::GroupCreate::bounding_type)             \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BoundingType"))   \
+)                                                                           \
+.property("groupnormal", &sopv::node::GroupCreate::keep_by_normals)         \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("KeepByNormals"))  \
 )                                                                           \
-.property("direction", &sopv::node::GroupCreate::direction)                 \
+.property("dir", &sopv::node::GroupCreate::direction)                       \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Direction"))      \
 )                                                                           \
-.property("spread_angle", &sopv::node::GroupCreate::spread_angle)           \
+.property("angle", &sopv::node::GroupCreate::spread_angle)                  \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SpreadAngle"))    \
 )                                                                           \
 )
 REGIST_NODE_RTTI(GroupExpression, groupexpression,
-.property("group_type", &sopv::node::GroupExpression::group_type)      \
+.property("grouptype", &sopv::node::GroupExpression::group_type)       \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType")) \
+)                                                                      \
+.property("expressions", &sopv::node::GroupExpression::inst_num)       \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupVEXpressions")) \
 )                                                                      \
 .property("inst0", &sopv::node::GroupExpression::inst0)                \
 (                                                                      \
@@ -187,15 +216,15 @@ REGIST_NODE_RTTI(GroupExpression, groupexpression,
 )                                                                      \
 )
 REGIST_NODE_RTTI(GroupPromote, grouppromote,
-.property("group_name", &sopv::node::GroupPromote::group_name)         \
+.property("group1", &sopv::node::GroupPromote::group_name)             \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
 )                                                                      \
-.property("src_type", &sopv::node::GroupPromote::src_type)             \
+.property("fromtype1", &sopv::node::GroupPromote::src_type1)           \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SrcType"))   \
 )                                                                      \
-.property("dst_type", &sopv::node::GroupPromote::dst_type)             \
+.property("totype1", &sopv::node::GroupPromote::dst_type1)             \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DstType"))   \
 )                                                                      \
@@ -203,61 +232,87 @@ REGIST_NODE_RTTI(GroupPromote, grouppromote,
 
 // import
 REGIST_NODE_RTTI(File, file,
-.property("filepath", &sopv::node::File::filepath)                     \
+.property("file", &sopv::node::File::filepath)                         \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Filepath")), \
     rttr::metadata(js::RTTR::FilePathTag(), true),                     \
     rttr::metadata(ee0::PropOpenFileTag(), ee0::PropOpenFile("*.*"))   \
 )                                                                      \
 )
+REGIST_NODE_RTTI(ObjectMerge, object_merge,
+.property("objpath1", &sopv::node::ObjectMerge::obj0)                 \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Object 1")) \
+)                                                                     \
+.property("objpath2", &sopv::node::ObjectMerge::obj1)                 \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Object 2")) \
+)                                                                     \
+.property("objpath3", &sopv::node::ObjectMerge::obj2)                 \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Object 3")) \
+)                                                                     \
+.property("objpath4", &sopv::node::ObjectMerge::obj3)                 \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Object 4")) \
+)                                                                     \
+)
 
 // manipulate
 REGIST_NODE_RTTI(Delete, delete,
-.property("delete_non_selected", &sopv::node::Delete::delete_non_selected)  \
+.property("negate", &sopv::node::Delete::delete_non_selected)               \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DelNonSelected")) \
 )                                                                           \
-.property("entity_type", &sopv::node::Delete::entity_type)                  \
+.property("entity", &sopv::node::Delete::entity_type)                       \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("EntityType"))     \
 )                                                                           \
-.property("filter_exp", &sopv::node::Delete::filter_exp)                    \
+.property("groupop", &sopv::node::Delete::operation)                        \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Operation"))      \
+)                                                                           \
+.property("filter", &sopv::node::Delete::filter_exp)                        \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FilterExp"))      \
 )                                                                           \
 )
 REGIST_NODE_RTTI(Peak, peak,
-.property("group_name", &sopv::node::Peak::group_name)                 \
+.property("group", &sopv::node::Peak::group_name)                      \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
 )                                                                      \
-.property("group_type", &sopv::node::Peak::group_type)                 \
+.property("grouptype", &sopv::node::Peak::group_type)                  \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType")) \
 )                                                                      \
-.property("distance", &sopv::node::Peak::distance)                     \
+.property("dist", &sopv::node::Peak::distance)                         \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance"))  \
 )                                                                      \
+.property("updatenmls", &sopv::node::Peak::update_norm)                \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Recompute Point Normals"))  \
+)                                                                      \
 )
 REGIST_NODE_RTTI(Transform, xform,
-.property("group_name", &sopv::node::Transform::group_name)            \
+.property("group", &sopv::node::Transform::group_name)                 \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
 )                                                                      \
-.property("group_type", &sopv::node::Transform::group_type)            \
+.property("grouptype", &sopv::node::Transform::group_type)             \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType")) \
 )                                                                      \
-.property("translate", &sopv::node::Transform::translate)              \
+.property("t", &sopv::node::Transform::translate)                      \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Translate")) \
 )                                                                      \
-.property("rotate", &sopv::node::Transform::rotate)                    \
+.property("r", &sopv::node::Transform::rotate)                         \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Rotate"))    \
 )                                                                      \
-.property("scale", &sopv::node::Transform::scale)                      \
+.property("s", &sopv::node::Transform::scale)                          \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))     \
 )                                                                      \
@@ -276,7 +331,7 @@ REGIST_NODE_RTTI(Color, color,
 )
 REGIST_NODE_RTTI_DEFAULT(UVLayout, uvlayout)
 REGIST_NODE_RTTI(UVQuickShade, uvquickshade,
-.property("image_file", &sopv::node::UVQuickShade::image_file)          \
+.property("texture", &sopv::node::UVQuickShade::image_file)             \
 (                                                                       \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("ImageFile")), \
     rttr::metadata(js::RTTR::FilePathTag(), true),                      \
@@ -284,23 +339,23 @@ REGIST_NODE_RTTI(UVQuickShade, uvquickshade,
 )                                                                       \
 )
 REGIST_NODE_RTTI(UVTransform, uvtransform::2.0,
-.property("group_name", &sopv::node::UVTransform::group_name)          \
+.property("group", &sopv::node::UVTransform::group_name)               \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
 )                                                                      \
-.property("group_type", &sopv::node::UVTransform::group_type)          \
+.property("grouptype", &sopv::node::UVTransform::group_type)           \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType")) \
 )                                                                      \
-.property("translate", &sopv::node::UVTransform::translate)            \
+.property("t", &sopv::node::UVTransform::translate)                    \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Translate")) \
 )                                                                      \
-.property("rotate", &sopv::node::UVTransform::rotate)                  \
+.property("r", &sopv::node::UVTransform::rotate)                       \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Rotate"))    \
 )                                                                      \
-.property("scale", &sopv::node::UVTransform::scale)                    \
+.property("s", &sopv::node::UVTransform::scale)                        \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))     \
 )                                                                      \
@@ -309,171 +364,292 @@ REGIST_NODE_RTTI(UVTransform, uvtransform::2.0,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Shear"))     \
 )                                                                      \
 )
-REGIST_NODE_RTTI_DEFAULT(UVUnwrap, uvunwrap)
+//REGIST_NODE_RTTI_DEFAULT(UVUnwrap, uvunwrap)
+REGIST_NODE_RTTI(UVUnwrap, uvunwrap,
+.property("scale", &sopv::node::UVUnwrap::scale)                    \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))  \
+)                                                                   \
+.property("r", &sopv::node::UVUnwrap::rotate)                       \
+(                                                                   \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Rotate")) \
+)                                                                   \
+)
 
 // NURBs
 REGIST_NODE_RTTI(Carve, carve,
-.property("first_u", &sopv::node::Carve::first_u)                    \
-(                                                                    \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FirstU"))  \
-)                                                                    \
-.property("second_u", &sopv::node::Carve::second_u)                  \
-(                                                                    \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SecondU")) \
-)                                                                    \
-.property("first_v", &sopv::node::Carve::first_v)                    \
-(                                                                    \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FirstV"))  \
-)                                                                    \
-.property("second_v", &sopv::node::Carve::second_v)                  \
-(                                                                    \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SecondV")) \
-)                                                                    \
+.property("firstu", &sopv::node::Carve::first_u_toggle)                    \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FirstUToggle"))  \
+)                                                                          \
+.property("secondu", &sopv::node::Carve::second_u_toggle)                  \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SecondUToggle")) \
+)                                                                          \
+.property("firstv", &sopv::node::Carve::first_v_toggle)                    \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FirstVToggle"))  \
+)                                                                          \
+.property("secondv", &sopv::node::Carve::second_v_toggle)                  \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SecondVToggle")) \
+)                                                                          \
+.property("domainu1", &sopv::node::Carve::first_u)                         \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FirstU"))        \
+)                                                                          \
+.property("domainu2", &sopv::node::Carve::second_u)                        \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SecondU"))       \
+)                                                                          \
+.property("domainv1", &sopv::node::Carve::first_v)                         \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FirstV"))        \
+)                                                                          \
+.property("domainv2", &sopv::node::Carve::second_v)                        \
+(                                                                          \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SecondV"))       \
+)                                                                          \
 )
 
 // polygon
 REGIST_NODE_RTTI(Add, add,
-.property("use_p0", &sopv::node::Add::use_p0)                      \
-(                                                                  \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UseP0")) \
-)                                                                  \
-.property("p0", &sopv::node::Add::p0)                              \
-(                                                                  \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P0"))    \
-)                                                                  \
-.property("use_p1", &sopv::node::Add::use_p1)                      \
-(                                                                  \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UseP1")) \
-)                                                                  \
-.property("p1", &sopv::node::Add::p1)                              \
-(                                                                  \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P1"))    \
-)                                                                  \
-.property("use_p2", &sopv::node::Add::use_p2)                      \
-(                                                                  \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UseP2")) \
-)                                                                  \
-.property("p2", &sopv::node::Add::p2)                              \
-(                                                                  \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P2"))    \
-)                                                                  \
-.property("use_p3", &sopv::node::Add::use_p3)                      \
-(                                                                  \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UseP3")) \
-)                                                                  \
-.property("p3", &sopv::node::Add::p3)                              \
-(                                                                  \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P3"))    \
-)                                                                  \
-)
-REGIST_NODE_RTTI(Boolean, boolean::2.0,
-.property("operator", &sopv::node::Boolean::op)                       \
+.property("stdswitcher1", &sopv::node::Add::top_switch)               \
 (                                                                     \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Operator")) \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Top"))      \
+)                                                                     \
+.property("switcher1", &sopv::node::Add::poly_switch)                 \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Poly"))     \
+)                                                                     \
+.property("points", &sopv::node::Add::pt_num)                         \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PointNum")) \
+)                                                                     \
+.property("usept0", &sopv::node::Add::p0_toggle)                      \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P0Toggle")) \
+)                                                                     \
+.property("usept1", &sopv::node::Add::p1_toggle)                      \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P1Toggle")) \
+)                                                                     \
+.property("usept2", &sopv::node::Add::p2_toggle)                      \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P2Toggle")) \
+)                                                                     \
+.property("usept3", &sopv::node::Add::p3_toggle)                      \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P3Toggle")) \
+)                                                                     \
+.property("pt0", &sopv::node::Add::p0)                                \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P0"))       \
+)                                                                     \
+.property("pt1", &sopv::node::Add::p1)                                \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P1"))       \
+)                                                                     \
+.property("pt2", &sopv::node::Add::p2)                                \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P2"))       \
+)                                                                     \
+.property("pt3", &sopv::node::Add::p3)                                \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("P3"))       \
 )                                                                     \
 )
+REGIST_NODE_RTTI(Boolean, boolean::2.0,
+.property("asurface", &sopv::node::Boolean::a_surface)                        \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("A Treat As"))       \
+)                                                                             \
+.property("bsurface", &sopv::node::Boolean::b_surface)                        \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("B Treat As"))       \
+)                                                                             \
+.property("booleanop", &sopv::node::Boolean::op)                              \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Operator"))         \
+)                                                                             \
+.property("subtractchoices", &sopv::node::Boolean::sub_type)                  \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SubType"))          \
+)                                                                             \
+.property("useabseamedges", &sopv::node::Boolean::ab_seam_edges_toggle)       \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("A-B Seams toggle")) \
+)                                                                             \
+.property("abseamedges", &sopv::node::Boolean::ab_seam_edges)                 \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("A-B Seams"))        \
+)                                                                             \
+)
+REGIST_NODE_RTTI(Divide, divide,
+.property("avoidsmallangles", &sopv::node::Divide::avoid_small_angles)          \
+(                                                                               \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Avoid Small Angles")) \
+)                                                                               \
+)
 REGIST_NODE_RTTI(Fuse, fuse,
-.property("op", &sopv::node::Fuse::op)                                \
+.property("switcher1", &sopv::node::Fuse::op)                         \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("op"))       \
 )                                                                     \
-.property("distance", &sopv::node::Fuse::distance)                    \
+.property("dist", &sopv::node::Fuse::distance)                        \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance")) \
 )                                                                     \
+.property("keepunusedpoints", &sopv::node::Fuse::keep_unused_points)  \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("KeepUnusedPoints")) \
+)                                                                     \
+.property("updatenml", &sopv::node::Fuse::update_point_norm)          \
+(                                                                     \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UpdatePointNormals")) \
+)                                                                     \
 )
 REGIST_NODE_RTTI(Knife, knife,
+.property("knifeop", &sopv::node::Knife::knife_op)                     \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Keep"))      \
+)                                                                      \
 .property("origin", &sopv::node::Knife::origin)                        \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Origin"))    \
 )                                                                      \
-.property("direction", &sopv::node::Knife::direction)                  \
+.property("dir", &sopv::node::Knife::direction)                        \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Direction")) \
-)                                                                      \
-.property("keep", &sopv::node::Knife::keep)                            \
-(                                                                      \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Keep"))      \
 )
 )
 REGIST_NODE_RTTI(Normal, normal,
-.property("attr_add_norm_to", &sopv::node::Normal::attr_add_norm_to)   \
+.property("type", &sopv::node::Normal::attr_add_norm_to)               \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("AddNormTo")) \
 )                                                                      \
 )
 REGIST_NODE_RTTI(PolyExtrude, polyextrude::2.0,
-.property("group_name", &sopv::node::PolyExtrude::group_name)            \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))   \
-)                                                                        \
-.property("distance", &sopv::node::PolyExtrude::distance)                \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance"))    \
-)                                                                        \
-.property("output_front", &sopv::node::PolyExtrude::output_front)        \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputFront")) \
-)                                                                        \
-.property("output_back", &sopv::node::PolyExtrude::output_back)          \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputBack"))  \
-)                                                                        \
-.property("output_side", &sopv::node::PolyExtrude::output_side)          \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputSide"))  \
-)                                                                        \
-.property("front_group", &sopv::node::PolyExtrude::front_group)          \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FrontGroup"))  \
-)                                                                        \
-.property("back_group", &sopv::node::PolyExtrude::back_group)            \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BackGroup"))   \
-)                                                                        \
-.property("side_group", &sopv::node::PolyExtrude::side_group)            \
-(                                                                        \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SideGroup"))   \
+.property("group", &sopv::node::PolyExtrude::group_name)                      \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))        \
+)                                                                             \
+.property("extrusionmode", &sopv::node::PolyExtrude::extrusion)               \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("ExtrusionMode"))    \
+)                                                                             \
+.property("dist", &sopv::node::PolyExtrude::distance)                         \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Distance"))         \
+)                                                                             \
+.property("outputfront", &sopv::node::PolyExtrude::output_front)              \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputFront"))      \
+)                                                                             \
+.property("outputback", &sopv::node::PolyExtrude::output_back)                \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputBack"))       \
+)                                                                             \
+.property("outputside", &sopv::node::PolyExtrude::output_side)                \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputSide"))       \
+)                                                                             \
+.property("outputfrontgrp", &sopv::node::PolyExtrude::front_group_toggle)     \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FrontGroupToggle")) \
+)                                                                             \
+.property("outputbackgrp", &sopv::node::PolyExtrude::back_group_toggle)       \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BackGroupToggle"))  \
+)                                                                             \
+.property("outputsidegrp", &sopv::node::PolyExtrude::side_group_toggle)       \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SideGroupToggle"))  \
+)                                                                             \
+.property("frontgrp", &sopv::node::PolyExtrude::front_group)                  \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FrontGroup"))       \
+)                                                                             \
+.property("backgrp", &sopv::node::PolyExtrude::back_group)                    \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BackGroup"))        \
+)                                                                             \
+.property("sidegrp", &sopv::node::PolyExtrude::side_group)                    \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SideGroup"))        \
 )
 )
-REGIST_NODE_RTTI_DEFAULT(PolyFill, polyfill)
+REGIST_NODE_RTTI(PolyFill, polyfill,
+.property("fillmode", &sopv::node::PolyFill::fill_mode)                   \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FillMode"))     \
+)                                                                         \
+.property("smoothtoggle", &sopv::node::PolyFill::smooth_toggle)           \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SmoothToggle")) \
+)                                                                         \
+.property("smoothstrength", &sopv::node::PolyFill::smooth_strength)       \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Smooth"))       \
+)                                                                         \
+)
 REGIST_NODE_RTTI(PolyFrame, polyframe,
-.property("entity_type", &sopv::node::PolyFrame::entity_type)              \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("EntityType"))    \
-)                                                                          \
-.property("frame_style", &sopv::node::PolyFrame::frame_style)              \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FrameStyle"))    \
-)                                                                          \
-.property("normal_name", &sopv::node::PolyFrame::normal_name)              \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("NormalName"))    \
-)                                                                          \
-.property("tangent_name", &sopv::node::PolyFrame::tangent_name)            \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TangentName"))   \
-)                                                                          \
-.property("bitangent_name", &sopv::node::PolyFrame::bitangent_name)        \
-(                                                                          \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BitangentName")) \
-)                                                                          \
+.property("entity", &sopv::node::PolyFrame::entity_type)                     \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("EntityType"))      \
+)                                                                            \
+.property("style", &sopv::node::PolyFrame::frame_style)                      \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("FrameStyle"))      \
+)                                                                            \
+.property("Non", &sopv::node::PolyFrame::normal_toggle)                      \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("NormalToggle"))    \
+)                                                                            \
+.property("tangentuon", &sopv::node::PolyFrame::tangent_toggle)              \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TangentToggle"))   \
+)                                                                            \
+.property("tangentvon", &sopv::node::PolyFrame::bitangent_toggle)            \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BitangentToggle")) \
+)                                                                            \
+.property("N", &sopv::node::PolyFrame::normal_name)                          \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("NormalName"))      \
+)                                                                            \
+.property("tangentu", &sopv::node::PolyFrame::tangent_name)                  \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TangentName"))     \
+)                                                                            \
+.property("tangentv", &sopv::node::PolyFrame::bitangent_name)                \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BitangentName"))   \
+)                                                                            \
 )
 
 // primitive
 REGIST_NODE_RTTI(Box, box,
-.property("size", &sopv::node::Box::size)                           \
-(                                                                   \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Size"))   \
-)                                                                   \
-.property("t", &sopv::node::Box::center)                            \
-(                                                                   \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Center")) \
-)                                                                   \
-.property("scale", &sopv::node::Box::scale)                         \
-(                                                                   \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))  \
-)
+.property("size", &sopv::node::Box::size)                                    \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Size"))            \
+)                                                                            \
+.property("t", &sopv::node::Box::center)                                     \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Center"))          \
+)                                                                            \
+.property("scale", &sopv::node::Box::scale)                                  \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))           \
+)                                                                            \
+.property("dodivs", &sopv::node::Box::divis_toggle)                          \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DivisionsToggle")) \
+)                                                                            \
+.property("divs", &sopv::node::Box::divis)                                   \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Divisions"))       \
+)                                                                            \
 )
 REGIST_NODE_RTTI(Curve, curve,
 .property("vertices", &sopv::node::Curve::vertices)                   \
@@ -482,19 +658,15 @@ REGIST_NODE_RTTI(Curve, curve,
 )                                                                     \
 )
 REGIST_NODE_RTTI(Grid, grid,
-.property("size_x", &sopv::node::Grid::size_x)                       \
+.property("size", &sopv::node::Grid::size)                           \
 (                                                                    \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Size X"))  \
-)                                                                    \
-.property("size_y", &sopv::node::Grid::size_y)                       \
-(                                                                    \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Size Y"))  \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Size"))    \
 )                                                                    \
 .property("rows", &sopv::node::Grid::rows)                           \
 (                                                                    \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Rows"))    \
 )                                                                    \
-.property("columns", &sopv::node::Grid::columns)                     \
+.property("cols", &sopv::node::Grid::columns)                        \
 (                                                                    \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Columns")) \
 )                                                                    \
@@ -504,11 +676,11 @@ REGIST_NODE_RTTI(Line, line,
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Origin"))    \
 )                                                                      \
-.property("direction", &sopv::node::Line::direction)                   \
+.property("dir", &sopv::node::Line::direction)                         \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Direction")) \
 )                                                                      \
-.property("length", &sopv::node::Line::length)                         \
+.property("dist", &sopv::node::Line::length)                           \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Length"))    \
 )                                                                      \
@@ -518,26 +690,42 @@ REGIST_NODE_RTTI(Line, line,
 )                                                                      \
 )
 REGIST_NODE_RTTI(Primitive, primitive,
-.property("group_name", &sopv::node::Primitive::group_name)              \
-(                                                                      \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
-)
-.property("translate", &sopv::node::Primitive::translate)              \
-(                                                                      \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Translate")) \
-)                                                                      \
-.property("rotate", &sopv::node::Primitive::rotate)                    \
-(                                                                      \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Rotate"))    \
-)                                                                      \
-.property("scale", &sopv::node::Primitive::scale)                      \
-(                                                                      \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))     \
-)                                                                      \
-.property("shear", &sopv::node::Primitive::shear)                      \
-(                                                                      \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Shear"))     \
-)                                                                      \
+.property("group", &sopv::node::Primitive::group_name)                                      \
+(                                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))                      \
+)                                                                                           \
+.property("doxform", &sopv::node::Primitive::trans_toggle)                                  \
+(                                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TransToggle"))                    \
+)                                                                                           \
+.property("t", &sopv::node::Primitive::translate)                                           \
+(                                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Translate"))                      \
+)                                                                                           \
+.property("r", &sopv::node::Primitive::rotate)                                              \
+(                                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Rotate"))                         \
+)                                                                                           \
+.property("s", &sopv::node::Primitive::scale)                                               \
+(                                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Scale"))                          \
+)                                                                                           \
+.property("shear", &sopv::node::Primitive::shear)                                           \
+(                                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Shear"))                          \
+)                                                                                           \
+.property("p", &sopv::node::Primitive::pivot_trans)                                         \
+(                                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Pivot Translate"))                \
+)                                                                                           \
+.property("pr", &sopv::node::Primitive::pivot_rotate)                                       \
+(                                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Pivot Rotate"))                   \
+)                                                                                           \
+.property("xformattribs", &sopv::node::Primitive::vec_attrs_to_trans)                       \
+(                                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Vector Attributes To Transform")) \
+)                                                                                           \
 )
 REGIST_NODE_RTTI_DEFAULT(Sphere, sphere)
 // primitive extern
@@ -560,66 +748,133 @@ REGIST_NODE_RTTI(Dungeon, dungeon,
 )                                                                      \
 )
 
+// rigging
+REGIST_NODE_RTTI_DEFAULT(Lattice, lattice)
+
 // utility
 REGIST_NODE_RTTI(Blast, blast,
-.property("group_name", &sopv::node::Blast::group_name)                     \
-(                                                                           \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))      \
-)                                                                           \
-.property("group_type", &sopv::node::Blast::group_type)                     \
-(                                                                           \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType"))      \
-)                                                                           \
-.property("delete_non_selected", &sopv::node::Blast::delete_non_selected)   \
-(                                                                           \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DelNonSelected")) \
-)
+.property("group", &sopv::node::Blast::group_name)                           \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName"))       \
+)                                                                            \
+.property("grouptype", &sopv::node::Blast::group_type)                       \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupType"))       \
+)                                                                            \
+.property("negate", &sopv::node::Blast::del_non_selected)                    \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DelNonSelected"))  \
+)                                                                            \
+.property("removegrp", &sopv::node::Blast::del_unused_groups)                \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DelUnusedGroups")) \
+)                                                                            \
 )
 REGIST_NODE_RTTI(CopyToPoints, copytopoints,
-.property("src_group", &sopv::node::CopyToPoints::src_group)                \
+.property("sourcegroup", &sopv::node::CopyToPoints::src_group)              \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SrcGroup"))       \
 )                                                                           \
-.property("target_group", &sopv::node::CopyToPoints::target_group)          \
+.property("targetgroup", &sopv::node::CopyToPoints::target_group)           \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TargetGroup"))    \
 )                                                                           \
-.property("target_group_str", &sopv::node::CopyToPoints::target_group_str)  \
+.property("targetgroup_str", &sopv::node::CopyToPoints::target_group_str)   \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TargetGroupStr")) \
 )                                                                           \
-.property("use_pt_dir", &sopv::node::CopyToPoints::use_pt_dir)              \
+.property("showguide", &sopv::node::CopyToPoints::show_guide)               \
 (                                                                           \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UsePtDir"))       \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("ShowGuide"))      \
+)                                                                           \
+.property("transform", &sopv::node::CopyToPoints::trans_dir)                \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("TransUsingPtOri"))\
+)                                                                           \
+.property("doattr", &sopv::node::CopyToPoints::copy_attr)                   \
+(                                                                           \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("CopyPtAttr"))     \
 )                                                                           \
 )
-REGIST_NODE_RTTI_DEFAULT(ForeachPrimBegin, block_begin)
-REGIST_NODE_RTTI(ForeachPrimEnd, block_end,
-.property("do_single_pass", &sopv::node::ForeachPrimEnd::do_single_pass)         \
-(                                                                                \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SinglePass"))          \
-)                                                                                \
-.property("single_pass_offset", &sopv::node::ForeachPrimEnd::single_pass_offset) \
-(                                                                                \
-	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SinglePassOffset"))    \
-)                                                                                \
+REGIST_NODE_RTTI(ForeachBegin, block_begin,
+.property("method", &sopv::node::ForeachBegin::method)                 \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Method"))    \
+)                                                                      \
+.property("blockpath", &sopv::node::ForeachBegin::block_path)          \
+(                                                                      \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("BlockPath")) \
+)                                                                      \
+)
+REGIST_NODE_RTTI(ForeachEnd, block_end,
+.property("itermethod", &sopv::node::ForeachEnd::iter)                        \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("IterationMethod"))  \
+)                                                                             \
+.property("method", &sopv::node::ForeachEnd::gather)                          \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GatherMethod"))     \
+)                                                                             \
+.property("class", &sopv::node::ForeachEnd::element)                          \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PieceElements"))    \
+)                                                                             \
+.property("useattrib", &sopv::node::ForeachEnd::piece_attrib_toggle)          \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PieceAttribToggle"))\
+)                                                                             \
+.property("attrib", &sopv::node::ForeachEnd::piece_attrib)                    \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PieceAttribute"))   \
+)                                                                             \
+.property("usemaxiter", &sopv::node::ForeachEnd::use_max_iter)                \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("UseMaxIter"))       \
+)                                                                             \
+.property("maxiter", &sopv::node::ForeachEnd::max_iter)                       \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("MaxIterations"))    \
+)                                                                             \
+.property("blockpath", &sopv::node::ForeachEnd::block_path)                   \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DefaultBlockPath")) \
+)                                                                             \
+.property("templatepath", &sopv::node::ForeachEnd::template_path)             \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("PieceBlockPath"))   \
+)                                                                             \
+.property("dosinglepass", &sopv::node::ForeachEnd::do_single_pass)            \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SinglePass"))       \
+)                                                                             \
+.property("singlepass", &sopv::node::ForeachEnd::single_pass_offset)          \
+(                                                                             \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("SinglePassOffset")) \
+)                                                                             \
 )
 REGIST_NODE_RTTI_DEFAULT(Merge, merge)
 REGIST_NODE_RTTI_DEFAULT(Null, null)
 REGIST_NODE_RTTI(Output, output,
-.property("output_idx", &sopv::node::Output::output_idx)               \
+.property("outputidx", &sopv::node::Output::output_idx)                \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("OutputIdx")) \
 )                                                                      \
 )
+REGIST_NODE_RTTI(Python, python,
+.property("python", &sopv::node::Python::code)                            \
+(                                                                         \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Python Code")), \
+    rttr::metadata(ee0::PropLongStringTag(), true)                        \
+)                                                                         \
+)
 REGIST_NODE_RTTI(Split, split,
-.property("group_name", &sopv::node::Split::group_name)                \
+.property("group", &sopv::node::Split::group_name)                     \
 (                                                                      \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
 )                                                                      \
 )
 REGIST_NODE_RTTI(Switch, switch,
-.property("selected", &sopv::node::Switch::selected)                  \
+.property("input", &sopv::node::Switch::selected)                     \
 (                                                                     \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Selected")) \
 )                                                                     \

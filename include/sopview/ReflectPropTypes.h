@@ -38,6 +38,23 @@ enum class GroupType
     Vertices,
 };
 
+enum class GroupTypes
+{
+    Auto = 0,
+    Primitives,
+    Points,
+    Edges,
+    Vertices,
+};
+
+enum class GroupBoundingType
+{
+    Box,
+    Sphere,
+    Object,
+    Volume,
+};
+
 enum class GroupMerge
 {
     Replace,
@@ -48,6 +65,7 @@ enum class GroupMerge
 
 struct GroupExprInst
 {
+    bool        enable = false;
     std::string group_name;
     std::string expr_str;
     GroupMerge  merge_op = GroupMerge::Union;
@@ -61,6 +79,19 @@ enum class BooleanOperator
     Subtract,
 };
 
+enum class BooleanGeoType
+{
+    Solid,
+    Surface,
+};
+
+enum class BooleanSubType
+{
+    AMinusB,
+    BMinusA,
+    Both,
+};
+
 enum class KnifeKeep
 {
     KeepAbove,
@@ -69,6 +100,14 @@ enum class KnifeKeep
 };
 
 enum class GeoAttrClass
+{
+    Point = 0,
+    Vertex,
+    Primitive,
+    Detail,
+};
+
+enum class GeoAttrClassType
 {
     Point = 0,
     Vertex,
@@ -99,13 +138,40 @@ enum class GeoAttrType
     Matrix4,
 };
 
+enum class AttrCreateType
+{
+    Float,
+    Integer,
+    Vector,
+    String,
+    FloatArray,
+    IntegerArray,
+    StringArray,
+};
+
+enum class AttrCreateFloatInfo
+{
+    Guess,
+    None,
+    Position,
+    Vector,
+    Normal,
+    Color,
+    Quaternion,
+    TransformMatrix,
+    TextureCoordinate,
+};
+
 struct AttrCreateItem
 {
-    std::string  name;
-    GeoAttrClass cls  = GeoAttrClass::Point;
-    GeoAttrType  type = GeoAttrType::Float;
-    sm::vec4     value;
-    sm::vec4     default_val;
+    std::string    name;
+    GeoAttrClass   cls  = GeoAttrClass::Point;
+    AttrCreateType type = AttrCreateType::Float;
+    size_t         size = 1;
+    sm::vec4       value;
+    sm::vec4       default_val;
+    std::string    string;
+    AttrCreateFloatInfo flt_info = AttrCreateFloatInfo::Guess;
 };
 
 struct AttributeName
@@ -137,10 +203,19 @@ enum class DeleteEntityType
     Faces,
 };
 
+enum class DeleteOperation
+{
+    Pattern,
+    Range,
+    Expression,
+};
+
 enum class MeasureType
 {
     Perimeter,
-    Area
+    Area,
+    Curvature,
+    Volume,
 };
 
 enum class PolyFrameStyle
@@ -154,11 +229,61 @@ enum class PolyFrameStyle
     MikkT,
 };
 
+enum class PolyExtrudeExtrusion
+{
+    PrimEdgeNorm,
+    PointNorm,
+};
+
+enum class PolyFillMode
+{
+    SinglePolygon,
+    Triangles,
+    TriangleFan,
+    QuadrilateralFan,
+    Quadrilaterals,
+    QuadrilateralGrid,
+};
+
 enum class FuseOperator
 {
     Consolidate,
     UniquePoints,
     Snap,
+};
+
+enum class ForeachBeginMethod
+{
+    Feedback,
+    PieceOrPoint,
+    Metadata,
+    Input,
+};
+
+enum class ForeachIterMethod
+{
+    AutoDetectFromInputs,
+    ByPiecesOrPoints,
+    ByCount,
+};
+
+enum class ForeachGatherMethod
+{
+    Feedback,
+    Merge,
+};
+
+enum class ForeachPieceElements
+{
+    Primitives,
+    Points,
+};
+
+enum class UVScale
+{
+    None,
+    Uniform,
+    Stretch,
 };
 
 void prop_types_regist_rttr();

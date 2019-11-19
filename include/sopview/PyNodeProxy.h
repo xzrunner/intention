@@ -17,15 +17,16 @@ namespace sopv
 {
 
 class Node;
-class SceneTree;
 
 namespace py
 {
 
+struct PyLoaderCtx;
+
 class NodeProxy
 {
 public:
-    NodeProxy(std::shared_ptr<SceneTree>& stree, const std::vector<n0::SceneNodePtr>& paths);
+    NodeProxy(PyLoaderCtx& ctx, const std::vector<n0::SceneNodePtr>& paths);
 
     std::shared_ptr<NodeProxy> CreateNode(const std::string& type, const std::string& name,
         bool run_init_scripts = false, bool load_contents = false, bool exact_type_name = false);
@@ -34,6 +35,8 @@ public:
 
     std::shared_ptr<NodeProxy> GetParent();
     std::shared_ptr<NodeProxy> GetChild(const std::string& name);
+
+    void AddNode(const std::shared_ptr<NodeProxy>& node) {}
 
     void Move(const sm::vec2& v);
     void SetSelectableInViewport(bool b) {}
@@ -55,8 +58,8 @@ public:
     void SetTemplateFlag(bool on) {}
     void SetUnloadFlag(bool on) {}
     void SetInput(int input_index, const std::shared_ptr<NodeProxy>& item_to_become_input, int output_index = 0);
-    void SetPosition(const sm::vec2& pos) {}
-    void SetSize(const sm::vec2& size) {}
+    void SetPosition(const sm::vec2& pos);
+    void SetSize(const sm::vec2& size);
     void SetMinimized(bool on) {}
     void SetAutoFit(bool on) {}
     void SetComment(const std::string& comment) {}
@@ -70,7 +73,7 @@ private:
     std::shared_ptr<Node> GetNode() const;
 
 private:
-    std::shared_ptr<sopv::SceneTree> m_stree = nullptr;
+    PyLoaderCtx& m_ctx;
 
     std::vector<n0::SceneNodePtr> m_paths;
 

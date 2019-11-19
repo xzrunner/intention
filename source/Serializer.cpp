@@ -127,7 +127,7 @@ void Serializer::InitParentChildren(const n0::SceneNodePtr& node)
     if (node->HasUniqueComp<bp::CompNode>()) {
         auto& cnode = node->GetUniqueComp<bp::CompNode>();
         auto bp_node = cnode.GetNode();
-        if (bp_node->get_type() == rttr::type::get<node::Geometry>()) {
+        if (bp_node->get_type().is_derived_from<node::Geometry>()) {
             parent = std::static_pointer_cast<node::Geometry>(bp_node);
         }
     }

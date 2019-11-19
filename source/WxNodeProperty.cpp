@@ -72,11 +72,14 @@ sop::NodePtr GetGroupNameNode(const sopv::GroupName& name, const sop::NodePtr& s
         }
         assert(conns.size() == 1);
         auto ret = conns[0].node.lock();
-        if (!ret || !ret->GetGeometry()) {
+        if (!ret) {
             return nullptr;
-        } else {
-            return ret;
         }
+        assert(ret->get_type().is_derived_from<sop::Node>());
+        if (!std::static_pointer_cast<sop::Node>(ret)->GetGeometry()) {
+            return nullptr;
+        }
+        return std::static_pointer_cast<sop::Node>(ret);
     }
 }
 
@@ -96,11 +99,14 @@ sop::NodePtr GetAttrNameNode(const bp::NodePtr& bp_node, const sopv::SceneTree& 
 
         assert(conns.size() == 1);
         auto f_node = conns[0].node.lock();
-        if (!f_node || !f_node->GetGeometry()) {
+        if (!f_node) {
             return nullptr;
-        } else {
-            return f_node;
         }
+        assert(f_node->get_type().is_derived_from<sop::Node>());
+        if (!std::static_pointer_cast<sop::Node>(f_node)->GetGeometry()) {
+            return nullptr;
+        }
+        return std::static_pointer_cast<sop::Node>(f_node);
     };
 
     auto node_type = bp_node->get_type();
@@ -238,6 +244,14 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         type_prop->SetValue(static_cast<int>(type));
         m_pg->Append(type_prop);
     }
+    else if (prop_type == rttr::type::get<GroupBoundingType>())
+    {
+        const wxChar* TYPES[] = { wxT("Box"), wxT("Sphere"), wxT("Object"), wxT("Volume"), NULL };
+        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
+        auto type = prop.get_value(node).get_value<GroupBoundingType>();
+        type_prop->SetValue(static_cast<int>(type));
+        m_pg->Append(type_prop);
+    }
     else if (prop_type == rttr::type::get<GroupMerge>())
     {
         const wxChar* OPs[] = { wxT("Replace"), wxT("Union"), wxT("Intersect"), wxT("Subtract"), NULL };
@@ -352,6 +366,14 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         type_prop->SetValue(static_cast<int>(type));
         m_pg->Append(type_prop);
     }
+    else if (prop_type == rttr::type::get<DeleteOperation>())
+    {
+        const wxChar* OPS[] = { wxT("Pattern"), wxT("Range"), wxT("Expression"), NULL };
+        auto op_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, OPS);
+        auto type = prop.get_value(node).get_value<DeleteOperation>();
+        op_prop->SetValue(static_cast<int>(type));
+        m_pg->Append(op_prop);
+    }
     else if (prop_type == rttr::type::get<MeasureType>())
     {
         const wxChar* TYPES[] = { wxT("Perimeter"), wxT("Area"), NULL };
@@ -359,6 +381,15 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         auto type = prop.get_value(node).get_value<MeasureType>();
         type_prop->SetValue(static_cast<int>(type));
         m_pg->Append(type_prop);
+    }
+    else if (prop_type == rttr::type::get<PolyFillMode>())
+    {
+        const wxChar* MODES[] = { wxT("SinglePolygon"), wxT("Triangles"), wxT("TriangleFan"),
+            wxT("QuadrilateralFan"), wxT("Quadrilaterals"), wxT("QuadrilateralGrid"), NULL };
+        auto mode_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, MODES);
+        auto mode = prop.get_value(node).get_value<PolyFrameStyle>();
+        mode_prop->SetValue(static_cast<int>(mode));
+        m_pg->Append(mode_prop);
     }
     else if (prop_type == rttr::type::get<PolyFrameStyle>())
     {
@@ -376,6 +407,25 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         auto op = prop.get_value(node).get_value<FuseOperator>();
         op_prop->SetValue(static_cast<int>(op));
         m_pg->Append(op_prop);
+    }
+    else if (prop_type.is_enumeration())
+    {
+//        const wxChar* OPS[] = { wxT("Consolidate"), wxT("UniquePoints"), wxT("Snap"), NULL };
+
+        wxArrayString names;
+        size_t idx = 0;
+        while (true)
+        {
+            auto desc = prop_type.get_enumeration().get_metadata(idx++);
+            if (!desc.is_valid()) {
+                break;
+            } else {
+                names.push_back(desc.to_string());
+            }
+        }
+        auto wx_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, names);
+        wx_prop->SetValue(prop.get_value(node).get_value<int>());
+        m_pg->Append(wx_prop);
     }
     else
     {
@@ -478,6 +528,10 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     {
         prop.set_value(m_node, GroupType(wxANY_AS(val, int)));
     }
+    else if (prop_type == rttr::type::get<GroupBoundingType>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, GroupBoundingType(wxANY_AS(val, int)));
+    }
     else if (prop_type == rttr::type::get<GroupMerge>() && key == ui_info.desc)
     {
         prop.set_value(m_node, GroupMerge(wxANY_AS(val, int)));
@@ -547,8 +601,8 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
 
         auto type_str = tokens[idx++];
         std::transform(type_str.begin(), type_str.end(), type_str.begin(), tolower);
-        item.type = rttr::type::get<GeoAttrType>().get_enumeration()
-            .name_to_value(type_str).get_value<GeoAttrType>();
+        item.type = rttr::type::get<AttrCreateType>().get_enumeration()
+            .name_to_value(type_str).get_value<AttrCreateType>();
 
         for (int i = 0; i < 4; ++i) {
             item.value.xyzw[i] = std::atof(tokens[idx++].c_str());
@@ -589,9 +643,17 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     {
         prop.set_value(m_node, DeleteEntityType(wxANY_AS(val, int)));
     }
+    else if (prop_type == rttr::type::get<DeleteOperation>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, DeleteOperation(wxANY_AS(val, int)));
+    }
     else if (prop_type == rttr::type::get<MeasureType>() && key == ui_info.desc)
     {
         prop.set_value(m_node, MeasureType(wxANY_AS(val, int)));
+    }
+    else if (prop_type == rttr::type::get<PolyFillMode>() && key == ui_info.desc)
+    {
+        prop.set_value(m_node, PolyFillMode(wxANY_AS(val, int)));
     }
     else if (prop_type == rttr::type::get<PolyFrameStyle>() && key == ui_info.desc)
     {
@@ -600,6 +662,19 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
     else if (prop_type == rttr::type::get<FuseOperator>() && key == ui_info.desc)
     {
         prop.set_value(m_node, FuseOperator(wxANY_AS(val, int)));
+    }
+    else if (prop_type.is_enumeration())
+    {
+//        prop_type.get_enumeration().name_to_value();
+//
+//        auto u_type = prop_type.get_enumeration().get_underlying_type();
+//        auto zz = u_type.get_name().to_string();
+//
+//        auto zz2 = prop_type.get_name().to_string();
+//
+////        prop.get_value(node).get_value<int>()
+////        prop_type.get_enumeration()..name_to_value(val);
+//        prop.set_value(m_node, static_cast<int>(wxANY_AS(val, int)));
     }
     else
     {

@@ -2,6 +2,7 @@
 #define BOOST_PYTHON_STATIC_LIB
 
 #include "sopview/PyLoader.h"
+#include "sopview/PyLoaderCtx.h"
 #include "sopview/PyParmValue.h"
 #include "sopview/PyNodeProxy.h"
 #include "sopview/SceneTree.h"
@@ -21,6 +22,7 @@
 #include <sop/PyParmTemplate.h>
 
 #include <fstream>
+#include <sstream>
 
 #include <boost/python.hpp>
 
@@ -30,20 +32,20 @@ using namespace sopv::py;
 namespace
 {
 
-std::shared_ptr<sopv::SceneTree> STREE = nullptr;
+PyLoaderCtx CTX;
 
 std::shared_ptr<NodeProxy> hou_get_node(const std::string& path)
 {
     std::vector<std::string> tokens;
     cpputil::StringHelper::Split(path, "/", tokens);
     assert(tokens.size() >= 2 && tokens[0] == "obj");
-    STREE->SetDepth(0);
+    CTX.stree->SetDepth(0);
     std::vector<n0::SceneNodePtr> paths;
     for (size_t i = 1, n = tokens.size(); i < n; ++i)
     {
         auto& name = tokens[i];
-        assert(STREE->GetCurrNode()->HasSharedComp<n0::CompComplex>());
-        auto& ccomplex = STREE->GetCurrNode()->GetSharedComp<n0::CompComplex>();
+        assert(CTX.stree->GetCurrNode()->HasSharedComp<n0::CompComplex>());
+        auto& ccomplex = CTX.stree->GetCurrNode()->GetSharedComp<n0::CompComplex>();
         for (auto& c : ccomplex.GetAllChildren())
         {
             assert(c->HasUniqueComp<bp::CompNode>());
@@ -57,10 +59,10 @@ std::shared_ptr<NodeProxy> hou_get_node(const std::string& path)
             {
                 if (i == n - 1) {
                     paths.push_back(c);
-                    return std::make_shared<NodeProxy>(STREE, paths);
+                    return std::make_shared<NodeProxy>(CTX, paths);
                 } else {
                     assert(bp_node->get_type() == rttr::type::get<sopv::node::Geometry>());
-                    STREE->Push(c);
+                    CTX.stree->Push(c);
                 }
             }
         }
@@ -78,14 +80,14 @@ std::shared_ptr<NodeProxy> hou_get_node(const std::string& path)
         auto& style = sopv_node->GetStyle();
         caabb.SetSize(*scene_node, sm::rect(style.width, style.height));
 
-        STREE->Add(scene_node);
+        CTX.stree->Add(scene_node);
 
-        STREE->Push(scene_node);
+        CTX.stree->Push(scene_node);
 
         paths.push_back(scene_node);
     }
 
-    return std::make_shared<NodeProxy>(STREE, paths);
+    return std::make_shared<NodeProxy>(CTX, paths);
 }
 
 BOOST_PYTHON_MODULE(hou)
@@ -139,9 +141,10 @@ hou_node = None
 
     std::stringstream buffer;
     buffer << fin.rdbuf();
+    auto fixed = FixCode(buffer.str());
 
     try {
-        PyRun_SimpleString(buffer.str().c_str());
+        PyRun_SimpleString(fixed.c_str());
     } catch (...) {
         boost::python::handle_exception();
     }
@@ -157,7 +160,35 @@ del hou
 
 void PyLoader::PrepareContext()
 {
-    STREE = m_stree;
+    CTX.stree = m_stree;
+}
+
+std::string PyLoader::FixCode(const std::string& code)
+{
+    std::string ret;
+
+    std::stringstream ss(code);
+
+    int line_num = 0;
+    std::string line;
+    while (std::getline(ss, line))
+    {
+        ++line_num;
+
+        auto pos = line.find("setComment(\"\"");
+        if (pos != std::string::npos)
+        {
+            line.erase(pos + 12, 1);
+            auto end_pos = line.find("\"\")", pos);
+            assert(end_pos != std::string::npos);
+            line.erase(end_pos + 1, 1);
+        }
+
+        ret.append(line);
+        ret.append("\n");
+    }
+
+    return ret;
 }
 
 }

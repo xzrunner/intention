@@ -54,7 +54,7 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
     auto bp_node = cnode.GetNode();
     assert(bp_node);
     auto bp_type = bp_node->get_type();
-    assert(bp_type == rttr::type::get<node::Geometry>());
+    assert(bp_type.is_derived_from<node::Geometry>());
 
     auto eval = stree->GetCurrEval();
     assert(node->HasSharedComp<n0::CompComplex>());
@@ -78,6 +78,7 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
             continue;
         }
 
+        //if (bp_type.is_derived_from<node::Geometry>())
         if (bp_type == rttr::type::get<node::Geometry>())
         {
             stree->Push(c);
@@ -148,8 +149,10 @@ void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) cons
             if (!bound_conns.empty()) {
                 assert(bound_conns.size() == 1);
                 auto bound_node = bound_conns.front().node.lock();
-                if (bound_node) {
-                    auto bound_geo = bound_node->GetGeometry();
+                if (bound_node)
+                {
+                    assert(bound_node->get_type().is_derived_from<sop::Node>());
+                    auto bound_geo = std::static_pointer_cast<sop::Node>(bound_node)->GetGeometry();
                     if (bound_geo) {
                         auto& b_aabb = bound_geo->GetAttr().GetAABB();
                         pt3::RenderSystem::DrawShape(gs::Box(b_aabb), rp);

@@ -115,6 +115,9 @@
     <ClInclude Include="..\..\..\include\sopview\PyParmValue.h">
       <Filter>tools\serialize</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\PyLoaderCtx.h">
+      <Filter>tools\serialize</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">

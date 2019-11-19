@@ -4,9 +4,9 @@
 
 #include <SM_Vector.h>
 #include <sop/typedef.h>
-#include <sop/NodeVar.h>
 #include <sop/VarValue.h>
 #include <sop/GeoAttrClass.h>
+#include <sop/NodeVarType.h>
 
 namespace sop { class Node; }
 namespace bp { class Node; class Pin; }

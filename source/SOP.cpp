@@ -16,11 +16,13 @@
 #include <sop/node/AttributeCreate.h>
 #include <sop/node/AttributePromote.h>
 #include <sop/node/AttributeTransfer.h>
+#include <sop/node/AttributeVOP.h>
 #include <sop/node/AttributeWrangle.h>
 #include <sop/node/Sort.h>
 #include <sop/node/Measure.h>
 // export
 #include <sop/node/File.h>
+#include <sop/node/ObjectMerge.h>
 // group
 #include <sop/node/GroupCreate.h>
 #include <sop/node/GroupExpression.h>
@@ -42,6 +44,7 @@
 #include <sop/node/Knife.h>
 #include <sop/node/Normal.h>
 #include <sop/node/PolyExtrude.h>
+#include <sop/node/PolyFill.h>
 #include <sop/node/PolyFrame.h>
 // primitive
 #include <sop/node/Box.h>
@@ -56,6 +59,7 @@
 #include <sop/node/Blast.h>
 #include <sop/node/CopyToPoints.h>
 #include <sop/node/ForeachPrimEnd.h>
+#include <sop/node/Python.h>
 #include <sop/node/Split.h>
 #include <sop/node/Switch.h>
 
@@ -78,6 +82,27 @@ TransGroupType(sopv::GroupType type)
     case sopv::GroupType::Edges:
         return sop::GroupType::Edges;
     case sopv::GroupType::Vertices:
+        return sop::GroupType::Vertices;
+    default:
+        assert(0);
+        return sop::GroupType::Primitives;
+    }
+}
+
+sop::GroupType
+TransGroupTypes(sopv::GroupTypes type)
+{
+    switch (type)
+    {
+    case sopv::GroupTypes::Auto:
+        return sop::GroupType::GuessFromGroup;
+    case sopv::GroupTypes::Primitives:
+        return sop::GroupType::Primitives;
+    case sopv::GroupTypes::Points:
+        return sop::GroupType::Points;
+    case sopv::GroupTypes::Edges:
+        return sop::GroupType::Edges;
+    case sopv::GroupTypes::Vertices:
         return sop::GroupType::Vertices;
     default:
         assert(0);
@@ -122,6 +147,23 @@ TransGeoAttrType(sopv::GeoAttrType type)
     }
 }
 
+sop::GeoAttrType
+TransAttrCreateType(sopv::AttrCreateType type)
+{
+    switch (type)
+    {
+    case sopv::AttrCreateType::Float:
+        return sop::GeoAttrType::Float;
+    case sopv::AttrCreateType::Integer:
+        return sop::GeoAttrType::Int;
+    case sopv::AttrCreateType::String:
+        return sop::GeoAttrType::String;
+    default:
+        assert(0);
+        return sop::GeoAttrType::Int;
+    }
+}
+
 sop::GroupMerge
 TransGroupMerge(sopv::GroupMerge merge_op)
 {
@@ -151,45 +193,18 @@ TransGroupExprInst(const sopv::GroupExprInst& src)
     return dst;
 }
 
-sop::VarValue TransAttrCreateVal(sopv::GeoAttrType type, const sm::vec4& value)
+sop::VarValue TransAttrCreateVal(sopv::AttrCreateType type, const sm::vec4& value)
 {
     sop::VarValue val;
     switch (type)
     {
-    case sopv::GeoAttrType::Int:
-        val = sop::VarValue(static_cast<int>(value.x));
-        break;
-
-    case sopv::GeoAttrType::Bool:
-        val = sop::VarValue(value.x == 0 ? false : true);
-        break;
-    case sopv::GeoAttrType::Double:
-        val = sop::VarValue(static_cast<double>(value.x));
-        break;
-
-    case sopv::GeoAttrType::Float:
+    case sopv::AttrCreateType::Float:
         val = sop::VarValue(value.x);
         break;
-    case sopv::GeoAttrType::Float2:
-        assert(0);
+    case sopv::AttrCreateType::Integer:
+        val = sop::VarValue(static_cast<int>(value.x));
         break;
-    case sopv::GeoAttrType::Float3:
-        val = sop::VarValue(sm::vec3(value.x, value.y, value.z));
-        break;
-    case sopv::GeoAttrType::Float4:
-        assert(0);
-        break;
-
-    case sopv::GeoAttrType::Vector:
-        val = sop::VarValue(sm::vec3(value.x, value.y, value.z));
-        break;
-    case sopv::GeoAttrType::Vector4:
-        assert(0);
-        break;
-
-    case sopv::GeoAttrType::Matrix2:
-    case sopv::GeoAttrType::Matrix3:
-    case sopv::GeoAttrType::Matrix4:
+    default:
         assert(0);
         break;
     }
@@ -200,7 +215,7 @@ sop::node::AttributeCreate::Item
 TransAttrCreateItem(const sopv::AttrCreateItem& item)
 {
     auto cls   = sopv::SOP::TransGeoAttrClass(item.cls);
-    auto type  = TransGeoAttrType(item.type);
+    auto type  = TransAttrCreateType(item.type);
     auto val   = TransAttrCreateVal(item.type, item.value);
     auto d_val = TransAttrCreateVal(item.type, item.default_val);
 
@@ -232,6 +247,25 @@ TransGroupType(sopv::PolyFrameStyle style)
     }
 }
 
+sop::GeoAttrClass
+TransGeoAttrClassType(sopv::GeoAttrClassType cls)
+{
+    switch (cls)
+    {
+    case sopv::GeoAttrClassType::Point:
+        return sop::GeoAttrClass::Point;
+    case sopv::GeoAttrClassType::Vertex:
+        return sop::GeoAttrClass::Vertex;
+    case sopv::GeoAttrClassType::Primitive:
+        return sop::GeoAttrClass::Primitive;
+    case sopv::GeoAttrClassType::Detail:
+        return sop::GeoAttrClass::Detail;
+    default:
+        assert(0);
+        return sop::GeoAttrClass::Point;
+    }
+}
+
 }
 
 namespace sopv
@@ -248,7 +282,7 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::AttributeCreate&>(back);
 
         dst.SetGroupName(src.group_name.str);
-        dst.SetGroupType(TransGroupType(src.group_type));
+        dst.SetGroupType(TransGroupTypes(src.group_type));
 
         std::vector<sop::node::AttributeCreate::Item> items;
         if (!src.item0.name.empty()) {
@@ -283,16 +317,16 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::AttributeTransfer&>(back);
 
         dst.ClearCopyAttrs();
-        if (!src.points_attrs.str.empty()) {
+        if (src.points_attrs_toggle && !src.points_attrs.str.empty()) {
             dst.SetCopyAttrs(sop::GeoAttrClass::Point, { src.points_attrs.str });
         }
-        if (!src.vertices_attrs.str.empty()) {
+        if (src.vertices_attrs_toggle && !src.vertices_attrs.str.empty()) {
             dst.SetCopyAttrs(sop::GeoAttrClass::Vertex, { src.vertices_attrs.str });
         }
-        if (!src.primitives_attrs.str.empty()) {
+        if (src.prims_attrs_toggle && !src.primitives_attrs.str.empty()) {
             dst.SetCopyAttrs(sop::GeoAttrClass::Primitive, { src.primitives_attrs.str });
         }
-        if (!src.detail_attrs.str.empty()) {
+        if (src.detail_attrs_toggle && !src.detail_attrs.str.empty()) {
             dst.SetCopyAttrs(sop::GeoAttrClass::Detail, { src.detail_attrs.str });
         }
     }
@@ -308,7 +342,7 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::Measure&>(back);
 
         sop::node::Measure::Type type;
-        switch (src.ms_type)
+        switch (src.measure_type)
         {
         case MeasureType::Perimeter:
             type = sop::node::Measure::Type::Perimeter;
@@ -316,12 +350,20 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         case MeasureType::Area:
             type = sop::node::Measure::Type::Area;
             break;
+        case MeasureType::Curvature:
+            type = sop::node::Measure::Type::Curvature;
+            break;
+        case MeasureType::Volume:
+            type = sop::node::Measure::Type::Volume;
+            break;
         default:
             assert(0);
         }
         dst.SetMesureType(type);
 
-        dst.SetMesureName(src.ms_name);
+        if (src.override_name) {
+            dst.SetMesureName(src.attr_name);
+        }
     }
     else if (type == rttr::type::get<node::Sort>())
     {
@@ -362,6 +404,12 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::File&>(front);
         auto& dst = static_cast<sop::node::File&>(back);
         dst.SetFilepath(src.filepath);
+    }
+    else if (type == rttr::type::get<node::ObjectMerge>())
+    {
+        auto& src = static_cast<const node::ObjectMerge&>(front);
+        auto& dst = static_cast<sop::node::ObjectMerge&>(back);
+//        dst.SetObjects();
     }
     // group
     else if (type == rttr::type::get<node::GroupCreate>())
@@ -417,8 +465,8 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::GroupPromote&>(back);
 
         dst.SetGroupName(src.group_name.str);
-        dst.SetSrcGroupType(TransGroupType(src.src_type));
-        dst.SetDstGroupType(TransGroupType(src.dst_type));
+        dst.SetSrcGroupType(TransGroupTypes(src.src_type1));
+        dst.SetDstGroupType(TransGroupTypes(src.dst_type1));
     }
     // manipulate
     else if (type == rttr::type::get<node::Delete>())
@@ -457,6 +505,8 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
 
         dst.SetDistance(ParseExprFloat(src.distance, back,
             sop::node::Peak::DIST, 0, eval));
+
+        dst.SetUpdateNorm(src.update_norm);
     }
     else if (type == rttr::type::get<node::Transform>())
     {
@@ -503,30 +553,38 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Carve&>(front);
         auto& dst = static_cast<sop::node::Carve&>(back);
 
-        dst.SetFirstU(ParseExprFloat(src.first_u, back,
-            sop::node::Carve::FIRST_U, 0, eval));
-        dst.SetSecondU(ParseExprFloat(src.second_u, back,
-            sop::node::Carve::SECOND_U, 1, eval));
-        dst.SetFirstV(ParseExprFloat(src.first_v, back,
-            sop::node::Carve::FIRST_V, 0, eval));
-        dst.SetSecondV(ParseExprFloat(src.second_v, back,
-            sop::node::Carve::SECOND_V, 1, eval));
+        if (src.first_u_toggle) {
+            dst.SetFirstU(ParseExprFloat(src.first_u, back,
+                sop::node::Carve::FIRST_U, 0, eval));
+        }
+        if (src.second_u_toggle) {
+            dst.SetSecondU(ParseExprFloat(src.second_u, back,
+                sop::node::Carve::SECOND_U, 1, eval));
+        }
+        if (src.first_v_toggle) {
+            dst.SetFirstV(ParseExprFloat(src.first_v, back,
+                sop::node::Carve::FIRST_V, 0, eval));
+        }
+        if (src.second_v_toggle) {
+            dst.SetSecondV(ParseExprFloat(src.second_v, back,
+                sop::node::Carve::SECOND_V, 1, eval));
+        }
     }
     else if (type == rttr::type::get<node::Add>())
     {
         auto& src = static_cast<const node::Add&>(front);
         auto& dst = static_cast<sop::node::Add&>(back);
         std::vector<sm::vec3> points;
-        if (src.use_p0) {
+        if (src.p0_toggle) {
             points.push_back(src.p0);
         }
-        if (src.use_p1) {
+        if (src.p1_toggle) {
             points.push_back(src.p1);
         }
-        if (src.use_p2) {
+        if (src.p2_toggle) {
             points.push_back(src.p2);
         }
-        if (src.use_p3) {
+        if (src.p3_toggle) {
             points.push_back(src.p3);
         }
         dst.SetPoints(points);
@@ -588,7 +646,7 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetDirection(src.direction);
 
         sop::node::Knife::KeepType keep;
-        switch (src.keep)
+        switch (src.knife_op)
         {
         case KnifeKeep::KeepAbove:
             keep = sop::node::Knife::KeepType::KeepAbove;
@@ -608,7 +666,7 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
     {
         auto& src = static_cast<const node::Normal&>(front);
         auto& dst = static_cast<sop::node::Normal&>(back);
-        dst.SetAttrAddTo(TransGeoAttrClass(src.attr_add_norm_to));
+        dst.SetAttrAddTo(TransGeoAttrClassType(src.attr_add_norm_to));
     }
     else if (type == rttr::type::get<node::PolyExtrude>())
     {
@@ -622,9 +680,20 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetOutputBack(src.output_back);
         dst.SetOutputSide(src.output_side);
 
-        dst.SetFrontGroupName(src.front_group);
-        dst.SetBackGroupName(src.back_group);
-        dst.SetSideGroupName(src.side_group);
+        if (src.front_group_toggle) {
+            dst.SetFrontGroupName(src.front_group);
+        }
+        if (src.back_group_toggle) {
+            dst.SetBackGroupName(src.back_group);
+        }
+        if (src.side_group_toggle) {
+            dst.SetSideGroupName(src.side_group);
+        }
+    }
+    else if (type == rttr::type::get<node::PolyFill>())
+    {
+        auto& src = static_cast<const node::PolyFill&>(front);
+        auto& dst = static_cast<sop::node::PolyFill&>(back);
     }
     else if (type == rttr::type::get<node::PolyFrame>())
     {
@@ -661,7 +730,10 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Grid&>(front);
         auto& dst = static_cast<sop::node::Grid&>(back);
 
-        dst.SetSize(sm::ivec2(src.size_x, src.size_y));
+        sm::ivec2 sz;
+        sz.x = static_cast<int>(src.size.x);
+        sz.y = static_cast<int>(src.size.y);
+        dst.SetSize(sz);
 
         dst.SetRows(src.rows);
         dst.SetColumns(src.columns);
@@ -709,7 +781,7 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
 
         dst.SetGroupName(src.group_name.str);
         dst.SetGroupType(TransGroupType(src.group_type));
-        dst.SetDeleteNonSelected(src.delete_non_selected);
+        dst.SetDeleteNonSelected(src.del_non_selected);
     }
     else if (type == rttr::type::get<node::CopyToPoints>())
     {
@@ -724,15 +796,21 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
             dst.SetTargetGroup(src.target_group_str);
         }
 
-        dst.EnableUsePointDir(src.use_pt_dir);
+        dst.EnableUsePointDir(src.trans_dir);
     }
-    else if (type == rttr::type::get<node::ForeachPrimEnd>())
+    else if (type == rttr::type::get<node::ForeachEnd>())
     {
-        auto& src = static_cast<const node::ForeachPrimEnd&>(front);
+        auto& src = static_cast<const node::ForeachEnd&>(front);
         auto& dst = static_cast<sop::node::ForeachPrimEnd&>(back);
 
         dst.EnableSinglePass(src.do_single_pass);
         dst.SetSinglePassOffset(src.single_pass_offset);
+    }
+    else if (type == rttr::type::get<node::Python>())
+    {
+        auto& src = static_cast<const node::Python&>(front);
+        auto& dst = static_cast<sop::node::Python&>(back);
+        dst.SetCode(src.code);
     }
     else if (type == rttr::type::get<node::Split>())
     {

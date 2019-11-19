@@ -130,7 +130,7 @@ void Evaluator::OnDisconnecting(const bp::Connecting& conn)
 
 void Evaluator::OnRebuildConnection()
 {
-    std::vector<std::pair<sop::Node::PortAddr, sop::Node::PortAddr>> conns;
+    std::vector<std::pair<hdiop::NodePortAddr, hdiop::NodePortAddr>> conns;
     for (auto& itr : m_nodes_map)
     {
         auto& front = itr.first;
@@ -217,9 +217,24 @@ sop::NodePtr Evaluator::QueryBackNode(const bp::Node& front_node) const
     return itr == m_nodes_map.end() ? nullptr : itr->second;
 }
 
+void Evaluator::EnableUpdateSopEval(bool up)
+{
+    if (up == m_update_sop_eval) {
+        return;
+    }
+
+    m_update_sop_eval = up;
+
+    if (up) {
+        m_eval.Update();
+    }
+}
+
 void Evaluator::Update()
 {
-    m_eval.Update();
+    if (m_update_sop_eval) {
+        m_eval.Update();
+    }
 
     UpdateGroupName();
 }

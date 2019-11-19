@@ -35,6 +35,16 @@ bool NodeSelectOP::OnMouseLeftDClick(int x, int y)
         return true;
     });
 
+    if (!node || !node->HasUniqueComp<bp::CompNode>()) {
+        return false;
+    }
+
+    auto& cnode = node->GetUniqueComp<bp::CompNode>();
+    auto bp_node = cnode.GetNode();
+    if (!bp_node) {
+        return false;
+    }
+
     if (m_stree && m_stree->Push(node))
     {
         ee0::VariantSet vars;
@@ -43,7 +53,18 @@ bool NodeSelectOP::OnMouseLeftDClick(int x, int y)
         var.m_val.pv = &node;
         vars.SetVariant("obj", var);
         m_stage.GetSubjectMgr()->NotifyObservers(MSG_SCENE_ROOT_TO_NEXT_LEVEL, vars);
+        return true;
     }
+
+    //auto bp_type = bp_node->get_type();
+    //if (bp_type == rttr::type::get<node::AttributeVOP>())
+    //{
+
+    //}
+    //else if (bp_type.is_derived_from<node::Geometry>())
+    //{
+
+    //}
 
     return false;
 }
