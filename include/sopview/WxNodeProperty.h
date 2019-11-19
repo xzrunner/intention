@@ -2,6 +2,8 @@
 
 #include <blueprint/WxNodeProperty.h>
 
+class wxEnumProperty;
+
 namespace sopv
 {
 
@@ -19,6 +21,9 @@ private:
     virtual bool InitView(const rttr::property& prop, const bp::NodePtr& node) override;
     virtual bool UpdateView(const rttr::property& prop, const wxPGProperty& wx_prop) override;
     virtual bool UpdateView(wxPropertyGridEvent& event) override;
+
+    static wxEnumProperty* CreateEnumProp(const std::string& label, rttr::type type, int init_val);
+    static rttr::variant QueryEnumPropByLabel(const std::string& label, rttr::type type);
 
 private:
     std::shared_ptr<SceneTree> m_stree = nullptr;

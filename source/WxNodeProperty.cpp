@@ -118,23 +118,6 @@ sop::NodePtr GetAttrNameNode(const bp::NodePtr& bp_node, const sopv::SceneTree& 
     }
 }
 
-wxEnumProperty* CreateGeoAttrClassProp(const std::string& name, int value)
-{
-    const wxChar* choices[] = { wxT("Point"), wxT("Vertex"), wxT("Primitive"), wxT("Detail"), NULL };
-    auto prop = new wxEnumProperty(name, wxPG_LABEL, choices);
-    prop->SetValue(value);
-    return prop;
-}
-
-wxEnumProperty* CreateGeoAttrTypeProp(const std::string& name, int value)
-{
-    const wxChar* choices[] = { wxT("Int"), wxT("Bool"), wxT("Double"), wxT("Float"), wxT("Float2"), wxT("Float3"),
-        wxT("Float4"), wxT("String"), wxT("Vector"), wxT("Vector4"), wxT("Matrix2"), wxT("Matrix3"), wxT("Matrix4"), NULL };
-    auto prop = new wxEnumProperty(name, wxPG_LABEL, choices);
-    prop->SetValue(value);
-    return prop;
-}
-
 const char* STR_GROUP_NULL = "null";
 
 }
@@ -236,30 +219,14 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         name_prop->SetValue(idx);
         m_pg->Append(name_prop);
     }
-    else if (prop_type == rttr::type::get<GroupType>())
-    {
-        const wxChar* TYPES[] = { wxT("GuessFromGroup"), wxT("Primitives"), wxT("Points"), wxT("Edges"), wxT("Vertices"), NULL };
-        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
-        auto type = prop.get_value(node).get_value<GroupType>();
-        type_prop->SetValue(static_cast<int>(type));
-        m_pg->Append(type_prop);
-    }
-    else if (prop_type == rttr::type::get<GroupBoundingType>())
-    {
-        const wxChar* TYPES[] = { wxT("Box"), wxT("Sphere"), wxT("Object"), wxT("Volume"), NULL };
-        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
-        auto type = prop.get_value(node).get_value<GroupBoundingType>();
-        type_prop->SetValue(static_cast<int>(type));
-        m_pg->Append(type_prop);
-    }
-    else if (prop_type == rttr::type::get<GroupMerge>())
-    {
-        const wxChar* OPs[] = { wxT("Replace"), wxT("Union"), wxT("Intersect"), wxT("Subtract"), NULL };
-        auto op_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, OPs);
-        auto op = prop.get_value(node).get_value<GroupMerge>();
-        op_prop->SetValue(static_cast<int>(op));
-        m_pg->Append(op_prop);
-    }
+    //else if (prop_type == rttr::type::get<GroupType>())
+    //{
+    //    const wxChar* TYPES[] = { wxT("GuessFromGroup"), wxT("Primitives"), wxT("Points"), wxT("Edges"), wxT("Vertices"), NULL };
+    //    auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
+    //    auto type = prop.get_value(node).get_value<GroupType>();
+    //    type_prop->SetValue(static_cast<int>(type));
+    //    m_pg->Append(type_prop);
+    //}
     else if (prop_type == rttr::type::get<GroupExprInst>())
     {
         auto v = prop.get_value(node).get_value<GroupExprInst>();
@@ -270,36 +237,8 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         m_pg->AppendIn(prop, new wxStringProperty(wxT("GroupName"), wxPG_LABEL, v.group_name));
         m_pg->AppendIn(prop, new wxStringProperty(wxT("ExprStr"),   wxPG_LABEL, v.expr_str));
 
-        const wxChar* OPS[] = { wxT("Replace"), wxT("Union"), wxT("Intersect"), wxT("Subtract"), NULL };
-        auto op_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, OPS);
-        op_prop->SetValue(static_cast<int>(v.merge_op));
+        auto op_prop = CreateEnumProp(ui_info.desc, rttr::type::get<GroupMerge>(), static_cast<int>(v.merge_op));
         m_pg->AppendIn(prop, op_prop);
-    }
-    else if (prop_type == rttr::type::get<BooleanOperator>())
-    {
-        const wxChar* OPS[] = { wxT("Union"), wxT("Intersect"), wxT("Subtract"), NULL };
-        auto op_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, OPS);
-        auto op = prop.get_value(node).get_value<BooleanOperator>();
-        op_prop->SetValue(static_cast<int>(op));
-        m_pg->Append(op_prop);
-    }
-    else if (prop_type == rttr::type::get<KnifeKeep>())
-    {
-        const wxChar* KEEPS[] = { wxT("KeepAbove"), wxT("KeepBelow"), wxT("KeepAll"), NULL };
-        auto keep_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, KEEPS);
-        auto keep = prop.get_value(node).get_value<KnifeKeep>();
-        keep_prop->SetValue(static_cast<int>(keep));
-        m_pg->Append(keep_prop);
-    }
-    else if (prop_type == rttr::type::get<GeoAttrClass>())
-    {
-        auto cls = prop.get_value(node).get_value<sopv::GeoAttrClass>();
-        m_pg->Append(CreateGeoAttrClassProp(ui_info.desc, static_cast<int>(cls)));
-    }
-    else if (prop_type == rttr::type::get<GeoAttrType>())
-    {
-        auto type = prop.get_value(node).get_value<sopv::GeoAttrType>();
-        m_pg->Append(CreateGeoAttrTypeProp(ui_info.desc, static_cast<int>(type)));
     }
     else if (prop_type == rttr::type::get<AttrCreateItem>())
     {
@@ -309,8 +248,8 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         prop->SetExpanded(false);
 
         m_pg->AppendIn(prop, new wxStringProperty(wxT("Name"),  wxPG_LABEL, item.name));
-        m_pg->AppendIn(prop, CreateGeoAttrClassProp("Class", static_cast<int>(item.cls)));
-        m_pg->AppendIn(prop, CreateGeoAttrTypeProp("Type", static_cast<int>(item.type)));
+        m_pg->AppendIn(prop, CreateEnumProp("Class", rttr::type::get<GeoAttrClass>(), static_cast<int>(item.cls)));
+        m_pg->AppendIn(prop, CreateEnumProp("Type", rttr::type::get<AttrCreateType>(), static_cast<int>(item.type)));
         m_pg->AppendIn(prop, new wxFloatProperty("Val X", wxPG_LABEL, item.value.x));
         m_pg->AppendIn(prop, new wxFloatProperty("Val Y", wxPG_LABEL, item.value.y));
         m_pg->AppendIn(prop, new wxFloatProperty("Val Z", wxPG_LABEL, item.value.z));
@@ -350,81 +289,9 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         attr_prop->SetValue(idx);
         m_pg->Append(attr_prop);
     }
-    else if (prop_type == rttr::type::get<SortKey>())
-    {
-        const wxChar* KEYS[] = { wxT("NoChange"), wxT("X"), wxT("Y"), wxT("Z"), wxT("Shift"), NULL };
-        auto key_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, KEYS);
-        auto key = prop.get_value(node).get_value<SortKey>();
-        key_prop->SetValue(static_cast<int>(key));
-        m_pg->Append(key_prop);
-    }
-    else if (prop_type == rttr::type::get<DeleteEntityType>())
-    {
-        const wxChar* TYPES[] = { wxT("Points"), wxT("Edges"), wxT("Faces"), NULL };
-        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
-        auto type = prop.get_value(node).get_value<DeleteEntityType>();
-        type_prop->SetValue(static_cast<int>(type));
-        m_pg->Append(type_prop);
-    }
-    else if (prop_type == rttr::type::get<DeleteOperation>())
-    {
-        const wxChar* OPS[] = { wxT("Pattern"), wxT("Range"), wxT("Expression"), NULL };
-        auto op_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, OPS);
-        auto type = prop.get_value(node).get_value<DeleteOperation>();
-        op_prop->SetValue(static_cast<int>(type));
-        m_pg->Append(op_prop);
-    }
-    else if (prop_type == rttr::type::get<MeasureType>())
-    {
-        const wxChar* TYPES[] = { wxT("Perimeter"), wxT("Area"), NULL };
-        auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
-        auto type = prop.get_value(node).get_value<MeasureType>();
-        type_prop->SetValue(static_cast<int>(type));
-        m_pg->Append(type_prop);
-    }
-    else if (prop_type == rttr::type::get<PolyFillMode>())
-    {
-        const wxChar* MODES[] = { wxT("SinglePolygon"), wxT("Triangles"), wxT("TriangleFan"),
-            wxT("QuadrilateralFan"), wxT("Quadrilaterals"), wxT("QuadrilateralGrid"), NULL };
-        auto mode_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, MODES);
-        auto mode = prop.get_value(node).get_value<PolyFrameStyle>();
-        mode_prop->SetValue(static_cast<int>(mode));
-        m_pg->Append(mode_prop);
-    }
-    else if (prop_type == rttr::type::get<PolyFrameStyle>())
-    {
-        const wxChar* STYLES[] = { wxT("FirstEdge"), wxT("TwoEdges"), wxT("PrimitiveCentroid"),
-            wxT("TextureUV"), wxT("TextureUVGradient"), wxT("AttributeGradient"), wxT("MikkT"), NULL };
-        auto style_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, STYLES);
-        auto style = prop.get_value(node).get_value<PolyFrameStyle>();
-        style_prop->SetValue(static_cast<int>(style));
-        m_pg->Append(style_prop);
-    }
-    else if (prop_type == rttr::type::get<FuseOperator>())
-    {
-        const wxChar* OPS[] = { wxT("Consolidate"), wxT("UniquePoints"), wxT("Snap"), NULL };
-        auto op_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, OPS);
-        auto op = prop.get_value(node).get_value<FuseOperator>();
-        op_prop->SetValue(static_cast<int>(op));
-        m_pg->Append(op_prop);
-    }
     else if (prop_type.is_enumeration())
     {
-//        const wxChar* OPS[] = { wxT("Consolidate"), wxT("UniquePoints"), wxT("Snap"), NULL };
-
-        wxArrayString names;
-        size_t idx = 0;
-        while (true)
-        {
-            auto desc = prop_type.get_enumeration().get_metadata(idx++);
-            if (!desc.is_valid()) {
-                break;
-            } else {
-                names.push_back(desc.to_string());
-            }
-        }
-        auto wx_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, names);
-        wx_prop->SetValue(prop.get_value(node).get_value<int>());
+        auto wx_prop = CreateEnumProp(ui_info.desc, prop_type, prop.get_value(node).get_value<int>());
         m_pg->Append(wx_prop);
     }
     else
@@ -524,18 +391,10 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         }
         prop.set_value(m_node, group_name);
     }
-    else if (prop_type == rttr::type::get<GroupType>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, GroupType(wxANY_AS(val, int)));
-    }
-    else if (prop_type == rttr::type::get<GroupBoundingType>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, GroupBoundingType(wxANY_AS(val, int)));
-    }
-    else if (prop_type == rttr::type::get<GroupMerge>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, GroupMerge(wxANY_AS(val, int)));
-    }
+    //else if (prop_type == rttr::type::get<GroupType>() && key == ui_info.desc)
+    //{
+    //    prop.set_value(m_node, GroupType(wxANY_AS(val, int)));
+    //}
     else if (prop_type == rttr::type::get<GroupExprInst>() && key == ui_info.desc)
     {
         std::vector<std::string> tokens;
@@ -552,19 +411,9 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         v.expr_str   = tokens[1];
 
         auto op_str = tokens[2];
-        std::transform(op_str.begin(), op_str.end(), op_str.begin(), tolower);
-        v.merge_op = rttr::type::get<GroupMerge>().get_enumeration()
-            .name_to_value(op_str).get_value<GroupMerge>();
+        v.merge_op = QueryEnumPropByLabel(op_str, rttr::type::get<GroupMerge>()).get_value<GroupMerge>();
 
         prop.set_value(m_node, v);
-    }
-    else if (prop_type == rttr::type::get<BooleanOperator>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, BooleanOperator(wxANY_AS(val, int)));
-    }
-    else if (prop_type == rttr::type::get<KnifeKeep>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, KnifeKeep(wxANY_AS(val, int)));
     }
     else if (prop_type == rttr::type::get<GeoAttrClass>() && key == ui_info.desc)
     {
@@ -573,10 +422,6 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         if (node_type == rttr::type::get<node::AttributePromote>()) {
             static_cast<node::AttributePromote&>(*m_node).attr_name.cls = GeoAttrClass(wxANY_AS(val, int));
         }
-    }
-    else if (prop_type == rttr::type::get<GeoAttrType>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, GeoAttrType(wxANY_AS(val, int)));
     }
     else if (prop_type == rttr::type::get<AttrCreateItem>() && key == ui_info.desc)
     {
@@ -595,14 +440,10 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         item.name = tokens[idx++];
 
         auto cls_str = tokens[idx++];
-        std::transform(cls_str.begin(), cls_str.end(), cls_str.begin(), tolower);
-        item.cls = rttr::type::get<GeoAttrClass>().get_enumeration()
-            .name_to_value(cls_str).get_value<GeoAttrClass>();
+        item.cls = QueryEnumPropByLabel(cls_str, rttr::type::get<GeoAttrClass>()).get_value<GeoAttrClass>();
 
         auto type_str = tokens[idx++];
-        std::transform(type_str.begin(), type_str.end(), type_str.begin(), tolower);
-        item.type = rttr::type::get<AttrCreateType>().get_enumeration()
-            .name_to_value(type_str).get_value<AttrCreateType>();
+        item.type = QueryEnumPropByLabel(type_str, rttr::type::get<AttrCreateType>()).get_value<AttrCreateType>();
 
         for (int i = 0; i < 4; ++i) {
             item.value.xyzw[i] = std::atof(tokens[idx++].c_str());
@@ -635,46 +476,25 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         }
         prop.set_value(m_node, attr_name);
     }
-    else if (prop_type == rttr::type::get<SortKey>() && key == ui_info.desc)
+    else if (prop_type.is_enumeration() && key == ui_info.desc)
     {
-        prop.set_value(m_node, SortKey(wxANY_AS(val, int)));
-    }
-    else if (prop_type == rttr::type::get<DeleteEntityType>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, DeleteEntityType(wxANY_AS(val, int)));
-    }
-    else if (prop_type == rttr::type::get<DeleteOperation>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, DeleteOperation(wxANY_AS(val, int)));
-    }
-    else if (prop_type == rttr::type::get<MeasureType>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, MeasureType(wxANY_AS(val, int)));
-    }
-    else if (prop_type == rttr::type::get<PolyFillMode>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, PolyFillMode(wxANY_AS(val, int)));
-    }
-    else if (prop_type == rttr::type::get<PolyFrameStyle>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, PolyFrameStyle(wxANY_AS(val, int)));
-    }
-    else if (prop_type == rttr::type::get<FuseOperator>() && key == ui_info.desc)
-    {
-        prop.set_value(m_node, FuseOperator(wxANY_AS(val, int)));
-    }
-    else if (prop_type.is_enumeration())
-    {
-//        prop_type.get_enumeration().name_to_value();
-//
-//        auto u_type = prop_type.get_enumeration().get_underlying_type();
-//        auto zz = u_type.get_name().to_string();
-//
-//        auto zz2 = prop_type.get_name().to_string();
-//
-////        prop.get_value(node).get_value<int>()
-////        prop_type.get_enumeration()..name_to_value(val);
-//        prop.set_value(m_node, static_cast<int>(wxANY_AS(val, int)));
+        if (val.CheckType<int>())
+        {
+            auto t = val.GetType();
+            auto idx = wxANY_AS(val, int);
+            auto vars = prop_type.get_enumeration().get_values();
+            auto name = prop_type.get_name().to_string();
+            assert(idx >= 0 && idx < static_cast<int>(vars.size()));
+            bool find = false;
+            for (auto& var : vars) {
+                if (var.to_int() == idx) {
+                    prop.set_value(m_node, var);
+                    find = true;
+                    break;
+                }
+            }
+            assert(find);
+        }
     }
     else
     {
@@ -714,6 +534,41 @@ bool WxNodeProperty::UpdateView(wxPropertyGridEvent& event)
     }
 
     return dirty;
+}
+
+wxEnumProperty* WxNodeProperty::CreateEnumProp(const std::string& label, rttr::type type, int init_val)
+{
+    wxArrayString choices;
+
+    auto vars = type.get_enumeration().get_values();
+    choices.resize(vars.size());
+    for (auto& var : vars)
+    {
+        auto idx = var.to_int();
+        auto desc = type.get_enumeration().get_metadata(idx);
+        assert(desc.is_valid());
+        choices[idx] = desc.to_string();
+    }
+
+    auto wx_prop = new wxEnumProperty(label, wxPG_LABEL, choices);
+    wx_prop->SetValue(init_val);
+    return wx_prop;
+}
+
+rttr::variant WxNodeProperty::QueryEnumPropByLabel(const std::string& label, rttr::type type)
+{
+    auto vars = type.get_enumeration().get_values();
+    for (auto& var : vars)
+    {
+        auto idx = var.to_int();
+        auto desc = type.get_enumeration().get_metadata(idx);
+        assert(desc.is_valid());
+        if (label == desc.to_string()) {
+            return var;
+        }
+    }
+    assert(0);
+    return rttr::variant();
 }
 
 }
