@@ -3,8 +3,11 @@
 #include "sopview/NodeProp.h"
 
 #include <blueprint/Pin.h>
+#include <blueprint/RenderSystem.h>
 
 #include <sop/Node.h>
+#include <node2/RenderSystem.h>
+#include <painting2/RenderSystem.h>
 
 namespace sopv
 {
@@ -51,6 +54,15 @@ Node::~Node()
 void Node::Draw(const n2::RenderParams& rp) const
 {
     bp::Node::Draw(rp);
+
+    // draw name
+    sm::Matrix2D mat;
+    auto s = bp::RenderSystem::Instance()->GetTextTitleScale();
+    mat.Scale(s, s);
+    auto pos = rp.GetMatrix() * sm::vec2(0, 0);
+    mat.Translate(pos.x + m_style.width * 0.8f, pos.y);
+    pt2::RenderSystem::DrawText(m_name, bp::RenderSystem::Instance()->GetTitleTB(),
+        mat, bp::RenderSystem::COL_TEXT, bp::RenderSystem::COL_ZERO);
 
     //if (m_preview) {
     //    auto eval = Blackboard::Instance()->GetEval();
