@@ -207,15 +207,15 @@ void Parm::Set(float val)
         auto succ = prop.set_value(*m_node, i);
         assert(succ);
     }
-    else if (prop_type == rttr::type::get<FuseOperator>())
+    else if (prop_type == rttr::type::get<sop::node::Fuse::Operator>())
     {
-        FuseOperator op;
+        sop::node::Fuse::Operator op;
         if (val == 0) {
-            op = FuseOperator::Consolidate;
+            op = sop::node::Fuse::Operator::Consolidate;
         } else if (val == 1) {
-            op = FuseOperator::UniquePoints;
+            op = sop::node::Fuse::Operator::UniquePoints;
         } else if (val == 2) {
-            op = FuseOperator::Snap;
+            op = sop::node::Fuse::Operator::Snap;
         } else {
             assert(0);
         }

@@ -56,7 +56,7 @@ void WxGeoProperty::LoadFromNode(const n0::SceneNodePtr& node)
 }
 
 std::vector<size_t>
-WxGeoProperty::GetSelectedIndices(GeoAttrClass cls) const
+WxGeoProperty::GetSelectedIndices(sop::GeoAttrClass cls) const
 {
     return m_lists2[static_cast<int>(cls)]->GetSelectedIndices();
 }

@@ -28,7 +28,7 @@ public:
     static int TypeBackToFront(sop::NodeVarType type);
     static sop::NodeVarType TypeFrontToBack(int pin_type);
 
-    static sop::GeoAttrClass TransGeoAttrClass(sopv::GeoAttrClass cls);
+    static sop::GeoAttrClass TransGeoAttrClass(sop::GeoAttrClass cls);
 
 private:
     static int ParseExprInt(const std::string& src, const sop::Node& dst,

@@ -205,7 +205,7 @@ void RenderSystem::DrawNodeAttr(const sop::Node& node, const WxGeoProperty& prop
     rp.radius   = NODE_RADIUS;
     rp.color    = LIGHT_SELECT_COLOR;
 
-    auto sel_pts = prop_view.GetSelectedIndices(GeoAttrClass::Point);
+    auto sel_pts = prop_view.GetSelectedIndices(sop::GeoAttrClass::Point);
     if (!sel_pts.empty())
     {
         auto& pts = geo->GetAttr().GetPoints();
@@ -214,7 +214,7 @@ void RenderSystem::DrawNodeAttr(const sop::Node& node, const WxGeoProperty& prop
         }
     }
 
-    auto sel_vts = prop_view.GetSelectedIndices(GeoAttrClass::Vertex);
+    auto sel_vts = prop_view.GetSelectedIndices(sop::GeoAttrClass::Vertex);
     if (!sel_vts.empty())
     {
         auto& vts = geo->GetAttr().GetVertices();
@@ -223,7 +223,7 @@ void RenderSystem::DrawNodeAttr(const sop::Node& node, const WxGeoProperty& prop
         }
     }
 
-    auto sel_prims = prop_view.GetSelectedIndices(GeoAttrClass::Primitive);
+    auto sel_prims = prop_view.GetSelectedIndices(sop::GeoAttrClass::Primitive);
     if (!sel_prims.empty())
     {
         auto& prims = geo->GetAttr().GetPrimtives();

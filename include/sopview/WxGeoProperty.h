@@ -25,7 +25,7 @@ public:
 
     void LoadFromNode(const n0::SceneNodePtr& node);
 
-    std::vector<size_t> GetSelectedIndices(GeoAttrClass cls) const;
+    std::vector<size_t> GetSelectedIndices(sop::GeoAttrClass cls) const;
 
     void SetPreviewCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas) {
         m_preview_canvas = canvas;

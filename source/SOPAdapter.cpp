@@ -69,27 +69,6 @@ namespace
 {
 
 sop::GroupType
-TransGroupType(sopv::GroupType type)
-{
-    switch (type)
-    {
-    case sopv::GroupType::GuessFromGroup:
-        return sop::GroupType::GuessFromGroup;
-    case sopv::GroupType::Primitives:
-        return sop::GroupType::Primitives;
-    case sopv::GroupType::Points:
-        return sop::GroupType::Points;
-    case sopv::GroupType::Edges:
-        return sop::GroupType::Edges;
-    case sopv::GroupType::Vertices:
-        return sop::GroupType::Vertices;
-    default:
-        assert(0);
-        return sop::GroupType::Primitives;
-    }
-}
-
-sop::GroupType
 TransGroupTypes(sopv::GroupTypes type)
 {
     switch (type)
@@ -110,98 +89,25 @@ TransGroupTypes(sopv::GroupTypes type)
     }
 }
 
-sop::GeoAttrType
-TransGeoAttrType(sopv::GeoAttrType type)
-{
-    switch (type)
-    {
-    case sopv::GeoAttrType::Int:
-        return sop::GeoAttrType::Int;
-    case sopv::GeoAttrType::Bool:
-        return sop::GeoAttrType::Bool;
-    case sopv::GeoAttrType::Double:
-        return sop::GeoAttrType::Double;
-    case sopv::GeoAttrType::Float:
-        return sop::GeoAttrType::Float;
-    case sopv::GeoAttrType::Float2:
-        return sop::GeoAttrType::Float2;
-    case sopv::GeoAttrType::Float3:
-        return sop::GeoAttrType::Float3;
-    case sopv::GeoAttrType::Float4:
-        return sop::GeoAttrType::Float4;
-    case sopv::GeoAttrType::String:
-        return sop::GeoAttrType::String;
-    case sopv::GeoAttrType::Vector:
-        return sop::GeoAttrType::Vector;
-    case sopv::GeoAttrType::Vector4:
-        return sop::GeoAttrType::Vector4;
-    case sopv::GeoAttrType::Matrix2:
-        return sop::GeoAttrType::Matrix2;
-    case sopv::GeoAttrType::Matrix3:
-        return sop::GeoAttrType::Matrix3;
-    case sopv::GeoAttrType::Matrix4:
-        return sop::GeoAttrType::Matrix4;
-    default:
-        assert(0);
-        return sop::GeoAttrType::Int;
-    }
-}
-
-sop::GeoAttrType
-TransAttrCreateType(sopv::AttrCreateType type)
-{
-    switch (type)
-    {
-    case sopv::AttrCreateType::Float:
-        return sop::GeoAttrType::Float;
-    case sopv::AttrCreateType::Integer:
-        return sop::GeoAttrType::Int;
-    case sopv::AttrCreateType::String:
-        return sop::GeoAttrType::String;
-    default:
-        assert(0);
-        return sop::GeoAttrType::Int;
-    }
-}
-
-sop::GroupMerge
-TransGroupMerge(sopv::GroupMerge merge_op)
-{
-    switch (merge_op)
-    {
-    case sopv::GroupMerge::Replace:
-        return sop::GroupMerge::Replace;
-    case sopv::GroupMerge::Union:
-        return sop::GroupMerge::Union;
-    case sopv::GroupMerge::Intersect:
-        return sop::GroupMerge::Intersect;
-    case sopv::GroupMerge::Subtract:
-        return sop::GroupMerge::Subtract;
-    default:
-        assert(0);
-        return sop::GroupMerge::Replace;
-    }
-}
-
 sop::node::GroupExpression::Instance
 TransGroupExprInst(const sopv::GroupExprInst& src)
 {
     sop::node::GroupExpression::Instance dst;
     dst.group_name = src.group_name;
     dst.expr_str   = src.expr_str;
-    dst.merge_op   = TransGroupMerge(src.merge_op);
+    dst.merge_op   = src.merge_op;
     return dst;
 }
 
-sop::VarValue TransAttrCreateVal(sopv::AttrCreateType type, const sm::vec4& value)
+sop::VarValue TransAttrCreateVal(sop::node::AttributeCreate::ItemType type, const sm::vec4& value)
 {
     sop::VarValue val;
     switch (type)
     {
-    case sopv::AttrCreateType::Float:
+    case sop::node::AttributeCreate::ItemType::Float:
         val = sop::VarValue(value.x);
         break;
-    case sopv::AttrCreateType::Integer:
+    case sop::node::AttributeCreate::ItemType::Integer:
         val = sop::VarValue(static_cast<int>(value.x));
         break;
     default:
@@ -215,50 +121,24 @@ sop::node::AttributeCreate::Item
 TransAttrCreateItem(const sopv::AttrCreateItem& item)
 {
     auto cls   = sopv::SOPAdapter::TransGeoAttrClass(item.cls);
-    auto type  = TransAttrCreateType(item.type);
     auto val   = TransAttrCreateVal(item.type, item.value);
     auto d_val = TransAttrCreateVal(item.type, item.default_val);
 
-    return { item.name, type, cls, val, d_val };
-}
-
-sop::node::PolyFrame::FrameStyle
-TransGroupType(sopv::PolyFrameStyle style)
-{
-    switch (style)
-    {
-    case sopv::PolyFrameStyle::FirstEdge:
-        return sop::node::PolyFrame::FrameStyle::FirstEdge;
-    case sopv::PolyFrameStyle::TwoEdges:
-        return sop::node::PolyFrame::FrameStyle::TwoEdges;
-    case sopv::PolyFrameStyle::PrimitiveCentroid:
-        return sop::node::PolyFrame::FrameStyle::PrimitiveCentroid;
-    case sopv::PolyFrameStyle::TextureUV:
-        return sop::node::PolyFrame::FrameStyle::TextureUV;
-    case sopv::PolyFrameStyle::TextureUVGradient:
-        return sop::node::PolyFrame::FrameStyle::TextureUVGradient;
-    case sopv::PolyFrameStyle::AttributeGradient:
-        return sop::node::PolyFrame::FrameStyle::AttributeGradient;
-    case sopv::PolyFrameStyle::MikkT:
-        return sop::node::PolyFrame::FrameStyle::MikkT;
-    default:
-        assert(0);
-        return sop::node::PolyFrame::FrameStyle::FirstEdge;
-    }
+    return { item.name, item.type, cls, val, d_val };
 }
 
 sop::GeoAttrClass
-TransGeoAttrClassType(sopv::GeoAttrClassType cls)
+TransGeoAttrClassType(sopv::NormalGeoAttrClass cls)
 {
     switch (cls)
     {
-    case sopv::GeoAttrClassType::Point:
+    case sopv::NormalGeoAttrClass::Point:
         return sop::GeoAttrClass::Point;
-    case sopv::GeoAttrClassType::Vertex:
+    case sopv::NormalGeoAttrClass::Vertex:
         return sop::GeoAttrClass::Vertex;
-    case sopv::GeoAttrClassType::Primitive:
+    case sopv::NormalGeoAttrClass::Primitive:
         return sop::GeoAttrClass::Primitive;
-    case sopv::GeoAttrClassType::Detail:
+    case sopv::NormalGeoAttrClass::Detail:
         return sop::GeoAttrClass::Detail;
     default:
         assert(0);
@@ -341,26 +221,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Measure&>(front);
         auto& dst = static_cast<sop::node::Measure&>(back);
 
-        sop::node::Measure::Type type;
-        switch (src.measure_type)
-        {
-        case MeasureType::Perimeter:
-            type = sop::node::Measure::Type::Perimeter;
-            break;
-        case MeasureType::Area:
-            type = sop::node::Measure::Type::Area;
-            break;
-        case MeasureType::Curvature:
-            type = sop::node::Measure::Type::Curvature;
-            break;
-        case MeasureType::Volume:
-            type = sop::node::Measure::Type::Volume;
-            break;
-        default:
-            assert(0);
-        }
-        dst.SetMesureType(type);
-
+        dst.SetMesureType(src.measure_type);
         if (src.override_name) {
             dst.SetMesureName(src.attr_name);
         }
@@ -370,31 +231,8 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Sort&>(front);
         auto& dst = static_cast<sop::node::Sort&>(back);
 
-        sop::node::Sort::Key key;
-        switch (src.key)
-        {
-        case SortKey::NoChange:
-            key = sop::node::Sort::Key::NoChange;
-            break;
-        case SortKey::X:
-            key = sop::node::Sort::Key::X;
-            break;
-        case SortKey::Y:
-            key = sop::node::Sort::Key::Y;
-            break;
-        case SortKey::Z:
-            key = sop::node::Sort::Key::Z;
-            break;
-        case SortKey::Shift:
-            key = sop::node::Sort::Key::Shift;
-            break;
-        default:
-            assert(0);
-        }
-        dst.SetKey(key);
-
+        dst.SetKey(src.key);
         dst.SetPointReverse(src.point_reverse);
-
         dst.SetPointOffset(ParseExprInt(src.point_offset, back,
             sop::node::Sort::POINT_OFFSET, 0, eval));
     }
@@ -418,8 +256,8 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::GroupCreate&>(back);
 
         dst.SetGroupName(src.group_name);
-        dst.SetGroupType(TransGroupType(src.group_type));
-        dst.SetGroupMerge(TransGroupMerge(src.merge_op));
+        dst.SetGroupType(src.group_type);
+        dst.SetGroupMerge(src.merge_op);
 
         if (src.base_group) {
             dst.EnableBaseGroup(src.base_group_expr);
@@ -444,7 +282,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::GroupExpression&>(front);
         auto& dst = static_cast<sop::node::GroupExpression&>(back);
 
-        dst.SetGroupType(TransGroupType(src.group_type));
+        dst.SetGroupType(src.group_type);
         dst.ClearInstances();
         if (!src.inst0.expr_str.empty()) {
             dst.AddInstance(TransGroupExprInst(src.inst0));
@@ -475,24 +313,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::Delete&>(back);
 
         dst.SetDelNonSelected(src.delete_non_selected);
-
-        sop::node::Delete::EntityType type;
-        switch (src.entity_type)
-        {
-        case DeleteEntityType::Points:
-            type = sop::node::Delete::EntityType::Points;
-            break;
-        case DeleteEntityType::Edges:
-            type = sop::node::Delete::EntityType::Edges;
-            break;
-        case DeleteEntityType::Faces:
-            type = sop::node::Delete::EntityType::Faces;
-            break;
-        default:
-            assert(0);
-        }
-        dst.SetEntityType(type);
-
+        dst.SetEntityType(src.entity_type);
         dst.SetFilterExpr(src.filter_exp);
     }
     else if (type == rttr::type::get<node::Peak>())
@@ -501,7 +322,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::Peak&>(back);
 
         dst.SetGroupName(src.group_name.str);
-        dst.SetGroupType(TransGroupType(src.group_type));
+        dst.SetGroupType(src.group_type);
 
         dst.SetDistance(ParseExprFloat(src.distance, back,
             sop::node::Peak::DIST, 0, eval));
@@ -514,7 +335,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::Transform&>(back);
 
         dst.SetGroupName(src.group_name.str);
-        dst.SetGroupType(TransGroupType(src.group_type));
+        dst.SetGroupType(src.group_type);
 
         dst.SetTranslate(ParseExprFloat3(src.translate, back, sop::node::Transform::TRANS, sm::vec3(0, 0, 0), eval));
         dst.SetRotate(ParseExprFloat3(src.rotate, back, sop::node::Transform::ROT, sm::vec3(0, 0, 0), eval));
@@ -540,7 +361,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::UVTransform&>(back);
 
         dst.SetGroupName(src.group_name.str);
-        dst.SetGroupType(TransGroupType(src.group_type));
+        dst.SetGroupType(src.group_type);
 
         dst.SetTranslate(ParseExprFloat3(src.translate, back, sop::node::UVTransform::TRANS, sm::vec3(0, 0, 0), eval));
         dst.SetRotate(ParseExprFloat3(src.rotate, back, sop::node::UVTransform::ROT, sm::vec3(0, 0, 0), eval));
@@ -594,47 +415,14 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
     {
         auto& src = static_cast<const node::Boolean&>(front);
         auto& dst = static_cast<sop::node::Boolean&>(back);
-
-        sop::node::Boolean::Operator op;
-        switch (src.op)
-        {
-        case BooleanOperator::Union:
-            op = sop::node::Boolean::Operator::Union;
-            break;
-        case BooleanOperator::Intersect:
-            op = sop::node::Boolean::Operator::Intersect;
-            break;
-        case BooleanOperator::Subtract:
-            op = sop::node::Boolean::Operator::Subtract;
-            break;
-        default:
-            assert(0);
-        }
-        dst.SetOperator(op);
+        dst.SetOperator(src.op);
     }
     else if (type == rttr::type::get<node::Fuse>())
     {
         auto& src = static_cast<const node::Fuse&>(front);
         auto& dst = static_cast<sop::node::Fuse&>(back);
 
-        sop::node::Fuse::Operator op;
-        switch (src.op)
-        {
-        case sopv::FuseOperator::Consolidate:
-            op = sop::node::Fuse::Operator::Consolidate;
-            break;
-        case sopv::FuseOperator::UniquePoints:
-            op = sop::node::Fuse::Operator::UniquePoints;
-            break;
-        case sopv::FuseOperator::Snap:
-            op = sop::node::Fuse::Operator::Snap;
-            break;
-        default:
-            assert(0);
-            op = sop::node::Fuse::Operator::Consolidate;
-        }
-        dst.SetFuseOP(op);
-
+        dst.SetFuseOP(src.op);
         dst.SetDistance(src.distance);
     }
     else if (type == rttr::type::get<node::Knife>())
@@ -644,23 +432,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
 
         dst.SetOrigin(ParseExprFloat3(src.origin, back, sop::node::Knife::ORIGINX, sm::vec3(0, 0, 0), eval));
         dst.SetDirection(src.direction);
-
-        sop::node::Knife::KeepType keep;
-        switch (src.knife_op)
-        {
-        case KnifeKeep::KeepAbove:
-            keep = sop::node::Knife::KeepType::KeepAbove;
-            break;
-        case KnifeKeep::KeepBelow:
-            keep = sop::node::Knife::KeepType::KeepBelow;
-            break;
-        case KnifeKeep::KeepAll:
-            keep = sop::node::Knife::KeepType::KeepAll;
-            break;
-        default:
-            assert(0);
-        }
-        dst.SetKeepType(keep);
+        dst.SetKeepType(src.knife_op);
     }
     else if (type == rttr::type::get<node::Normal>())
     {
@@ -700,9 +472,9 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::PolyFrame&>(front);
         auto& dst = static_cast<sop::node::PolyFrame&>(back);
 
-        dst.SetEntityType(TransGroupType(src.entity_type));
+        dst.SetEntityType(src.entity_type);
 
-        dst.SetFrameStyle(TransGroupType(src.frame_style));
+        dst.SetFrameStyle(src.frame_style);
 
         dst.SetNormalName(src.normal_name);
         dst.SetTangentName(src.tangent_name);
@@ -780,7 +552,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::Blast&>(back);
 
         dst.SetGroupName(src.group_name.str);
-        dst.SetGroupType(TransGroupType(src.group_type));
+        dst.SetGroupType(src.group_type);
         dst.SetDeleteNonSelected(src.del_non_selected);
     }
     else if (type == rttr::type::get<node::CopyToPoints>())
@@ -932,17 +704,17 @@ sop::NodeVarType SOPAdapter::TypeFrontToBack(int pin_type)
 }
 
 sop::GeoAttrClass
-SOPAdapter::TransGeoAttrClass(sopv::GeoAttrClass cls)
+SOPAdapter::TransGeoAttrClass(sop::GeoAttrClass cls)
 {
     switch (cls)
     {
-    case sopv::GeoAttrClass::Point:
+    case sop::GeoAttrClass::Point:
         return sop::GeoAttrClass::Point;
-    case sopv::GeoAttrClass::Vertex:
+    case sop::GeoAttrClass::Vertex:
         return sop::GeoAttrClass::Vertex;
-    case sopv::GeoAttrClass::Primitive:
+    case sop::GeoAttrClass::Primitive:
         return sop::GeoAttrClass::Primitive;
-    case sopv::GeoAttrClass::Detail:
+    case sop::GeoAttrClass::Detail:
         return sop::GeoAttrClass::Detail;
     default:
         assert(0);

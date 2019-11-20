@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SM_Vector.h>
+#include <sop/node/AttributeCreate.h>
 
 #include <string>
 
@@ -29,15 +30,6 @@ struct GroupName
 
 }; // GroupName
 
-enum class GroupType
-{
-    GuessFromGroup,
-    Primitives,
-    Points,
-    Edges,
-    Vertices,
-};
-
 enum class GroupTypes
 {
     Auto = 0,
@@ -47,244 +39,47 @@ enum class GroupTypes
     Vertices,
 };
 
-enum class GroupBoundingType
-{
-    Box,
-    Sphere,
-    Object,
-    Volume,
-};
-
-enum class GroupMerge
-{
-    Replace,
-    Union,
-    Intersect,
-    Subtract,
-};
-
 struct GroupExprInst
 {
     bool        enable = false;
     std::string group_name;
     std::string expr_str;
-    GroupMerge  merge_op = GroupMerge::Union;
+    sop::GroupMerge  merge_op = sop::GroupMerge::Union;
 
 }; // GroupExprInst
 
-enum class BooleanOperator
-{
-    Union,
-    Intersect,
-    Subtract,
-};
-
-enum class BooleanGeoType
-{
-    Solid,
-    Surface,
-};
-
-enum class BooleanSubType
-{
-    AMinusB,
-    BMinusA,
-    Both,
-};
-
-enum class KnifeKeep
-{
-    KeepAbove,
-    KeepBelow,
-    KeepAll,
-};
-
-enum class GeoAttrClass
+enum class NormalGeoAttrClass
 {
     Point = 0,
     Vertex,
     Primitive,
     Detail,
-};
-
-enum class GeoAttrClassType
-{
-    Point = 0,
-    Vertex,
-    Primitive,
-    Detail,
-};
-
-enum class GeoAttrType
-{
-    Int,
-
-    // todo
-    Bool,
-    Double,
-
-    Float,
-    Float2,
-    Float3,
-    Float4,
-
-    String,
-
-    Vector,
-    Vector4,
-
-    Matrix2,
-    Matrix3,
-    Matrix4,
-};
-
-enum class AttrCreateType
-{
-    Float,
-    Integer,
-    Vector,
-    String,
-    FloatArray,
-    IntegerArray,
-    StringArray,
-};
-
-enum class AttrCreateFloatInfo
-{
-    Guess,
-    None,
-    Position,
-    Vector,
-    Normal,
-    Color,
-    Quaternion,
-    TransformMatrix,
-    TextureCoordinate,
 };
 
 struct AttrCreateItem
 {
     std::string    name;
-    GeoAttrClass   cls  = GeoAttrClass::Point;
-    AttrCreateType type = AttrCreateType::Float;
+    sop::GeoAttrClass   cls  = sop::GeoAttrClass::Point;
+    sop::node::AttributeCreate::ItemType type = sop::node::AttributeCreate::ItemType::Float;
     size_t         size = 1;
     sm::vec4       value;
     sm::vec4       default_val;
     std::string    string;
-    AttrCreateFloatInfo flt_info = AttrCreateFloatInfo::Guess;
+    sop::node::AttributeCreate::ItemFltInfo flt_info = sop::node::AttributeCreate::ItemFltInfo::Guess;
 };
 
 struct AttributeName
 {
-    AttributeName(GeoAttrClass cls)
+    AttributeName(sop::GeoAttrClass cls)
         : cls(cls)
     {
     }
 
-    GeoAttrClass cls;
+    sop::GeoAttrClass cls;
 
     std::string str;
 
 }; // AttributeName
-
-enum class SortKey
-{
-    NoChange,
-    X,
-    Y,
-    Z,
-    Shift,
-};
-
-enum class DeleteEntityType
-{
-    Points,
-    Edges,
-    Faces,
-};
-
-enum class DeleteOperation
-{
-    Pattern,
-    Range,
-    Expression,
-};
-
-enum class MeasureType
-{
-    Perimeter,
-    Area,
-    Curvature,
-    Volume,
-};
-
-enum class PolyFrameStyle
-{
-    FirstEdge,
-    TwoEdges,
-    PrimitiveCentroid,
-    TextureUV,
-    TextureUVGradient,
-    AttributeGradient,
-    MikkT,
-};
-
-enum class PolyExtrudeExtrusion
-{
-    PrimEdgeNorm,
-    PointNorm,
-};
-
-enum class PolyFillMode
-{
-    SinglePolygon,
-    Triangles,
-    TriangleFan,
-    QuadrilateralFan,
-    Quadrilaterals,
-    QuadrilateralGrid,
-};
-
-enum class FuseOperator
-{
-    Consolidate,
-    UniquePoints,
-    Snap,
-};
-
-enum class ForeachBeginMethod
-{
-    Feedback,
-    PieceOrPoint,
-    Metadata,
-    Input,
-};
-
-enum class ForeachIterMethod
-{
-    AutoDetectFromInputs,
-    ByPiecesOrPoints,
-    ByCount,
-};
-
-enum class ForeachGatherMethod
-{
-    Feedback,
-    Merge,
-};
-
-enum class ForeachPieceElements
-{
-    Primitives,
-    Points,
-};
-
-enum class UVScale
-{
-    None,
-    Uniform,
-    Stretch,
-};
 
 void prop_types_regist_rttr();
 

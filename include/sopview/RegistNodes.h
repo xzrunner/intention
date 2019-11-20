@@ -5,6 +5,21 @@
 
 #include <blueprint/Pin.h>
 
+#include <sop/node/Sort.h>
+#include <sop/node/Boolean.h>
+#include <sop/node/Delete.h>
+#include <sop/node/Measure.h>
+#include <sop/node/PolyFrame.h>
+#include <sop/node/PolyExtrude.h>
+#include <sop/node/PolyFill.h>
+#include <sop/node/Fuse.h>
+#include <sop/node/ForeachPrimBegin.h>
+#include <sop/node/ForeachPrimEnd.h>
+#include <sop/node/UVUnwrap.h>
+#include <sop/node/Knife.h>
+#include <sop/node/AttributeCreate.h>
+#include <sop/node/GroupCreate.h>
+
 namespace sopv
 {
 
@@ -73,7 +88,7 @@ public:
 	{
 		InitPins("geometry");
 	}
-    
+
     std::vector<bp::NodePtr> children;
 
 	RTTR_ENABLE(Node)
@@ -89,31 +104,31 @@ SOPV_DEFINE_NODE(AttributeCreate, attribcreate::2.0,
     AttrCreateItem item3;                     \
 )
 SOPV_DEFINE_NODE(AttributePromote, attribpromote,
-    AttributeName attr_name = GeoAttrClass::Point; \
-    GeoAttrClass  from_cls  = GeoAttrClass::Point; \
-    GeoAttrClass  to_cls    = GeoAttrClass::Point; \
+    AttributeName     attr_name = sop::GeoAttrClass::Point; \
+    sop::GeoAttrClass  from_cls = sop::GeoAttrClass::Point; \
+    sop::GeoAttrClass  to_cls   = sop::GeoAttrClass::Point; \
 )
 SOPV_DEFINE_NODE(AttributeTransfer, attribtransfer,
     bool points_attrs_toggle       = false;                   \
     bool vertices_attrs_toggle     = false;                   \
     bool prims_attrs_toggle        = false;                   \
     bool detail_attrs_toggle       = false;                   \
-    AttributeName points_attrs     = GeoAttrClass::Point;     \
-    AttributeName vertices_attrs   = GeoAttrClass::Vertex;    \
-    AttributeName primitives_attrs = GeoAttrClass::Primitive; \
-    AttributeName detail_attrs     = GeoAttrClass::Detail;    \
+    AttributeName points_attrs     = sop::GeoAttrClass::Point;     \
+    AttributeName vertices_attrs   = sop::GeoAttrClass::Vertex;    \
+    AttributeName primitives_attrs = sop::GeoAttrClass::Primitive; \
+    AttributeName detail_attrs     = sop::GeoAttrClass::Detail;    \
 )
 SOPV_DEFINE_NODE(AttributeVOP, attribvop, SOPV_NODE_PROP)
 SOPV_DEFINE_NODE(AttributeWrangle, attribwrangle,
     std::string vex_expr; \
 )
 SOPV_DEFINE_NODE(Measure, measure,
-    MeasureType measure_type = MeasureType::Perimeter; \
+    sop::node::Measure::Type measure_type = sop::node::Measure::Type::Perimeter; \
     bool        override_name = false;                  \
     std::string attr_name;                              \
 )
 SOPV_DEFINE_NODE(Sort, sort,
-    SortKey     key = SortKey::NoChange; \
+    sop::node::Sort::Key key = sop::node::Sort::Key::NoChange; \
     bool        point_reverse = false;   \
     std::string point_offset = "0";      \
 )
@@ -121,18 +136,18 @@ SOPV_DEFINE_NODE(Sort, sort,
 // group
 SOPV_DEFINE_NODE(GroupCreate, groupcreate,
     std::string group_name;                         \
-    GroupType   group_type = GroupType::Primitives; \
-    GroupMerge  merge_op = GroupMerge::Replace;     \
+    sop::GroupType   group_type = sop::GroupType::Primitives; \
+    sop::GroupMerge  merge_op   = sop::GroupMerge::Replace;   \
     bool        base_group = false;                 \
     std::string base_group_expr;                    \
     bool        keep_in_bounding = false;           \
-    GroupBoundingType bounding_type = GroupBoundingType::Box;
-bool        keep_by_normals = false;            \
-sm::vec3    direction = sm::vec3(0, 0, 1);      \
-float       spread_angle = 180;                 \
+    sop::node::GroupCreate::BoundingType bounding_type = sop::node::GroupCreate::BoundingType::Box;
+    bool        keep_by_normals = false;            \
+    sm::vec3    direction = sm::vec3(0, 0, 1);      \
+    float       spread_angle = 180;                 \
 )
 SOPV_DEFINE_NODE(GroupExpression, groupexpression,
-    GroupType   group_type = GroupType::Primitives; \
+    sop::GroupType   group_type = sop::GroupType::Primitives; \
     size_t inst_num = 0;                            \
     GroupExprInst inst0;                            \
     GroupExprInst inst1;                            \
@@ -159,19 +174,19 @@ SOPV_DEFINE_NODE(ObjectMerge, object_merge,
 // manipulate
 SOPV_DEFINE_NODE(Delete, delete,
     bool             delete_non_selected = false;            \
-    DeleteEntityType entity_type = DeleteEntityType::Points; \
-    DeleteOperation  operation = DeleteOperation::Pattern;   \
+    sop::node::Delete::EntityType entity_type = sop::node::Delete::EntityType::Points; \
+    sop::node::Delete::Operation  operation   = sop::node::Delete::Operation::Pattern;   \
     std::string      filter_exp;                             \
 )
 SOPV_DEFINE_NODE(Peak, peak,
     GroupName   group_name;                             \
-    GroupType   group_type = GroupType::GuessFromGroup; \
+    sop::GroupType   group_type = sop::GroupType::GuessFromGroup; \
     std::string distance = "0";                         \
     bool        update_norm = true;                     \
 )
 SOPV_DEFINE_NODE(Transform, xform,
     GroupName group_name;                             \
-    GroupType group_type = GroupType::GuessFromGroup; \
+    sop::GroupType group_type = sop::GroupType::GuessFromGroup; \
     StrVec3 translate = StrVec3("0", "0", "0");       \
     StrVec3 rotate = StrVec3("0", "0", "0");          \
     StrVec3 scale = StrVec3("1", "1", "1");           \
@@ -188,14 +203,14 @@ SOPV_DEFINE_NODE(UVQuickShade, uvquickshade,
 )
 SOPV_DEFINE_NODE(UVTransform, uvtransform::2.0,
     GroupName group_name;                             \
-    GroupType group_type = GroupType::GuessFromGroup; \
+    sop::GroupType group_type = sop::GroupType::GuessFromGroup; \
     StrVec3   translate = StrVec3("0", "0", "0");    \
     StrVec3   rotate = StrVec3("0", "0", "0");    \
     StrVec3   scale = StrVec3("1", "1", "1");    \
     StrVec3   shear = StrVec3("0", "0", "0");    \
 )
 SOPV_DEFINE_NODE(UVUnwrap, uvunwrap,
-    UVScale  scale = UVScale::Uniform;  \
+    sop::node::UVUnwrap::ScaleType scale = sop::node::UVUnwrap::ScaleType::Uniform;  \
     sm::vec3 rotate = sm::vec3(0, 0, 0); \
 )
 
@@ -226,33 +241,33 @@ SOPV_DEFINE_NODE(Add, add,
     sm::vec3 p3;            \
 )
 SOPV_DEFINE_NODE(Boolean, boolean::2.0,
-    BooleanGeoType  a_surface = BooleanGeoType::Solid;      \
-    BooleanGeoType  b_surface = BooleanGeoType::Solid;      \
-    BooleanOperator op = BooleanOperator::Intersect; \
-    BooleanSubType  sub_type = BooleanSubType::AMinusB;    \
-    bool        ab_seam_edges_toggle = false;               \
-    std::string ab_seam_edges;                              \
+    sop::node::Boolean::GeoType  a_surface = sop::node::Boolean::GeoType::Solid;      \
+    sop::node::Boolean::GeoType  b_surface = sop::node::Boolean::GeoType::Solid;      \
+    sop::node::Boolean::Operator op        = sop::node::Boolean::Operator::Intersect; \
+    sop::node::Boolean::SubType  sub_type  = sop::node::Boolean::SubType::AMinusB;    \
+    bool        ab_seam_edges_toggle = false;                                         \
+    std::string ab_seam_edges;                                                        \
 )
 SOPV_DEFINE_NODE(Divide, divide,
     bool avoid_small_angles = false; \
 )
 SOPV_DEFINE_NODE(Fuse, fuse,
-    FuseOperator op          = FuseOperator::Consolidate; \
+    sop::node::Fuse::Operator op = sop::node::Fuse::Operator::Consolidate; \
     float distance           = 0.001f;                    \
     bool  keep_unused_points = false;                     \
     bool  update_point_norm  = true;                      \
 )
 SOPV_DEFINE_NODE(Knife, knife,
-    KnifeKeep knife_op = KnifeKeep::KeepAll;     \
+    sop::node::Knife::KeepType knife_op = sop::node::Knife::KeepType::KeepAll;     \
     StrVec3   origin = StrVec3("0", "0", "0"); \
     sm::vec3  direction = sm::vec3(0, 1, 0);      \
 )
 SOPV_DEFINE_NODE(Normal, normal,
-    GeoAttrClassType attr_add_norm_to = GeoAttrClassType::Vertex; \
+    NormalGeoAttrClass attr_add_norm_to = NormalGeoAttrClass::Vertex; \
 )
 SOPV_DEFINE_NODE(PolyExtrude, polyextrude::2.0,
     GroupName group_name;            \
-    PolyExtrudeExtrusion extrusion = PolyExtrudeExtrusion::PrimEdgeNorm; \
+    sop::node::PolyExtrude::Extrusion extrusion = sop::node::PolyExtrude::Extrusion::PrimEdgeNorm; \
     float distance = 0;              \
     bool output_front = true;        \
     bool output_back  = false;       \
@@ -265,13 +280,13 @@ SOPV_DEFINE_NODE(PolyExtrude, polyextrude::2.0,
     std::string side_group;          \
 )
 SOPV_DEFINE_NODE(PolyFill, polyfill,
-    PolyFillMode fill_mode       = PolyFillMode::QuadrilateralGrid; \
+    sop::node::PolyFill::Mode fill_mode       = sop::node::PolyFill::Mode::QuadrilateralGrid; \
     bool         smooth_toggle   = true;                            \
     float        smooth_strength = 50.0f;                           \
 )
 SOPV_DEFINE_NODE(PolyFrame, polyframe,
-    GroupType      entity_type = GroupType::Primitives;     \
-    PolyFrameStyle frame_style = PolyFrameStyle::TwoEdges;  \
+    sop::GroupType      entity_type = sop::GroupType::Primitives;     \
+    sop::node::PolyFrame::FrameStyle frame_style = sop::node::PolyFrame::FrameStyle::TwoEdges;  \
     bool           normal_toggle    = true;                 \
     bool           tangent_toggle   = true;                 \
     bool           bitangent_toggle = false;                \
@@ -328,7 +343,7 @@ SOPV_DEFINE_NODE(Lattice, lattice, SOPV_NODE_PROP)
 // utility
 SOPV_DEFINE_NODE(Blast, blast,
     GroupName group_name;                             \
-    GroupType group_type = GroupType::GuessFromGroup; \
+    sop::GroupType group_type = sop::GroupType::GuessFromGroup; \
     bool del_non_selected  = false;                   \
     bool del_unused_groups = false;                   \
 )
@@ -341,13 +356,13 @@ SOPV_DEFINE_NODE(CopyToPoints, copytopoints,
     bool        copy_attr    = true;         \
 )
 SOPV_DEFINE_NODE(ForeachBegin, block_begin,
-    ForeachBeginMethod method = ForeachBeginMethod::Input; \
+    sop::node::ForeachPrimBegin::Method method = sop::node::ForeachPrimBegin::Method::Input; \
     std::string        block_path;                         \
 )
 SOPV_DEFINE_NODE(ForeachEnd, block_end,
-    ForeachIterMethod    iter    = ForeachIterMethod::ByPiecesOrPoints; \
-    ForeachGatherMethod  gather  = ForeachGatherMethod::Merge;          \
-    ForeachPieceElements element = ForeachPieceElements::Primitives;    \
+    sop::node::ForeachPrimEnd::IterMethod    iter    = sop::node::ForeachPrimEnd::IterMethod::ByPiecesOrPoints; \
+    sop::node::ForeachPrimEnd::GatherMethod  gather  = sop::node::ForeachPrimEnd::GatherMethod::Merge;          \
+    sop::node::ForeachPrimEnd::PieceElements element = sop::node::ForeachPrimEnd::PieceElements::Primitives;    \
     bool        piece_attrib_toggle = false;                            \
     std::string piece_attrib;                                           \
     bool        use_max_iter = false;                                   \
