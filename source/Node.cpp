@@ -127,6 +127,14 @@ void Node::LoadFromJson(const std::string& dir, const rapidjson::Value& val)
 void Node::InitPins(const std::vector<PinDesc>& input,
                     const std::vector<PinDesc>& output)
 {
+    if (input.size() <= 1 && output.size() <= 1)
+    {
+        if ((input.empty() || input[0].name == "in") &&
+            (output.empty() || output[0].name == "out")) {
+            m_style.draw_pin_label = false;
+        }
+    }
+
     InitPinsImpl(input, true);
     InitPinsImpl(output, false);
     Layout();
