@@ -144,7 +144,9 @@ hou_node = None
     auto fixed = FixCode(buffer.str());
 
     try {
+        m_stree->LoadBegin();
         PyRun_SimpleString(fixed.c_str());
+        m_stree->LoadEnd();
     } catch (...) {
         boost::python::handle_exception();
     }

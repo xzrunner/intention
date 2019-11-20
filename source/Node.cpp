@@ -137,6 +137,7 @@ void Node::InitPins(const std::vector<PinDesc>& input,
 
     InitPinsImpl(input, true);
     InitPinsImpl(output, false);
+
     Layout();
 }
 

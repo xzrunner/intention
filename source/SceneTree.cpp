@@ -67,7 +67,9 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
     if (m_path.parts.empty())
     {
         auto eval = std::make_shared<Evaluator>();
-        //eval->EnableUpdateSopEval(false);
+        if (m_is_loading) {
+            eval->EnableUpdateSopEval(false);
+        }
         m_eval_cache.insert({ node, eval });
         m_path.parts.push_back(PathPart(node, eval));
 
@@ -130,7 +132,7 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
         // update flags
         if (type.is_derived_from<Node>()) {
             auto sopv_node = std::static_pointer_cast<Node>(bp_node);
-            if (m_enable_set_node_display) {
+            if (!m_is_loading) {
                 sopv_node->SetDisplay(true);
             }
         }
@@ -271,7 +273,9 @@ bool SceneTree::Push(const n0::SceneNodePtr& node)
     if (itr == m_eval_cache.end())
     {
         auto eval = std::make_shared<Evaluator>();
-        //eval->EnableUpdateSopEval(false);
+        if (m_is_loading) {
+            eval->EnableUpdateSopEval(false);
+        }
         if (node->HasSharedComp<n0::CompComplex>())
         {
             for (auto& c : node->GetSharedComp<n0::CompComplex>().GetAllChildren()) {
@@ -338,7 +342,7 @@ bool SceneTree::SetDepth(size_t depth)
 
 void SceneTree::ClearNodeDisplayTag()
 {
-    if (!m_enable_set_node_display || m_path.parts.empty()) {
+    if (m_is_loading || m_path.parts.empty()) {
         return;
     }
 
@@ -363,13 +367,33 @@ n0::SceneNodePtr SceneTree::GetRoot() const
 #endif // SOPV_SCENE_TREE_DUMMY_ROOT
 }
 
+void SceneTree::LoadBegin()
+{
+    m_is_loading = true;
+
+    for (auto& itr : m_eval_cache) {
+        itr.second->EnableUpdateSopEval(false);
+    }
+}
+
+void SceneTree::LoadEnd()
+{
+    m_is_loading = false;
+
+    for (auto& itr : m_eval_cache) {
+        itr.second->EnableUpdateSopEval(true);
+    }
+}
+
 void SceneTree::InitDummyRoot()
 {
     auto node = ns::NodeFactory::Create2D();
     node->AddSharedComp<n0::CompComplex>();
 
     auto eval = std::make_shared<Evaluator>();
-    //eval->EnableUpdateSopEval(false);
+    if (m_is_loading) {
+        eval->EnableUpdateSopEval(false);
+    }
     m_eval_cache.insert({ node, eval });
 
     m_path.parts.push_back(PathPart(node, eval));
