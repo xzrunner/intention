@@ -16,7 +16,7 @@
     <ClInclude Include="..\..\..\include\sopview\PyParmValue.h" />
     <ClInclude Include="..\..\..\include\sopview\PyLoader.h" />
     <ClInclude Include="..\..\..\include\sopview\PyNodeProxy.h" />
-    <ClInclude Include="..\..\..\include\sopview\SOP.h" />
+    <ClInclude Include="..\..\..\include\sopview\SOPAdapter.h" />
     <ClInclude Include="..\..\..\include\sopview\SOPView.h" />
     <ClInclude Include="..\..\..\include\sopview\MessageID.h" />
     <ClInclude Include="..\..\..\include\sopview\Node.h" />
@@ -42,7 +42,7 @@
     <ClCompile Include="..\..\..\source\PyParmValue.cpp" />
     <ClCompile Include="..\..\..\source\PyLoader.cpp" />
     <ClCompile Include="..\..\..\source\PyNodeProxy.cpp" />
-    <ClCompile Include="..\..\..\source\SOP.cpp" />
+    <ClCompile Include="..\..\..\source\SOPAdapter.cpp" />
     <ClCompile Include="..\..\..\source\SOPView.cpp" />
     <ClCompile Include="..\..\..\source\Node.cpp" />
     <ClCompile Include="..\..\..\source\NodeSelectOP.cpp" />

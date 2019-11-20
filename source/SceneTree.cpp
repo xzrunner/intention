@@ -2,7 +2,7 @@
 #include "sopview/Evaluator.h"
 #include "sopview/Node.h"
 #include "sopview/RegistNodes.h"
-#include "sopview/SOP.h"
+#include "sopview/SOPAdapter.h"
 
 #include <blueprint/CompNode.h>
 #include <blueprint/Node.h>
@@ -33,14 +33,14 @@ void RebuildBackFromFront(std::shared_ptr<sop::node::Geometry>& dst,
         sop::node::Geometry::AddChild(dst, dst_c);
 
         //// calc again, for expr which need level info
-        //sopv::SOP::UpdatePropBackFromFront(*c, *dst_c, eval);
+        //sopv::SOPAdapter::UpdatePropBackFromFront(*c, *dst_c, eval);
     }
 
     // calc again, for expr which need level info
     for (auto& c : src->children)
     {
         auto dst_c = eval.QueryBackNode(*c);
-        sopv::SOP::UpdatePropBackFromFront(*c, *dst_c, eval);
+        sopv::SOPAdapter::UpdatePropBackFromFront(*c, *dst_c, eval);
     }
 }
 

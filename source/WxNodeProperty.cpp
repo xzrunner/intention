@@ -6,7 +6,7 @@
 #include "sopview/NodeProp.h"
 #include "sopview/SceneTree.h"
 #include "sopview/Evaluator.h"
-#include "sopview/SOP.h"
+#include "sopview/SOPAdapter.h"
 
 #include <ee0/SubjectMgr.h>
 #include <ee0/ReflectPropTypes.h>
@@ -219,14 +219,6 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         name_prop->SetValue(idx);
         m_pg->Append(name_prop);
     }
-    //else if (prop_type == rttr::type::get<GroupType>())
-    //{
-    //    const wxChar* TYPES[] = { wxT("GuessFromGroup"), wxT("Primitives"), wxT("Points"), wxT("Edges"), wxT("Vertices"), NULL };
-    //    auto type_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, TYPES);
-    //    auto type = prop.get_value(node).get_value<GroupType>();
-    //    type_prop->SetValue(static_cast<int>(type));
-    //    m_pg->Append(type_prop);
-    //}
     else if (prop_type == rttr::type::get<GroupExprInst>())
     {
         auto v = prop.get_value(node).get_value<GroupExprInst>();
@@ -267,7 +259,7 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         }
 
         auto attr_name = prop.get_value(node).get_value<AttributeName>();
-        auto cls = SOP::TransGeoAttrClass(attr_name.cls);
+        auto cls = SOPAdapter::TransGeoAttrClass(attr_name.cls);
         auto& desc = sop_node->GetGeometry()->GetAttr().GetAttrDesc(cls);
 
         int idx = -1;
@@ -391,10 +383,6 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         }
         prop.set_value(m_node, group_name);
     }
-    //else if (prop_type == rttr::type::get<GroupType>() && key == ui_info.desc)
-    //{
-    //    prop.set_value(m_node, GroupType(wxANY_AS(val, int)));
-    //}
     else if (prop_type == rttr::type::get<GroupExprInst>() && key == ui_info.desc)
     {
         std::vector<std::string> tokens;
@@ -470,7 +458,7 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
             auto sop_node = GetAttrNameNode(m_node, *m_stree);
             assert(sop_node && sop_node->GetGeometry());
 
-            auto cls = SOP::TransGeoAttrClass(attr_name.cls);
+            auto cls = SOPAdapter::TransGeoAttrClass(attr_name.cls);
             auto& desc = sop_node->GetGeometry()->GetAttr().GetAttrDesc(cls);
             attr_name.str = desc[idx - 1].GetName();
         }

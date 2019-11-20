@@ -1,5 +1,5 @@
 #include "sopview/Evaluator.h"
-#include "sopview/SOP.h"
+#include "sopview/SOPAdapter.h"
 #include "sopview/RegistNodes.h"
 
 #include <blueprint/Node.h>
@@ -20,7 +20,7 @@ namespace sopv
 
 void Evaluator::OnAddNode(const bp::Node& front, bool need_update)
 {
-    auto back = SOP::CreateBackFromFront(front);
+    auto back = SOPAdapter::CreateBackFromFront(front);
     if (!back) {
         return;
     }
@@ -32,7 +32,7 @@ void Evaluator::OnAddNode(const bp::Node& front, bool need_update)
         const_cast<Node&>(static_cast<const Node&>(front)).SetName(back->GetName());
     }
 
-    SOP::UpdatePropBackFromFront(front, *back, *this);
+    SOPAdapter::UpdatePropBackFromFront(front, *back, *this);
     if (need_update) {
         Update();
     }
@@ -67,7 +67,7 @@ void Evaluator::OnNodePropChanged(const bp::NodePtr& node)
         return;
     }
 
-    SOP::UpdatePropBackFromFront(*node, *itr->second, *this);
+    SOPAdapter::UpdatePropBackFromFront(*node, *itr->second, *this);
 
     if (node->get_type().is_derived_from<Node>())
     {

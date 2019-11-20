@@ -1,4 +1,4 @@
-#include "sopview/SOP.h"
+#include "sopview/SOPAdapter.h"
 #include "sopview/PinType.h"
 #include "sopview/Evaluator.h"
 #include "sopview/Node.h"
@@ -214,7 +214,7 @@ sop::VarValue TransAttrCreateVal(sopv::AttrCreateType type, const sm::vec4& valu
 sop::node::AttributeCreate::Item
 TransAttrCreateItem(const sopv::AttrCreateItem& item)
 {
-    auto cls   = sopv::SOP::TransGeoAttrClass(item.cls);
+    auto cls   = sopv::SOPAdapter::TransGeoAttrClass(item.cls);
     auto type  = TransAttrCreateType(item.type);
     auto val   = TransAttrCreateVal(item.type, item.value);
     auto d_val = TransAttrCreateVal(item.type, item.default_val);
@@ -271,7 +271,7 @@ TransGeoAttrClassType(sopv::GeoAttrClassType cls)
 namespace sopv
 {
 
-void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
+void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
                                          const Evaluator& eval)
 {
     auto type = front.get_type();
@@ -307,8 +307,8 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetAttrName(src.attr_name.str);
 
         dst.SetPromoteType(
-            SOP::TransGeoAttrClass(src.from_cls),
-            SOP::TransGeoAttrClass(src.to_cls)
+            SOPAdapter::TransGeoAttrClass(src.from_cls),
+            SOPAdapter::TransGeoAttrClass(src.to_cls)
         );
     }
     else if (type == rttr::type::get<node::AttributeTransfer>())
@@ -850,7 +850,7 @@ void SOP::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
     }
 }
 
-sop::NodePtr SOP::CreateBackFromFront(const bp::Node& node)
+sop::NodePtr SOPAdapter::CreateBackFromFront(const bp::Node& node)
 {
     auto type = node.get_type();
     auto src_type = type.get_name().to_string();
@@ -891,7 +891,7 @@ sop::NodePtr SOP::CreateBackFromFront(const bp::Node& node)
     return dst;
 }
 
-int SOP::TypeBackToFront(sop::NodeVarType type)
+int SOPAdapter::TypeBackToFront(sop::NodeVarType type)
 {
     int ret = -1;
 
@@ -911,7 +911,7 @@ int SOP::TypeBackToFront(sop::NodeVarType type)
     return ret;
 }
 
-sop::NodeVarType SOP::TypeFrontToBack(int pin_type)
+sop::NodeVarType SOPAdapter::TypeFrontToBack(int pin_type)
 {
     sop::NodeVarType ret = sop::NodeVarType::Any;
 
@@ -932,7 +932,7 @@ sop::NodeVarType SOP::TypeFrontToBack(int pin_type)
 }
 
 sop::GeoAttrClass
-SOP::TransGeoAttrClass(sopv::GeoAttrClass cls)
+SOPAdapter::TransGeoAttrClass(sopv::GeoAttrClass cls)
 {
     switch (cls)
     {
@@ -950,7 +950,7 @@ SOP::TransGeoAttrClass(sopv::GeoAttrClass cls)
     }
 }
 
-int SOP::ParseExprInt(const std::string& src, const sop::Node& dst,
+int SOPAdapter::ParseExprInt(const std::string& src, const sop::Node& dst,
                       size_t idx, int expect, const Evaluator& eval)
 {
     int ret = expect;
@@ -966,7 +966,7 @@ int SOP::ParseExprInt(const std::string& src, const sop::Node& dst,
     return ret;
 }
 
-float SOP::ParseExprFloat(const std::string& src, const sop::Node& dst,
+float SOPAdapter::ParseExprFloat(const std::string& src, const sop::Node& dst,
                           size_t idx, float expect, const Evaluator& eval)
 {
     float ret = expect;
@@ -982,7 +982,7 @@ float SOP::ParseExprFloat(const std::string& src, const sop::Node& dst,
     return ret;
 }
 
-sm::vec3 SOP::ParseExprFloat3(const StrVec3& src, const sop::Node& dst,
+sm::vec3 SOPAdapter::ParseExprFloat3(const StrVec3& src, const sop::Node& dst,
                               size_t idx, const sm::vec3& expect, const Evaluator& eval)
 {
     sm::vec3 ret = expect;

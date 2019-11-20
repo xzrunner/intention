@@ -1,5 +1,5 @@
 #include "sopview/Node.h"
-#include "sopview/SOP.h"
+#include "sopview/SOPAdapter.h"
 #include "sopview/NodeProp.h"
 
 #include <blueprint/Pin.h>
@@ -164,7 +164,7 @@ void Node::InitPins(const std::string& name)
             PinDesc d;
 
 			auto& s = src[i];
-            d.type = SOP::TypeBackToFront(s.var.type);
+            d.type = SOPAdapter::TypeBackToFront(s.var.type);
             d.name = s.var.name;
 
             dst.push_back(d);

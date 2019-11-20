@@ -46,9 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\sopview\SOPView.h" />
-    <ClInclude Include="..\..\..\include\sopview\SOP.h">
-      <Filter>tools\trans</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\WxToolbarPanel.h">
       <Filter>view\toolbar</Filter>
     </ClInclude>
@@ -118,6 +115,9 @@
     <ClInclude Include="..\..\..\include\sopview\PyLoaderCtx.h">
       <Filter>tools\serialize</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\SOPAdapter.h">
+      <Filter>tools\trans</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -159,9 +159,6 @@
     <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp">
       <Filter>view\toolbar</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\SOP.cpp">
-      <Filter>tools\trans</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\SOPView.cpp" />
     <ClCompile Include="..\..\..\source\WxGeoProperty.cpp">
       <Filter>view\toolbar\geo</Filter>
@@ -183,6 +180,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\PyParmValue.cpp">
       <Filter>tools\serialize</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\SOPAdapter.cpp">
+      <Filter>tools\trans</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ namespace sopv
 class Evaluator;
 struct StrVec3;
 
-class SOP
+class SOPAdapter
 {
 public:
     static void UpdatePropBackFromFront(const bp::Node& front,
@@ -38,6 +38,6 @@ private:
     static sm::vec3 ParseExprFloat3(const StrVec3& src, const sop::Node& dst,
         size_t idx, const sm::vec3& expect, const Evaluator& eval);
 
-}; // SOP
+}; // SOPAdapter
 
 }
