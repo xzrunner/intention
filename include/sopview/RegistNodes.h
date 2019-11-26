@@ -29,7 +29,7 @@ void nodes_regist_rttr();
 namespace node
 {
 
-#define SOPV_DEFINE_NODE(type, name, prop) \
+#define SOPV_DEFINE_NODE(type, name, parm) \
 class type : public Node                   \
 {                                          \
 public:                                    \
@@ -39,11 +39,11 @@ public:                                    \
 		InitPins(#name);                   \
 	}                                      \
                                            \
-	prop                                   \
+	parm                                   \
 	RTTR_ENABLE(Node)                      \
 };
 
-#define SOPV_DEFINE_PROPS_NODE(type, name, prop) \
+#define SOPV_DEFINE_PROPS_NODE(type, name, parm) \
 class type : public Node                         \
 {                                                \
 public:                                          \
@@ -53,11 +53,11 @@ public:                                          \
 		InitPins(#name);                         \
 	}                                            \
                                                  \
-	prop                                         \
+	parm                                         \
 	RTTR_ENABLE(Node)                            \
 };
 
-#define SOPV_DEFINE_IMPORT_EXT_NODE(type, name, base, prop)          \
+#define SOPV_DEFINE_IMPORT_EXT_NODE(type, name, base, parm)          \
 class type : public base                                             \
 {                                                                    \
 public:                                                              \
@@ -73,7 +73,7 @@ private:                                                             \
     }                                                                \
                                                                      \
 public:                                                              \
-	prop                                                             \
+	parm                                                             \
 	RTTR_ENABLE(base)                                                \
 };
 

@@ -1,5 +1,5 @@
 #include "sopview/RightPopupMenu.h"
-#include "sopview/WxNodePropsDlg.h"
+#include "sopview/WxNodeParmsDlg.h"
 #include "sopview/Node.h"
 
 #include <ee0/EditPanelImpl.h>
@@ -61,11 +61,11 @@ void RightPopupMenu::OnRightPopupMenu(int id)
         if (bp_node->get_type().is_derived_from<Node>())
         {
             auto sopv_node = std::static_pointer_cast<Node>(bp_node);
-            auto& props = sopv_node->GetProps();
-            if (props) {
-                WxNodePropsDlg dlg(m_stage, *props);
+            auto& parms = sopv_node->GetParms();
+            if (parms) {
+                WxNodeParmsDlg dlg(m_stage, *parms);
                 if (dlg.ShowModal() == wxID_OK) {
-                    dlg.StoreToProps(*props);
+                    dlg.StoreToProps(*parms);
                 }
             }
         }

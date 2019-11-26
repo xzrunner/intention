@@ -3,7 +3,7 @@
 #include "sopview/PinType.h"
 #include "sopview/RegistNodes.h"
 #include "sopview/MessageID.h"
-#include "sopview/NodeProp.h"
+#include "sopview/NodeParm.h"
 #include "sopview/SceneTree.h"
 #include "sopview/Evaluator.h"
 #include "sopview/SOPAdapter.h"
@@ -143,12 +143,12 @@ void WxNodeProperty::LoadFromNode(const n0::SceneNodePtr& obj, const bp::NodePtr
     }
 
     auto sopv_node = std::static_pointer_cast<sopv::Node>(node);
-    auto& props = sopv_node->GetProps();
+    auto& props = sopv_node->GetParms();
     if (!props) {
         return;
     }
 
-    for (auto& p : props->props) {
+    for (auto& p : props->parms) {
         m_pg->Append(new wxStringProperty(p.name, wxPG_LABEL, p.value));
     }
 }
@@ -498,7 +498,7 @@ bool WxNodeProperty::UpdateView(wxPropertyGridEvent& event)
     }
 
     auto sopv_node = std::static_pointer_cast<sopv::Node>(m_node);
-    auto& props = sopv_node->GetProps();
+    auto& props = sopv_node->GetParms();
     if (!props) {
         return false;
     }
@@ -508,7 +508,7 @@ bool WxNodeProperty::UpdateView(wxPropertyGridEvent& event)
     wxPGProperty* property = event.GetProperty();
     auto key = property->GetName();
     wxAny val = property->GetValue();
-    for (auto& p : props->props)
+    for (auto& p : props->parms)
     {
         if (p.name != key) {
             continue;

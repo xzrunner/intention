@@ -3,7 +3,7 @@
 #include "sopview/Evaluator.h"
 #include "sopview/Node.h"
 #include "sopview/RegistNodes.h"
-#include "sopview/NodeProp.h"
+#include "sopview/NodeParm.h"
 
 #include <blueprint/Pin.h>
 #include <blueprint/Node.h>
@@ -573,16 +573,16 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
             sop::node::Switch::ParmNames[static_cast<int>(sop::node::Switch::Parm::Selected)], 0, eval));
     }
 
-    // update props
+    // update parms
     if (type.is_derived_from<Node>())
     {
         auto& src = static_cast<const Node&>(front);
-        auto& src_props = src.GetProps();
-        if (src_props)
+        auto& src_parms = src.GetParms();
+        if (src_parms)
         {
             auto& dst_parms = const_cast<sop::NodeParmsMgr&>(back.GetParms());
             dst_parms.ClearAllParms();
-            for (auto& sp : src_props->props)
+            for (auto& sp : src_parms->parms)
             {
                 sop::Variable d_val;
                 try {

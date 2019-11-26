@@ -20,7 +20,7 @@
     <ClInclude Include="..\..\..\include\sopview\SOPView.h" />
     <ClInclude Include="..\..\..\include\sopview\MessageID.h" />
     <ClInclude Include="..\..\..\include\sopview\Node.h" />
-    <ClInclude Include="..\..\..\include\sopview\NodeProp.h" />
+    <ClInclude Include="..\..\..\include\sopview\NodeParm.h" />
     <ClInclude Include="..\..\..\include\sopview\NodeSelectOP.h" />
     <ClInclude Include="..\..\..\include\sopview\PinCallback.h" />
     <ClInclude Include="..\..\..\include\sopview\PinType.h" />
@@ -33,7 +33,7 @@
     <ClInclude Include="..\..\..\include\sopview\WxGeoProperty.h" />
     <ClInclude Include="..\..\..\include\sopview\WxGeoPropList.h" />
     <ClInclude Include="..\..\..\include\sopview\WxNodeProperty.h" />
-    <ClInclude Include="..\..\..\include\sopview\WxNodePropsDlg.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxNodeParmsDlg.h" />
     <ClInclude Include="..\..\..\include\sopview\WxStageCanvas.h" />
     <ClInclude Include="..\..\..\include\sopview\WxToolbarPanel.h" />
   </ItemGroup>
@@ -57,7 +57,7 @@
     <ClCompile Include="..\..\..\source\WxGeoProperty.cpp" />
     <ClCompile Include="..\..\..\source\WxGeoPropList.cpp" />
     <ClCompile Include="..\..\..\source\WxNodeProperty.cpp" />
-    <ClCompile Include="..\..\..\source\WxNodePropsDlg.cpp" />
+    <ClCompile Include="..\..\..\source\WxNodeParmsDlg.cpp" />
     <ClCompile Include="..\..\..\source\WxStageCanvas.cpp" />
     <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp" />
   </ItemGroup>

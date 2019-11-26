@@ -7,14 +7,14 @@ class wxListCtrl;
 namespace sopv
 {
 
-struct NodePropArray;
+struct NodeParmArray;
 
-class WxNodePropsDlg : public wxDialog
+class WxNodeParmsDlg : public wxDialog
 {
 public:
-    WxNodePropsDlg(wxWindow* parent, const NodePropArray& props);
+    WxNodeParmsDlg(wxWindow* parent, const NodeParmArray& parms);
 
-    void StoreToProps(NodePropArray& props) const;
+    void StoreToProps(NodeParmArray& parms) const;
 
 private:
     void InitLayout();
@@ -24,10 +24,10 @@ private:
     void OnClearItems(wxCommandEvent& event);
 
 private:
-    const NodePropArray& m_props;
+    const NodeParmArray& m_parms;
 
     wxListCtrl* m_list = nullptr;
 
-}; // WxNodePropsDlg
+}; // WxNodeParmsDlg
 
 }

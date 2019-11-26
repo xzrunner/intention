@@ -23,7 +23,7 @@ public:
     void OnRemoveNode(const bp::Node& node);
     void OnClearAllNodes();
 
-    // update node prop
+    // update node parm
     void OnNodePropChanged(const bp::NodePtr& node);
 
     // update node conn

@@ -1,6 +1,6 @@
 #include "sopview/Node.h"
 #include "sopview/SOPAdapter.h"
-#include "sopview/NodeProp.h"
+#include "sopview/NodeParm.h"
 
 #include <blueprint/Pin.h>
 #include <blueprint/RenderSystem.h>
@@ -14,11 +14,11 @@ namespace sopv
 
 const char* Node::STR_PROP_DISPLAY = "Display";
 
-Node::Node(const std::string& title, bool props)
+Node::Node(const std::string& title, bool parms)
     : bp::Node(title)
 {
-    if (props) {
-        m_props = std::make_unique<NodePropArray>();
+    if (parms) {
+        m_parms = std::make_unique<NodeParmArray>();
     }
 
     m_style.hori = false;
@@ -40,8 +40,8 @@ Node& Node::operator = (const Node& node)
     m_template = node.m_template;
     m_display  = node.m_display;
 
-    if (node.m_props) {
-        m_props = std::make_unique<NodePropArray>(*node.m_props);
+    if (node.m_parms) {
+        m_parms = std::make_unique<NodeParmArray>(*node.m_parms);
     }
 
     return *this;
@@ -76,25 +76,25 @@ void Node::StoreToJson(const std::string& dir, rapidjson::Value& val, rapidjson:
 {
     bp::Node::StoreToJson(dir, val, alloc);
 
-    if (m_props && !m_props->props.empty())
+    if (m_parms && !m_parms->parms.empty())
     {
-        rapidjson::Value val_props;
-        val_props.SetArray();
+        rapidjson::Value val_parms;
+        val_parms.SetArray();
 
-        for (auto& p : m_props->props)
+        for (auto& p : m_parms->parms)
         {
             rapidjson::Value val_p;
             val_p.SetObject();
             val_p.AddMember("name", rapidjson::Value(p.name.c_str(), alloc), alloc);
-#ifdef EnableNodePropType
-            auto type_str = NodePropStrings[static_cast<int>(p.type)];
+#ifdef EnableNodeParmType
+            auto type_str = NodeParmStrings[static_cast<int>(p.type)];
             val_p.AddMember("type", rapidjson::Value(type_str, alloc), alloc);
-#endif // EnableNodePropType
+#endif // EnableNodeParmType
             val_p.AddMember("value", rapidjson::Value(p.value.c_str(), alloc), alloc);
-            val_props.PushBack(val_p, alloc);
+            val_parms.PushBack(val_p, alloc);
         }
 
-        val.AddMember("node_props", val_props, alloc);
+        val.AddMember("node_parms", val_parms, alloc);
     }
 }
 
@@ -102,34 +102,34 @@ void Node::LoadFromJson(const std::string& dir, const rapidjson::Value& val)
 {
     bp::Node::LoadFromJson(dir, val);
 
-    if (val.HasMember("node_props"))
+    if (val.HasMember("node_parms"))
     {
-        if (!m_props) {
-            m_props = std::make_unique<NodePropArray>();
+        if (!m_parms) {
+            m_parms = std::make_unique<NodeParmArray>();
         }
 
-        auto array = val["node_props"].GetArray();
-        m_props->props.clear();
-        m_props->props.resize(array.Size());
+        auto array = val["node_parms"].GetArray();
+        m_parms->parms.clear();
+        m_parms->parms.resize(array.Size());
         for (int i = 0, n = array.Size(); i < n; ++i)
         {
             auto& src = array[i];
-            auto& dst = m_props->props[i];
+            auto& dst = m_parms->parms[i];
 
             dst.name = src["name"].GetString();
 
-#ifdef EnableNodePropType
+#ifdef EnableNodeParmType
             auto type = src["type"].GetString();
             bool finded = false;
-            for (int j = 0, m = (int)NodePropType::MaxNum; j < m; ++j) {
-                if (strcmp(type, NodePropStrings[j]) == 0) {
-                    dst.type = static_cast<NodePropType>(j);
+            for (int j = 0, m = (int)NodeParmType::MaxNum; j < m; ++j) {
+                if (strcmp(type, NodeParmStrings[j]) == 0) {
+                    dst.type = static_cast<NodeParmType>(j);
                     finded = true;
                     break;
                 }
             }
             assert(finded);
-#endif // EnableNodePropType
+#endif // EnableNodeParmType
 
             dst.value = src["value"].GetString();
         }

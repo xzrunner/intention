@@ -5,12 +5,12 @@
 namespace sopv
 {
 
-struct NodePropArray;
+struct NodeParmArray;
 
 class Node : public bp::Node
 {
 public:
-    Node(const std::string& title, bool props = false);
+    Node(const std::string& title, bool parms = false);
     Node(const Node& node);
     Node& operator = (const Node& node);
     virtual ~Node();
@@ -29,7 +29,7 @@ public:
     bool GetDisplay() const { return m_display; }
     void SetDisplay(bool display) { m_display = display; }
 
-    auto& GetProps() const { return m_props; }
+    auto& GetParms() const { return m_parms; }
 
 protected:
     struct PinDesc
@@ -63,7 +63,7 @@ private:
     bool m_template = false;
     bool m_display  = false;
 
-    std::unique_ptr<NodePropArray> m_props = nullptr;
+    std::unique_ptr<NodeParmArray> m_parms = nullptr;
 
     RTTR_ENABLE(bp::Node)
 

@@ -85,9 +85,6 @@
     <ClInclude Include="..\..\..\include\sopview\RegistNodes.h">
       <Filter>tools\rtti</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\sopview\NodeProp.h">
-      <Filter>dataset\node</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\MessageID.h">
       <Filter>dataset</Filter>
     </ClInclude>
@@ -95,9 +92,6 @@
       <Filter>view\toolbar\geo</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\WxNodeProperty.h">
-      <Filter>view\toolbar\node</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\sopview\WxNodePropsDlg.h">
       <Filter>view\toolbar\node</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\WxGeoPropList.h">
@@ -117,6 +111,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\SOPAdapter.h">
       <Filter>tools\trans</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\NodeParm.h">
+      <Filter>dataset\node</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\WxNodeParmsDlg.h">
+      <Filter>view\toolbar\node</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -166,9 +166,6 @@
     <ClCompile Include="..\..\..\source\WxNodeProperty.cpp">
       <Filter>view\toolbar\node</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\WxNodePropsDlg.cpp">
-      <Filter>view\toolbar\node</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\WxGeoPropList.cpp">
       <Filter>view\toolbar\geo</Filter>
     </ClCompile>
@@ -183,6 +180,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\SOPAdapter.cpp">
       <Filter>tools\trans</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxNodeParmsDlg.cpp">
+      <Filter>view\toolbar\node</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
