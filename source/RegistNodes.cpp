@@ -260,7 +260,7 @@ REGIST_NODE_RTTI(ObjectMerge, object_merge,
 
 // manipulate
 REGIST_NODE_RTTI(Delete, delete,
-.property("negate", &sopv::node::Delete::delete_non_selected)               \
+.property("negate", &sopv::node::Delete::del_selected)                      \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("DelNonSelected")) \
 )                                                                           \
@@ -268,7 +268,7 @@ REGIST_NODE_RTTI(Delete, delete,
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("EntityType"))     \
 )                                                                           \
-.property("groupop", &sopv::node::Delete::operation)                        \
+.property("groupop", &sopv::node::Delete::op_rule)                          \
 (                                                                           \
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Operation"))      \
 )                                                                           \

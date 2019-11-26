@@ -4,7 +4,6 @@
 
 #include <SM_Vector.h>
 #include <sop/typedef.h>
-#include <sop/VarValue.h>
 #include <sop/GeoAttrClass.h>
 #include <sop/NodeVarType.h>
 
@@ -28,15 +27,13 @@ public:
     static int TypeBackToFront(sop::NodeVarType type);
     static sop::NodeVarType TypeFrontToBack(int pin_type);
 
-    static sop::GeoAttrClass TransGeoAttrClass(sop::GeoAttrClass cls);
-
 private:
     static int ParseExprInt(const std::string& src, const sop::Node& dst,
-        size_t idx, int expect, const Evaluator& eval);
+        const std::string& name, int expect, const Evaluator& eval);
     static float ParseExprFloat(const std::string& src, const sop::Node& dst,
-        size_t idx, float expect, const Evaluator& eval);
+        const std::string& name, float expect, const Evaluator& eval);
     static sm::vec3 ParseExprFloat3(const StrVec3& src, const sop::Node& dst,
-        size_t idx, const sm::vec3& expect, const Evaluator& eval);
+        const std::string& name, const sm::vec3& expect, const Evaluator& eval);
 
 }; // SOPAdapter
 

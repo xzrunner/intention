@@ -19,6 +19,7 @@
 #include <sop/node/Knife.h>
 #include <sop/node/AttributeCreate.h>
 #include <sop/node/GroupCreate.h>
+#include <sop/node/Normal.h>
 
 namespace sopv
 {
@@ -97,7 +98,7 @@ public:
 // attribute
 SOPV_DEFINE_NODE(AttributeCreate, attribcreate::2.0,
     GroupName  group_name;                    \
-    GroupTypes group_type = GroupTypes::Auto; \
+    sop::GroupTypes group_type = sop::GroupTypes::Auto; \
     AttrCreateItem item0;                     \
     AttrCreateItem item1;                     \
     AttrCreateItem item2;                     \
@@ -156,8 +157,8 @@ SOPV_DEFINE_NODE(GroupExpression, groupexpression,
 )
 SOPV_DEFINE_NODE(GroupPromote, grouppromote,
     GroupName group_name;                      \
-    GroupTypes src_type1 = GroupTypes::Auto;   \
-    GroupTypes dst_type1 = GroupTypes::Points; \
+    sop::GroupTypes src_type1 = sop::GroupTypes::Auto;   \
+    sop::GroupTypes dst_type1 = sop::GroupTypes::Points; \
 )
 
 // import
@@ -173,10 +174,10 @@ SOPV_DEFINE_NODE(ObjectMerge, object_merge,
 
 // manipulate
 SOPV_DEFINE_NODE(Delete, delete,
-    bool             delete_non_selected = false;            \
-    sop::node::Delete::EntityType entity_type = sop::node::Delete::EntityType::Points; \
-    sop::node::Delete::Operation  operation   = sop::node::Delete::Operation::Pattern;   \
-    std::string      filter_exp;                             \
+    sop::node::Delete::NegateSelected del_selected = sop::node::Delete::NegateSelected::Delete; \
+    sop::node::Delete::EntityType     entity_type  = sop::node::Delete::EntityType::Points;     \
+    sop::node::Delete::OpRule         op_rule      = sop::node::Delete::OpRule::Pattern;        \
+    std::string                       filter_exp;                                               \
 )
 SOPV_DEFINE_NODE(Peak, peak,
     GroupName   group_name;                             \
@@ -263,7 +264,7 @@ SOPV_DEFINE_NODE(Knife, knife,
     sm::vec3  direction = sm::vec3(0, 1, 0);      \
 )
 SOPV_DEFINE_NODE(Normal, normal,
-    NormalGeoAttrClass attr_add_norm_to = NormalGeoAttrClass::Vertex; \
+    sop::node::Normal::AddToType attr_add_norm_to = sop::node::Normal::AddToType::Vertices; \
 )
 SOPV_DEFINE_NODE(PolyExtrude, polyextrude::2.0,
     GroupName group_name;            \

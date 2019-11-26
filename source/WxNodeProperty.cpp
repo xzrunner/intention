@@ -23,6 +23,7 @@
 #include <node2/CompBoundingBox.h>
 #include <sop/GeometryImpl.h>
 #include <sop/GeoAttrClass.h>
+#include <sop/ParmList.h>
 #include <sop/node/AttributeTransfer.h>
 
 #include <wx/sizer.h>
@@ -260,19 +261,18 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         }
 
         auto attr_name = prop.get_value(node).get_value<AttributeName>();
-        auto cls = SOPAdapter::TransGeoAttrClass(attr_name.cls);
-        auto& desc = sop_node->GetGeometry()->GetAttr().GetAttrDesc(cls);
+        auto& lists = sop_node->GetGeometry()->GetAttr().GetAllParmLists()[static_cast<int>(attr_name.cls)];
 
         int idx = -1;
 
         wxArrayString attr_names;
         attr_names.push_back("");
-        for (size_t i = 0, n = desc.size(); i < n; ++i)
+        for (auto& list : lists) 
         {
-            if (desc[i].GetName() == attr_name.str) {
+            if (list->GetName() == attr_name.str) {
                 idx = attr_names.size();
             }
-            attr_names.push_back(desc[i].GetName());
+            attr_names.push_back(list->GetName());
         }
 
         auto attr_prop = new wxEnumProperty(ui_info.desc, wxPG_LABEL, attr_names);
@@ -459,9 +459,8 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
             auto sop_node = GetAttrNameNode(m_node, *m_stree);
             assert(sop_node && sop_node->GetGeometry());
 
-            auto cls = SOPAdapter::TransGeoAttrClass(attr_name.cls);
-            auto& desc = sop_node->GetGeometry()->GetAttr().GetAttrDesc(cls);
-            attr_name.str = desc[idx - 1].GetName();
+            auto& lists = sop_node->GetGeometry()->GetAttr().GetAllParmLists()[static_cast<int>(attr_name.cls)];
+            attr_name.str = lists[idx - 1]->GetName();
         }
         prop.set_value(m_node, attr_name);
     }
@@ -472,7 +471,6 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
             auto t = val.GetType();
             auto idx = wxANY_AS(val, int);
             auto vars = prop_type.get_enumeration().get_values();
-            auto name = prop_type.get_name().to_string();
             assert(idx >= 0 && idx < static_cast<int>(vars.size()));
             bool find = false;
             for (auto& var : vars) {

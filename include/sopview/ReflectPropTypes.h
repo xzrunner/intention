@@ -30,31 +30,14 @@ struct GroupName
 
 }; // GroupName
 
-enum class GroupTypes
-{
-    Auto = 0,
-    Primitives,
-    Points,
-    Edges,
-    Vertices,
-};
-
 struct GroupExprInst
 {
-    bool        enable = false;
-    std::string group_name;
-    std::string expr_str;
-    sop::GroupMerge  merge_op = sop::GroupMerge::Union;
+    bool            enable = false;
+    std::string     group_name;
+    std::string     expr_str;
+    sop::GroupMerge merge_op = sop::GroupMerge::Union;
 
 }; // GroupExprInst
-
-enum class NormalGeoAttrClass
-{
-    Point = 0,
-    Vertex,
-    Primitive,
-    Detail,
-};
 
 struct AttrCreateItem
 {

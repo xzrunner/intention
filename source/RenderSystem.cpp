@@ -13,6 +13,7 @@
 #include <polymesh3/Geometry.h>
 #include <sop/Node.h>
 #include <sop/GeometryImpl.h>
+#include <sop/ParmList.h>
 #include <sop/node/GroupCreate.h>
 #include <sop/node/GroupPromote.h>
 #include <painting3/RenderSystem.h>
@@ -248,17 +249,21 @@ void RenderSystem::DrawNodeUV(const sop::Node& node)
     }
 
     auto& attr = geo->GetAttr();
-    auto uv_idx = attr.QueryAttrIdx(sop::GeoAttrClass::Point, sop::GeoAttr::GEO_ATTR_UV);
-    if (uv_idx >= 0)
+    auto& uv_list = attr.QueryParmList(sop::GeoAttrClass::Point, sop::GeoAttr::GEO_ATTR_UV);
+    if (uv_list)
     {
+        assert(uv_list->Type() == sop::ParmType::Float3);
+        auto& uv_data = std::static_pointer_cast<sop::ParmFlt3List>(uv_list)->GetAllItems();
         auto& pts = attr.GetPoints();
         for (auto& prim : attr.GetPrimtives())
         {
             std::vector<sm::vec2> border;
             border.reserve(prim->vertices.size());
-            for (auto& v : prim->vertices) {
-                auto uv = static_cast<const sm::vec3*>(pts[v->point->attr_idx]->vars[uv_idx].p);
-                border.push_back({ uv->x * UV_SCALE, uv->y * UV_SCALE });
+            for (auto& v : prim->vertices) 
+            {
+                assert(v->point->attr_idx < uv_data.size());
+                auto& uv = uv_data[v->point->attr_idx];
+                border.push_back({ uv.x * UV_SCALE, uv.y * UV_SCALE });
             }
             m_pt.AddPolygon(border.data(), border.size(), 0xff000000);
         }
@@ -266,17 +271,21 @@ void RenderSystem::DrawNodeUV(const sop::Node& node)
         return;
     }
 
-    uv_idx = attr.QueryAttrIdx(sop::GeoAttrClass::Vertex, sop::GeoAttr::GEO_ATTR_UV);
-    if (uv_idx >= 0)
+    uv_list = attr.QueryParmList(sop::GeoAttrClass::Vertex, sop::GeoAttr::GEO_ATTR_UV);
+    if (uv_list)
     {
+        assert(uv_list->Type() == sop::ParmType::Float3);
+        auto& uv_data = std::static_pointer_cast<sop::ParmFlt3List>(uv_list)->GetAllItems();
         auto& vts = attr.GetVertices();
         for (auto& prim : attr.GetPrimtives())
         {
             std::vector<sm::vec2> border;
             border.reserve(prim->vertices.size());
-            for (auto& v : prim->vertices) {
-                auto uv = static_cast<const sm::vec3*>(vts[v->attr_idx]->vars[uv_idx].p);
-                border.push_back({ uv->x * UV_SCALE, uv->y * UV_SCALE });
+            for (auto& v : prim->vertices) 
+            {
+                assert(v->point->attr_idx < uv_data.size());
+                auto& uv = uv_data[v->attr_idx];
+                border.push_back({ uv.x * UV_SCALE, uv.y * UV_SCALE });
             }
             m_pt.AddPolygon(border.data(), border.size(), 0xff000000);
         }

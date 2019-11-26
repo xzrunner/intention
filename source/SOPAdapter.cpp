@@ -65,89 +65,6 @@
 
 #include <boost/lexical_cast.hpp>
 
-namespace
-{
-
-sop::GroupType
-TransGroupTypes(sopv::GroupTypes type)
-{
-    switch (type)
-    {
-    case sopv::GroupTypes::Auto:
-        return sop::GroupType::GuessFromGroup;
-    case sopv::GroupTypes::Primitives:
-        return sop::GroupType::Primitives;
-    case sopv::GroupTypes::Points:
-        return sop::GroupType::Points;
-    case sopv::GroupTypes::Edges:
-        return sop::GroupType::Edges;
-    case sopv::GroupTypes::Vertices:
-        return sop::GroupType::Vertices;
-    default:
-        assert(0);
-        return sop::GroupType::Primitives;
-    }
-}
-
-sop::node::GroupExpression::Instance
-TransGroupExprInst(const sopv::GroupExprInst& src)
-{
-    sop::node::GroupExpression::Instance dst;
-    dst.group_name = src.group_name;
-    dst.expr_str   = src.expr_str;
-    dst.merge_op   = src.merge_op;
-    return dst;
-}
-
-sop::VarValue TransAttrCreateVal(sop::node::AttributeCreate::ItemType type, const sm::vec4& value)
-{
-    sop::VarValue val;
-    switch (type)
-    {
-    case sop::node::AttributeCreate::ItemType::Float:
-        val = sop::VarValue(value.x);
-        break;
-    case sop::node::AttributeCreate::ItemType::Integer:
-        val = sop::VarValue(static_cast<int>(value.x));
-        break;
-    default:
-        assert(0);
-        break;
-    }
-    return val;
-}
-
-sop::node::AttributeCreate::Item
-TransAttrCreateItem(const sopv::AttrCreateItem& item)
-{
-    auto cls   = sopv::SOPAdapter::TransGeoAttrClass(item.cls);
-    auto val   = TransAttrCreateVal(item.type, item.value);
-    auto d_val = TransAttrCreateVal(item.type, item.default_val);
-
-    return { item.name, item.type, cls, val, d_val };
-}
-
-sop::GeoAttrClass
-TransGeoAttrClassType(sopv::NormalGeoAttrClass cls)
-{
-    switch (cls)
-    {
-    case sopv::NormalGeoAttrClass::Point:
-        return sop::GeoAttrClass::Point;
-    case sopv::NormalGeoAttrClass::Vertex:
-        return sop::GeoAttrClass::Vertex;
-    case sopv::NormalGeoAttrClass::Primitive:
-        return sop::GeoAttrClass::Primitive;
-    case sopv::NormalGeoAttrClass::Detail:
-        return sop::GeoAttrClass::Detail;
-    default:
-        assert(0);
-        return sop::GeoAttrClass::Point;
-    }
-}
-
-}
-
 namespace sopv
 {
 
@@ -162,53 +79,90 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::AttributeCreate&>(back);
 
         dst.SetGroupName(src.group_name.str);
-        dst.SetGroupType(TransGroupTypes(src.group_type));
+        dst.SetGroupTypes(src.group_type);
 
-        std::vector<sop::node::AttributeCreate::Item> items;
-        if (!src.item0.name.empty()) {
-            items.push_back(TransAttrCreateItem(src.item0));
+        std::vector<std::string> names, strings;
+        std::vector<sop::GeoAttrClass> classes;
+        std::vector<sop::node::AttributeCreate::ItemType> types;
+        std::vector<sm::vec4> values, default_vals;
+        std::vector<sop::node::AttributeCreate::ItemFltInfo> flt_infos;
+        std::vector<int> comp_sizes;
+        if (!src.item0.name.empty())
+        {
+            names.push_back(src.item0.name);
+            classes.push_back(src.item0.cls);
+            types.push_back(src.item0.type);
+            values.push_back(src.item0.value);
+            default_vals.push_back(src.item0.default_val);
+            flt_infos.push_back(src.item0.flt_info);
+            comp_sizes.push_back(src.item0.size);
+            strings.push_back(src.item0.string);
         }
-        if (!src.item1.name.empty()) {
-            items.push_back(TransAttrCreateItem(src.item1));
+        if (!src.item1.name.empty())
+        {
+            names.push_back(src.item1.name);
+            classes.push_back(src.item1.cls);
+            types.push_back(src.item1.type);
+            values.push_back(src.item1.value);
+            default_vals.push_back(src.item1.default_val);
+            flt_infos.push_back(src.item1.flt_info);
+            comp_sizes.push_back(src.item1.size);
+            strings.push_back(src.item1.string);
         }
-        if (!src.item2.name.empty()) {
-            items.push_back(TransAttrCreateItem(src.item2));
+        if (!src.item2.name.empty())
+        {
+            names.push_back(src.item2.name);
+            classes.push_back(src.item2.cls);
+            types.push_back(src.item2.type);
+            values.push_back(src.item2.value);
+            default_vals.push_back(src.item2.default_val);
+            flt_infos.push_back(src.item2.flt_info);
+            comp_sizes.push_back(src.item2.size);
+            strings.push_back(src.item2.string);
         }
-        if (!src.item3.name.empty()) {
-            items.push_back(TransAttrCreateItem(src.item3));
+        if (!src.item3.name.empty())
+        {
+            names.push_back(src.item3.name);
+            classes.push_back(src.item3.cls);
+            types.push_back(src.item3.type);
+            values.push_back(src.item3.value);
+            default_vals.push_back(src.item3.default_val);
+            flt_infos.push_back(src.item3.flt_info);
+            comp_sizes.push_back(src.item3.size);
+            strings.push_back(src.item3.string);
         }
-        dst.SetAttrItems(items);
+        dst.SetItemNames(names);
+        dst.SetItemClasses(classes);
+        dst.SetItemTypes(types);
+        dst.SetItemValues(values);
+        dst.SetItemDefaultValues(default_vals);
+        dst.SetItemFloatInfos(flt_infos);
+        dst.SetItemCompSize(comp_sizes);
+        dst.SetItemStrings(strings);
     }
     else if (type == rttr::type::get<node::AttributePromote>())
     {
         auto& src = static_cast<const node::AttributePromote&>(front);
         auto& dst = static_cast<sop::node::AttributePromote&>(back);
 
-        dst.SetAttrName(src.attr_name.str);
-
-        dst.SetPromoteType(
-            SOPAdapter::TransGeoAttrClass(src.from_cls),
-            SOPAdapter::TransGeoAttrClass(src.to_cls)
-        );
+        dst.SetOriName(src.attr_name.str);
+        dst.SetOriClass(src.from_cls);
+        dst.SetNewClass(src.to_cls);
     }
     else if (type == rttr::type::get<node::AttributeTransfer>())
     {
         auto& src = static_cast<const node::AttributeTransfer&>(front);
         auto& dst = static_cast<sop::node::AttributeTransfer&>(back);
 
-        dst.ClearCopyAttrs();
-        if (src.points_attrs_toggle && !src.points_attrs.str.empty()) {
-            dst.SetCopyAttrs(sop::GeoAttrClass::Point, { src.points_attrs.str });
-        }
-        if (src.vertices_attrs_toggle && !src.vertices_attrs.str.empty()) {
-            dst.SetCopyAttrs(sop::GeoAttrClass::Vertex, { src.vertices_attrs.str });
-        }
-        if (src.prims_attrs_toggle && !src.primitives_attrs.str.empty()) {
-            dst.SetCopyAttrs(sop::GeoAttrClass::Primitive, { src.primitives_attrs.str });
-        }
-        if (src.detail_attrs_toggle && !src.detail_attrs.str.empty()) {
-            dst.SetCopyAttrs(sop::GeoAttrClass::Detail, { src.detail_attrs.str });
-        }
+        dst.SetEnablePointAttribs(src.points_attrs_toggle);
+        dst.SetEnableVertexAttribs(src.vertices_attrs_toggle);
+        dst.SetEnablePrimitiveAttribs(src.prims_attrs_toggle);
+        dst.SetEnableDetailAttribs(src.detail_attrs_toggle);
+
+        dst.SetPointAttribList({ src.points_attrs.str });
+        dst.SetVertexAttribList({ src.vertices_attrs.str });
+        dst.SetPrimitiveAttribList({ src.primitives_attrs.str });
+        dst.SetDetailAttribList({ src.detail_attrs.str });
     }
     else if (type == rttr::type::get<node::AttributeWrangle>())
     {
@@ -231,10 +185,10 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Sort&>(front);
         auto& dst = static_cast<sop::node::Sort&>(back);
 
-        dst.SetKey(src.key);
+        dst.SetSortKey(src.key);
         dst.SetPointReverse(src.point_reverse);
         dst.SetPointOffset(ParseExprInt(src.point_offset, back,
-            sop::node::Sort::POINT_OFFSET, 0, eval));
+            sop::node::Sort::ParmNames[static_cast<int>(sop::node::Sort::Parm::SortKey)], 0, eval));
     }
     // export
     else if (type == rttr::type::get<node::File>())
@@ -259,23 +213,15 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetGroupType(src.group_type);
         dst.SetGroupMerge(src.merge_op);
 
-        if (src.base_group) {
-            dst.EnableBaseGroup(src.base_group_expr);
-        } else {
-            dst.DisableBaseGroup();
-        }
+        dst.SetBaseGroupEnable(src.base_group);
+        dst.SetBaseGroupSyntax(src.base_group_expr);
 
-        if (src.keep_in_bounding) {
-            dst.EnableKeepInBounding();
-        } else {
-            dst.DisableKeepInBounding();
-        }
+        dst.SetKeepInBounding(src.keep_in_bounding);
+        dst.SetBoundingType(src.bounding_type);
 
-        if (src.keep_by_normals) {
-            dst.EnableKeepByNormals(src.direction, src.spread_angle);
-        } else {
-            dst.DisableKeepByNormals();
-        }
+        dst.SetKeepByNormals(src.keep_by_normals);
+        dst.SetKeepByNormalsDir(src.direction);
+        dst.SetKeepByNormalsAngle(src.spread_angle);
     }
     else if (type == rttr::type::get<node::GroupExpression>())
     {
@@ -283,28 +229,45 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& dst = static_cast<sop::node::GroupExpression&>(back);
 
         dst.SetGroupType(src.group_type);
-        dst.ClearInstances();
-        if (!src.inst0.expr_str.empty()) {
-            dst.AddInstance(TransGroupExprInst(src.inst0));
+
+        std::vector<std::string> names, exprs;
+        std::vector<sop::GroupMerge> ops;
+        if (src.inst0.enable)
+        {
+            names.push_back(src.inst0.group_name);
+            exprs.push_back(src.inst0.expr_str);
+            ops.push_back(src.inst0.merge_op);
         }
-        if (!src.inst1.expr_str.empty()) {
-            dst.AddInstance(TransGroupExprInst(src.inst1));
+        if (src.inst1.enable)
+        {
+            names.push_back(src.inst1.group_name);
+            exprs.push_back(src.inst1.expr_str);
+            ops.push_back(src.inst1.merge_op);
         }
-        if (!src.inst2.expr_str.empty()) {
-            dst.AddInstance(TransGroupExprInst(src.inst2));
+        if (src.inst2.enable)
+        {
+            names.push_back(src.inst2.group_name);
+            exprs.push_back(src.inst2.expr_str);
+            ops.push_back(src.inst2.merge_op);
         }
-        if (!src.inst3.expr_str.empty()) {
-            dst.AddInstance(TransGroupExprInst(src.inst3));
+        if (src.inst3.enable)
+        {
+            names.push_back(src.inst3.group_name);
+            exprs.push_back(src.inst3.expr_str);
+            ops.push_back(src.inst3.merge_op);
         }
+        dst.SetGroupNames(names);
+        dst.SetGroupExprs(exprs);
+        dst.SetGroupMergeOps(ops);
     }
     else if (type == rttr::type::get<node::GroupPromote>())
     {
         auto& src = static_cast<const node::GroupPromote&>(front);
         auto& dst = static_cast<sop::node::GroupPromote&>(back);
 
-        dst.SetGroupName(src.group_name.str);
-        dst.SetSrcGroupType(TransGroupTypes(src.src_type1));
-        dst.SetDstGroupType(TransGroupTypes(src.dst_type1));
+        dst.SetGroupNames({ src.group_name.str });
+        dst.SetSrcGroupTypes({ src.src_type1 });
+        dst.SetDstGroupTypes({ src.dst_type1 });
     }
     // manipulate
     else if (type == rttr::type::get<node::Delete>())
@@ -312,8 +275,9 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Delete&>(front);
         auto& dst = static_cast<sop::node::Delete&>(back);
 
-        dst.SetDelNonSelected(src.delete_non_selected);
+        dst.SetNegateSelected(src.del_selected);
         dst.SetEntityType(src.entity_type);
+        dst.SetOpRule(src.op_rule);
         dst.SetFilterExpr(src.filter_exp);
     }
     else if (type == rttr::type::get<node::Peak>())
@@ -325,9 +289,8 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetGroupType(src.group_type);
 
         dst.SetDistance(ParseExprFloat(src.distance, back,
-            sop::node::Peak::DIST, 0, eval));
-
-        dst.SetUpdateNorm(src.update_norm);
+            sop::node::Peak::ParmNames[static_cast<int>(sop::node::Peak::Parm::Distance)], 0, eval));
+        dst.SetUpdateNormal(src.update_norm);
     }
     else if (type == rttr::type::get<node::Transform>())
     {
@@ -337,10 +300,14 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetGroupName(src.group_name.str);
         dst.SetGroupType(src.group_type);
 
-        dst.SetTranslate(ParseExprFloat3(src.translate, back, sop::node::Transform::TRANS, sm::vec3(0, 0, 0), eval));
-        dst.SetRotate(ParseExprFloat3(src.rotate, back, sop::node::Transform::ROT, sm::vec3(0, 0, 0), eval));
-        dst.SetScale(ParseExprFloat3(src.scale, back, sop::node::Transform::SCALE, sm::vec3(1, 1, 1), eval));
-        dst.SetShear(ParseExprFloat3(src.shear, back, sop::node::Transform::SHEAR, sm::vec3(0, 0, 0), eval));
+        dst.SetTranslate(ParseExprFloat3(src.translate, back,
+            sop::node::Transform::ParmNames[static_cast<int>(sop::node::Transform::Parm::Translate)], sm::vec3(0, 0, 0), eval));
+        dst.SetRotate(ParseExprFloat3(src.rotate, back,
+            sop::node::Transform::ParmNames[static_cast<int>(sop::node::Transform::Parm::Rotate)], sm::vec3(0, 0, 0), eval));
+        dst.SetScale(ParseExprFloat3(src.scale, back,
+            sop::node::Transform::ParmNames[static_cast<int>(sop::node::Transform::Parm::Scale)], sm::vec3(1, 1, 1), eval));
+        dst.SetShear(ParseExprFloat3(src.shear, back,
+            sop::node::Transform::ParmNames[static_cast<int>(sop::node::Transform::Parm::Shear)], sm::vec3(0, 0, 0), eval));
     }
     // material
     else if (type == rttr::type::get<node::Color>())
@@ -353,7 +320,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
     {
         auto& src = static_cast<const node::UVQuickShade&>(front);
         auto& dst = static_cast<sop::node::UVQuickShade&>(back);
-        dst.SetImageFile(src.image_file);
+        dst.SetTexturePath(src.image_file);
     }
     else if (type == rttr::type::get<node::UVTransform>())
     {
@@ -363,10 +330,14 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetGroupName(src.group_name.str);
         dst.SetGroupType(src.group_type);
 
-        dst.SetTranslate(ParseExprFloat3(src.translate, back, sop::node::UVTransform::TRANS, sm::vec3(0, 0, 0), eval));
-        dst.SetRotate(ParseExprFloat3(src.rotate, back, sop::node::UVTransform::ROT, sm::vec3(0, 0, 0), eval));
-        dst.SetScale(ParseExprFloat3(src.scale, back, sop::node::UVTransform::SCALE, sm::vec3(1, 1, 1), eval));
-        dst.SetShear(ParseExprFloat3(src.shear, back, sop::node::UVTransform::SHEAR, sm::vec3(0, 0, 0), eval));
+        dst.SetTranslate(ParseExprFloat3(src.translate, back,
+            sop::node::UVTransform::ParmNames[static_cast<int>(sop::node::UVTransform::Parm::Translate)], sm::vec3(0, 0, 0), eval));
+        dst.SetRotate(ParseExprFloat3(src.rotate, back,
+            sop::node::UVTransform::ParmNames[static_cast<int>(sop::node::UVTransform::Parm::Rotate)], sm::vec3(0, 0, 0), eval));
+        dst.SetScale(ParseExprFloat3(src.scale, back,
+            sop::node::UVTransform::ParmNames[static_cast<int>(sop::node::UVTransform::Parm::Scale)], sm::vec3(1, 1, 1), eval));
+        dst.SetShear(ParseExprFloat3(src.shear, back,
+            sop::node::UVTransform::ParmNames[static_cast<int>(sop::node::UVTransform::Parm::Shear)], sm::vec3(0, 0, 0), eval));
     }
     // NURBs
     else if (type == rttr::type::get<node::Carve>())
@@ -376,19 +347,19 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
 
         if (src.first_u_toggle) {
             dst.SetFirstU(ParseExprFloat(src.first_u, back,
-                sop::node::Carve::FIRST_U, 0, eval));
+                sop::node::Carve::ParmNames[static_cast<int>(sop::node::Carve::Parm::FirstU)], 0, eval));
         }
         if (src.second_u_toggle) {
             dst.SetSecondU(ParseExprFloat(src.second_u, back,
-                sop::node::Carve::SECOND_U, 1, eval));
+                sop::node::Carve::ParmNames[static_cast<int>(sop::node::Carve::Parm::SecondU)], 1, eval));
         }
         if (src.first_v_toggle) {
             dst.SetFirstV(ParseExprFloat(src.first_v, back,
-                sop::node::Carve::FIRST_V, 0, eval));
+                sop::node::Carve::ParmNames[static_cast<int>(sop::node::Carve::Parm::FirstV)], 0, eval));
         }
         if (src.second_v_toggle) {
             dst.SetSecondV(ParseExprFloat(src.second_v, back,
-                sop::node::Carve::SECOND_V, 1, eval));
+                sop::node::Carve::ParmNames[static_cast<int>(sop::node::Carve::Parm::SecondV)], 1, eval));
         }
     }
     else if (type == rttr::type::get<node::Add>())
@@ -430,7 +401,8 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Knife&>(front);
         auto& dst = static_cast<sop::node::Knife&>(back);
 
-        dst.SetOrigin(ParseExprFloat3(src.origin, back, sop::node::Knife::ORIGINX, sm::vec3(0, 0, 0), eval));
+        dst.SetOrigin(ParseExprFloat3(src.origin, back,
+            sop::node::Knife::ParmNames[static_cast<int>(sop::node::Knife::Parm::Origin)], sm::vec3(0, 0, 0), eval));
         dst.SetDirection(src.direction);
         dst.SetKeepType(src.knife_op);
     }
@@ -438,7 +410,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
     {
         auto& src = static_cast<const node::Normal&>(front);
         auto& dst = static_cast<sop::node::Normal&>(back);
-        dst.SetAttrAddTo(TransGeoAttrClassType(src.attr_add_norm_to));
+        dst.SetAttrAddTo(src.attr_add_norm_to);
     }
     else if (type == rttr::type::get<node::PolyExtrude>())
     {
@@ -485,17 +457,18 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
     {
         auto& src = static_cast<const node::Box&>(front);
         auto& dst = static_cast<sop::node::Box&>(back);
-        auto& dst_props = const_cast<sop::NodePropsMgr&>(dst.GetProps());
 
-        dst.SetSize(ParseExprFloat3(src.size, back, sop::node::Box::SIZE, sm::vec3(1, 1, 1), eval));
-        dst.SetCenter(ParseExprFloat3(src.center, back, sop::node::Box::POS, sm::vec3(0, 0, 0), eval));
+        dst.SetSize(ParseExprFloat3(src.size, back,
+            sop::node::Box::ParmNames[static_cast<int>(sop::node::Box::Parm::Size)], sm::vec3(1, 1, 1), eval));
+        dst.SetCenter(ParseExprFloat3(src.center, back,
+            sop::node::Box::ParmNames[static_cast<int>(sop::node::Box::Parm::Center)], sm::vec3(0, 0, 0), eval));
         dst.SetScale(sm::vec3(src.scale, src.scale, src.scale));
     }
     else if (type == rttr::type::get<node::Curve>())
     {
         auto& src = static_cast<const node::Curve&>(front);
         auto& dst = static_cast<sop::node::Curve&>(back);
-        dst.SetVertices(src.vertices);
+        //dst.SetVertices(src.vertices);
     }
     else if (type == rttr::type::get<node::Grid>())
     {
@@ -518,7 +491,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetOrigin(src.origin);
         dst.SetDirection(src.direction);
         dst.SetLength(ParseExprFloat(src.length, back,
-            sop::node::Line::LENGTH, 1.0f, eval));
+            sop::node::Line::ParmNames[static_cast<int>(sop::node::Line::Parm::Length)], 1.0f, eval));
         dst.SetPoints(src.points);
     }
     else if (type == rttr::type::get<node::Primitive>())
@@ -553,29 +526,31 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
 
         dst.SetGroupName(src.group_name.str);
         dst.SetGroupType(src.group_type);
-        dst.SetDeleteNonSelected(src.del_non_selected);
+        dst.SetDelNonSelected(src.del_non_selected);
+        dst.SetDelUnusedGroups(src.del_unused_groups);
     }
     else if (type == rttr::type::get<node::CopyToPoints>())
     {
         auto& src = static_cast<const node::CopyToPoints&>(front);
         auto& dst = static_cast<sop::node::CopyToPoints&>(back);
 
-        dst.SetSrcGroup(src.src_group.str);
-
+        dst.SetSourceGroup(src.src_group.str);
         if (!src.target_group.str.empty()) {
-            dst.SetTargetGroup(src.target_group.str);
+            dst.SetTargetPoints(src.target_group.str);
         } else {
-            dst.SetTargetGroup(src.target_group_str);
+            dst.SetTargetPoints(src.target_group_str);
         }
 
-        dst.EnableUsePointDir(src.trans_dir);
+        dst.SetShowGuide(src.show_guide);
+        dst.SetTransUsePointDir(src.trans_dir);
+        dst.SetCopyPointAttr(src.copy_attr);
     }
     else if (type == rttr::type::get<node::ForeachEnd>())
     {
         auto& src = static_cast<const node::ForeachEnd&>(front);
         auto& dst = static_cast<sop::node::ForeachPrimEnd&>(back);
 
-        dst.EnableSinglePass(src.do_single_pass);
+        dst.SetDoSinglePass(src.do_single_pass);
         dst.SetSinglePassOffset(src.single_pass_offset);
     }
     else if (type == rttr::type::get<node::Python>())
@@ -595,7 +570,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src = static_cast<const node::Switch&>(front);
         auto& dst = static_cast<sop::node::Switch&>(back);
         dst.SetSelected(ParseExprInt(src.selected, back,
-            sop::node::Switch::SELECTED, 0, eval));
+            sop::node::Switch::ParmNames[static_cast<int>(sop::node::Switch::Parm::Selected)], 0, eval));
     }
 
     // update props
@@ -605,8 +580,8 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         auto& src_props = src.GetProps();
         if (src_props)
         {
-            auto& dst_props = const_cast<sop::NodePropsMgr&>(back.GetProps());
-            dst_props.Clear();
+            auto& dst_parms = const_cast<sop::NodeParmsMgr&>(back.GetParms());
+            dst_parms.ClearAllParms();
             for (auto& sp : src_props->props)
             {
                 sop::Variable d_val;
@@ -616,7 +591,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
                 } catch (boost::bad_lexical_cast&) {
                     continue;
                 }
-                dst_props.Add(sp.name, d_val);
+                dst_parms.AddParm(sp.name, d_val);
             }
         }
     }
@@ -703,35 +678,16 @@ sop::NodeVarType SOPAdapter::TypeFrontToBack(int pin_type)
     return ret;
 }
 
-sop::GeoAttrClass
-SOPAdapter::TransGeoAttrClass(sop::GeoAttrClass cls)
-{
-    switch (cls)
-    {
-    case sop::GeoAttrClass::Point:
-        return sop::GeoAttrClass::Point;
-    case sop::GeoAttrClass::Vertex:
-        return sop::GeoAttrClass::Vertex;
-    case sop::GeoAttrClass::Primitive:
-        return sop::GeoAttrClass::Primitive;
-    case sop::GeoAttrClass::Detail:
-        return sop::GeoAttrClass::Detail;
-    default:
-        assert(0);
-        return sop::GeoAttrClass::Point;
-    }
-}
-
 int SOPAdapter::ParseExprInt(const std::string& src, const sop::Node& dst,
-                      size_t idx, int expect, const Evaluator& eval)
+                             const std::string& name, int expect, const Evaluator& eval)
 {
     int ret = expect;
 
-    auto& dst_props = const_cast<sop::NodePropsMgr&>(dst.GetProps());
+    auto& dst_parms = const_cast<sop::NodeParmsMgr&>(dst.GetParms());
     try {
         ret = boost::lexical_cast<int>(src);
     } catch (boost::bad_lexical_cast&) {
-        dst_props.SetExpr(idx, src);
+        dst_parms.SetExpr(name, src);
         ret = eval.CalcInt(src, dst, 0);
     }
 
@@ -739,15 +695,15 @@ int SOPAdapter::ParseExprInt(const std::string& src, const sop::Node& dst,
 }
 
 float SOPAdapter::ParseExprFloat(const std::string& src, const sop::Node& dst,
-                          size_t idx, float expect, const Evaluator& eval)
+                                 const std::string& name, float expect, const Evaluator& eval)
 {
     float ret = expect;
 
-    auto& dst_props = const_cast<sop::NodePropsMgr&>(dst.GetProps());
+    auto& dst_parms = const_cast<sop::NodeParmsMgr&>(dst.GetParms());
     try {
         ret = boost::lexical_cast<float>(src);
     } catch (boost::bad_lexical_cast&) {
-        dst_props.SetExpr(idx, src);
+        dst_parms.SetExpr(name, src);
         ret = eval.CalcFloat(src, dst, expect);
     }
 
@@ -755,27 +711,27 @@ float SOPAdapter::ParseExprFloat(const std::string& src, const sop::Node& dst,
 }
 
 sm::vec3 SOPAdapter::ParseExprFloat3(const StrVec3& src, const sop::Node& dst,
-                              size_t idx, const sm::vec3& expect, const Evaluator& eval)
+                                     const std::string& name, const sm::vec3& expect, const Evaluator& eval)
 {
     sm::vec3 ret = expect;
 
-    auto& dst_props = const_cast<sop::NodePropsMgr&>(dst.GetProps());
+    auto& dst_parms = const_cast<sop::NodeParmsMgr&>(dst.GetParms());
     try {
         ret.x = boost::lexical_cast<float>(src.x);
     } catch (boost::bad_lexical_cast&) {
-        dst_props.SetExpr(idx, src.x, 0);
+        dst_parms.SetExpr(name + "x", src.x);
         ret.x = eval.CalcFloat(src.x, dst, 1.0f);
     }
     try {
         ret.y = boost::lexical_cast<float>(src.y);
     } catch (boost::bad_lexical_cast&) {
-        dst_props.SetExpr(idx, src.y, 1);
+        dst_parms.SetExpr(name + "y", src.y);
         ret.y = eval.CalcFloat(src.y, dst, 1.0f);
     }
     try {
         ret.z = boost::lexical_cast<float>(src.z);
     } catch (boost::bad_lexical_cast&) {
-        dst_props.SetExpr(idx, src.z, 2);
+        dst_parms.SetExpr(name + "z", src.z);
         ret.z = eval.CalcFloat(src.z, dst, 1.0f);
     }
 

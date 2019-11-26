@@ -1,11 +1,29 @@
 #include "sopview/WxGeoPropList.h"
 
 #include <sop/GeometryImpl.h>
+#include <sop/ParmList.h>
 
 namespace
 {
 
 const size_t BASE_COUNT[] = { 4, 2, 1, 1 };
+
+size_t get_parm_type_size(sop::ParmType type)
+{
+    int num = 0;
+    switch (type)
+    {
+#define PARM_INFO(type, name, label, size) \
+        case sop::ParmType::##type:        \
+            num = size;                    \
+            break;
+#include <sop/parm_cfg.h>
+#undef PARM_INFO
+    default:
+        num = 1;
+    }
+    return num;
+}
 
 }
 
@@ -55,65 +73,31 @@ void WxGeoPropList::SetGeoData(const std::shared_ptr<sop::GeometryImpl>& geo)
         return;
     }
 
-    // set item count
     auto& attr = m_geo->GetAttr();
-    switch (m_type)
-    {
-    case sop::GeoAttrClass::Point:
-        SetItemCount(attr.GetPoints().size());
-        break;
-    case sop::GeoAttrClass::Vertex:
-        SetItemCount(attr.GetVertices().size());
-        break;
-    case sop::GeoAttrClass::Primitive:
-        SetItemCount(attr.GetPrimtives().size());
-        break;
-    case sop::GeoAttrClass::Detail:
-        SetItemCount(1);
-        break;
-    }
+
+    // set item count
+    SetItemCount(attr.GetSize(m_type));
 
     // prepare column
-    auto& attr_desc = attr.GetAttrDesc(m_type);
-    for (auto& desc : attr_desc)
+    auto& lists = attr.GetAllParmLists()[static_cast<int>(m_type)];
+    for (auto& list : lists)
     {
-        int num;
-        switch (desc.GetType())
+        const auto num = get_parm_type_size(list->GetType());
+        if (list->GetAttr() == sop::GEO_ATTR_UNKNOWN)
         {
-        case sop::GeoAttrType::Float2:
-            num = 2;
-            break;
-        case sop::GeoAttrType::Float3:
-            num = 3;
-            break;
-        case sop::GeoAttrType::Float4:
-            num = 4;
-            break;
-        case sop::GeoAttrType::Vector:
-            num = 3;
-            break;
-        case sop::GeoAttrType::Vector4:
-            num = 4;
-            break;
-        default:
-            num = 1;
-        }
-
-        if (desc.GetAttr() == sop::GEO_ATTR_UNKNOWN)
-        {
-            for (int i = 0; i < num; ++i)
+            for (size_t i = 0; i < num; ++i)
             {
                 auto item_idx = GetColumnCount();
-                auto name = GetAttrName(desc.GetAttr(), i);
-                InsertColumn(item_idx, desc.GetName(), wxLIST_FORMAT_LEFT);
+                auto name = GetAttrName(list->GetAttr(), i);
+                InsertColumn(item_idx, list->GetName(), wxLIST_FORMAT_LEFT);
             }
         }
         else
         {
-            for (int i = 0; i < num; ++i)
+            for (size_t i = 0; i < num; ++i)
             {
                 auto item_idx = GetColumnCount();
-                auto name = GetAttrName(desc.GetAttr(), i);
+                auto name = GetAttrName(list->GetAttr(), i);
                 InsertColumn(item_idx, name, wxLIST_FORMAT_LEFT);
             }
         }
@@ -188,7 +172,9 @@ wxString WxGeoPropList::GetPointItemText(long item, long column) const
     // others
     else
     {
-        return GetOthersPropText(column, p->vars);
+        assert(m_geo);
+        auto& lists = m_geo->GetAttr().GetAllParmLists()[static_cast<int>(sop::GeoAttrClass::Point)];
+        return GetOthersPropText(item, column, lists);
     }
 }
 
@@ -214,7 +200,9 @@ wxString WxGeoPropList::GetVertexItemText(long item, long column) const
     // others
     else
     {
-        return GetOthersPropText(column, v->vars);
+        assert(m_geo);
+        auto& lists = m_geo->GetAttr().GetAllParmLists()[static_cast<int>(sop::GeoAttrClass::Vertex)];
+        return GetOthersPropText(item, column, lists);
     }
 }
 
@@ -237,15 +225,14 @@ wxString WxGeoPropList::GetPrimitiveItemText(long item, long column) const
     // others
     else
     {
-        return GetOthersPropText(column, prim->vars);
+        assert(m_geo);
+        auto& lists = m_geo->GetAttr().GetAllParmLists()[static_cast<int>(sop::GeoAttrClass::Primitive)];
+        return GetOthersPropText(item, column, lists);
     }
 }
 
 wxString WxGeoPropList::GetDetailItemText(long item, long column) const
 {
-    assert(m_geo);
-    auto& detail = m_geo->GetAttr().GetDetail();
-
     // name
     if (column == 0)
     {
@@ -254,26 +241,25 @@ wxString WxGeoPropList::GetDetailItemText(long item, long column) const
     // others
     else
     {
-        return GetOthersPropText(column, detail.vars);
+        assert(m_geo);
+        auto& lists = m_geo->GetAttr().GetAllParmLists()[static_cast<int>(sop::GeoAttrClass::Detail)];
+        return GetOthersPropText(item, column, lists);
     }
 }
 
-wxString WxGeoPropList::GetOthersPropText(size_t idx, const std::vector<sop::VarValue>& vars) const
+wxString WxGeoPropList::GetOthersPropText(long item, long column, const std::vector<std::shared_ptr<sop::ParmList>>& lists) const
 {
-    auto& desc = m_geo->GetAttr().GetAttrDesc(m_type);
-    assert(desc.size() == vars.size());
     const size_t start_offset = BASE_COUNT[static_cast<int>(m_type)];
-    int curr_idx = idx - start_offset;
-    int var_idx = 0;
+    int curr_idx = column - start_offset;
+    int list_idx = 0;
     while (true)
     {
-        assert(var_idx < static_cast<long>(vars.size()));
-        auto var_n = GetAttrVarNum(desc[var_idx].GetType());
-        if (curr_idx >= var_n) {
+        const auto var_n = get_parm_type_size(lists[list_idx]->GetType());
+        if (curr_idx >= static_cast<int>(var_n)) {
             curr_idx -= var_n;
-            ++var_idx;
+            ++list_idx;
         } else {
-            return VarToString(desc[var_idx].GetType(), vars[var_idx], curr_idx);
+            return VarToString(lists[list_idx]->GetType(), *lists[list_idx], item, curr_idx);
         }
     }
     return "";
@@ -312,7 +298,7 @@ std::string WxGeoPropList::GetAttrName(sop::GeoAttr attr, int index) const
     std::string name = sop::GeoAttrNames[attr];
     switch (sop::GeoAttrTypes[attr])
     {
-    case sop::GeoAttrType::Float2:
+    case sop::ParmType::Float2:
         switch (index)
         {
         case 0:
@@ -325,7 +311,7 @@ std::string WxGeoPropList::GetAttrName(sop::GeoAttr attr, int index) const
             assert(0);
         }
         break;
-    case sop::GeoAttrType::Float3:
+    case sop::ParmType::Float3:
         switch (index)
         {
         case 0:
@@ -341,7 +327,7 @@ std::string WxGeoPropList::GetAttrName(sop::GeoAttr attr, int index) const
             assert(0);
         }
         break;
-    case sop::GeoAttrType::Float4:
+    case sop::ParmType::Float4:
         switch (index)
         {
         case 0:
@@ -360,7 +346,7 @@ std::string WxGeoPropList::GetAttrName(sop::GeoAttr attr, int index) const
             assert(0);
         }
         break;
-    case sop::GeoAttrType::Vector:
+    case sop::ParmType::Vector:
         switch (index)
         {
         case 0:
@@ -376,7 +362,7 @@ std::string WxGeoPropList::GetAttrName(sop::GeoAttr attr, int index) const
             assert(0);
         }
         break;
-    case sop::GeoAttrType::Vector4:
+    case sop::ParmType::Vector4:
         switch (index)
         {
         case 0:
@@ -399,23 +385,6 @@ std::string WxGeoPropList::GetAttrName(sop::GeoAttr attr, int index) const
     return name;
 }
 
-int WxGeoPropList::GetAttrVarNum(sop::GeoAttrType type) const
-{
-    switch (type)
-    {
-    case sop::GeoAttrType::Float2:
-        return 2;
-    case sop::GeoAttrType::Float3:
-    case sop::GeoAttrType::Vector:
-        return 3;
-    case sop::GeoAttrType::Float4:
-    case sop::GeoAttrType::Vector4:
-        return 4;
-    default:
-        return 1;
-    }
-}
-
 std::string WxGeoPropList::TopoIDToString(const he::TopoID& id) const
 {
     std::string ret;
@@ -430,60 +399,77 @@ std::string WxGeoPropList::IDToString(const he::TopoID& topo_id, size_t group_id
     return TopoIDToString(topo_id) + "; " + std::to_string(group_id);
 }
 
-std::string WxGeoPropList::VarToString(sop::GeoAttrType type, const sop::VarValue& val, int index) const
+std::string WxGeoPropList::VarToString(sop::ParmType type, const sop::ParmList& list, size_t item, int comp_idx) const
 {
+    assert(list.Type() == type);
     switch (type)
     {
-    case sop::GeoAttrType::Bool:
-        return val.b ? "true" : "false";
-    case sop::GeoAttrType::Int:
-        return std::to_string(val.i);
-    case sop::GeoAttrType::Float:
-        return std::to_string(val.f);
-    case sop::GeoAttrType::Double:
-        return std::to_string(val.d);
-    case sop::GeoAttrType::Float2:
+    case sop::ParmType::Boolean:
     {
-        switch (index)
+        auto& data = static_cast<const sop::ParmBoolList&>(list).GetAllItems();
+        assert(item < data.size());
+        return data[item] ? "true" : "false";
+    }
+    case sop::ParmType::Int:
+    {
+        auto& data = static_cast<const sop::ParmIntList&>(list).GetAllItems();
+        assert(item < data.size());
+        return std::to_string(data[item]);
+    }
+    case sop::ParmType::Float:
+    {
+        auto& data = static_cast<const sop::ParmFltList&>(list).GetAllItems();
+        assert(item < data.size());
+        return std::to_string(data[item]);
+    }
+    case sop::ParmType::Float2:
+    {
+        auto& data = static_cast<const sop::ParmFlt2List&>(list).GetAllItems();
+        assert(item < data.size());
+        switch (comp_idx)
         {
         case 0:
-            return std::to_string(static_cast<const sm::vec2*>(val.p)->x);
+            return std::to_string(data[item].x);
         case 1:
-            return std::to_string(static_cast<const sm::vec2*>(val.p)->y);
+            return std::to_string(data[item].y);
         default:
             assert(0);
             return "";
         }
     }
-    case sop::GeoAttrType::Float3:
-    case sop::GeoAttrType::Vector:
+    case sop::ParmType::Float3:
+    case sop::ParmType::Vector:
     {
-        switch (index)
+        auto& data = static_cast<const sop::ParmFlt3List&>(list).GetAllItems();
+        assert(item < data.size());
+        switch (comp_idx)
         {
         case 0:
-            return std::to_string(static_cast<const sm::vec3*>(val.p)->x);
+            return std::to_string(data[item].x);
         case 1:
-            return std::to_string(static_cast<const sm::vec3*>(val.p)->y);
+            return std::to_string(data[item].y);
         case 2:
-            return std::to_string(static_cast<const sm::vec3*>(val.p)->z);
+            return std::to_string(data[item].z);
         default:
             assert(0);
             return "";
         }
     }
-    case sop::GeoAttrType::Float4:
-    case sop::GeoAttrType::Vector4:
+    case sop::ParmType::Float4:
+    case sop::ParmType::Vector4:
     {
-        switch (index)
+        auto& data = static_cast<const sop::ParmFlt4List&>(list).GetAllItems();
+        assert(item < data.size());
+        switch (comp_idx)
         {
         case 0:
-            return std::to_string(static_cast<const sm::vec4*>(val.p)->x);
+            return std::to_string(data[item].x);
         case 1:
-            return std::to_string(static_cast<const sm::vec4*>(val.p)->y);
+            return std::to_string(data[item].y);
         case 2:
-            return std::to_string(static_cast<const sm::vec4*>(val.p)->z);
+            return std::to_string(data[item].z);
         case 3:
-            return std::to_string(static_cast<const sm::vec4*>(val.p)->w);
+            return std::to_string(data[item].w);
         default:
             assert(0);
             return "";

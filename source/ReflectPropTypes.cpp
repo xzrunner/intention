@@ -15,20 +15,6 @@ rttr::registration::class_<sopv::GroupName>("sopv_group_name")
     .property("str", &sopv::GroupName::str)
 ;
 
-rttr::registration::enumeration<sopv::GroupTypes>("sopv_group_types")
-(
-	rttr::value("auto",     sopv::GroupTypes::Auto),
-    rttr::value("prims",    sopv::GroupTypes::Primitives),
-    rttr::value("points",   sopv::GroupTypes::Points),
-    rttr::value("edges",    sopv::GroupTypes::Edges),
-    rttr::value("vertices", sopv::GroupTypes::Vertices),
-    rttr::metadata(sopv::GroupTypes::Auto,       "Auto"),
-    rttr::metadata(sopv::GroupTypes::Primitives, "Primitives"),
-    rttr::metadata(sopv::GroupTypes::Points,     "Points"),
-    rttr::metadata(sopv::GroupTypes::Edges,      "Edges"),
-    rttr::metadata(sopv::GroupTypes::Vertices,   "Vertices")
-);
-
 rttr::registration::class_<sopv::GroupExprInst>("sopv_group_expr_inst")
     .property("enable",    &sopv::GroupExprInst::enable)
     .property("groupname", &sopv::GroupExprInst::group_name)
@@ -46,18 +32,6 @@ rttr::registration::class_<sopv::AttrCreateItem>("sopv_attr_create_item")
     .property("string",   &sopv::AttrCreateItem::string)
     .property("typeinfo", &sopv::AttrCreateItem::flt_info)
 ;
-
-rttr::registration::enumeration<sopv::NormalGeoAttrClass>("sopv_norm_geo_attr_cls_type")
-(
-	rttr::value("typepoint",  sopv::NormalGeoAttrClass::Point),
-    rttr::value("typevertex", sopv::NormalGeoAttrClass::Vertex),
-    rttr::value("typeprim",   sopv::NormalGeoAttrClass::Primitive),
-    rttr::value("typedetail", sopv::NormalGeoAttrClass::Detail),
-    rttr::metadata(sopv::NormalGeoAttrClass::Point,     "Point"),
-    rttr::metadata(sopv::NormalGeoAttrClass::Vertex,    "Vertex"),
-    rttr::metadata(sopv::NormalGeoAttrClass::Primitive, "Primitive"),
-    rttr::metadata(sopv::NormalGeoAttrClass::Detail,    "Detail")
-);
 
 rttr::registration::class_<sopv::AttributeName>("sopv_attr_name")
     .property("cls", &sopv::AttributeName::cls)

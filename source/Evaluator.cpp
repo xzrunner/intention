@@ -249,9 +249,7 @@ void Evaluator::UpdateGroupName()
             assert(itr.second->get_type() == rttr::type::get<sop::node::GroupCreate>());
             auto front = static_cast<const node::GroupCreate*>(itr.first);
             auto back = std::static_pointer_cast<sop::node::GroupCreate>(itr.second);
-            auto& name_var = back->GetProps().GetProps()[sop::node::GroupCreate::NAME].Val();
-            assert(name_var.type == sop::VarType::String);
-            const_cast<node::GroupCreate*>(front)->group_name = static_cast<const char*>(name_var.p);
+            const_cast<node::GroupCreate*>(front)->group_name = back->GetGroupName();
         }
         else if (type == rttr::type::get<node::GroupExpression>())
         {
@@ -260,25 +258,25 @@ void Evaluator::UpdateGroupName()
                 static_cast<const node::GroupExpression*>(itr.first)
             );
             auto back = std::static_pointer_cast<sop::node::GroupExpression>(itr.second);
-            auto& back_insts = back->GetInstances();
+            auto back_num = back->GetExprsNum();
             size_t idx = 0;
             if (!front->inst0.expr_str.empty()) {
-                assert(idx < back_insts.size());
-                front->inst0.group_name = back_insts[idx++].group_name;
+                assert(idx < back_num);
+                front->inst0.group_name = back->GetGroupNames()[idx++];
             }
             if (!front->inst1.expr_str.empty()) {
-                assert(idx < back_insts.size());
-                front->inst1.group_name = back_insts[idx++].group_name;
+                assert(idx < back_num);
+                front->inst1.group_name = back->GetGroupNames()[idx++];
             }
             if (!front->inst2.expr_str.empty()) {
-                assert(idx < back_insts.size());
-                front->inst2.group_name = back_insts[idx++].group_name;
+                assert(idx < back_num);
+                front->inst2.group_name = back->GetGroupNames()[idx++];
             }
             if (!front->inst3.expr_str.empty()) {
-                assert(idx < back_insts.size());
-                front->inst3.group_name = back_insts[idx++].group_name;
+                assert(idx < back_num);
+                front->inst3.group_name = back->GetGroupNames()[idx++];
             }
-            assert(idx == back_insts.size());
+            assert(idx == back_num);
         }
     }
 }
