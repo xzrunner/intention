@@ -41,6 +41,7 @@ const uint32_t MESSAGES[] =
     sopv::MSG_CLEAR_NODE_DISPLAY_TAG,
     sopv::MSG_SCENE_ROOT_TO_NEXT_LEVEL,
     sopv::MSG_SCENE_ROOT_SEEK_TO_PREV_LEVEL,
+    sopv::MSG_REFRESH_PREVIEW_CANVAS,
 };
 
 }
@@ -122,6 +123,9 @@ void WxGraphPage::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
         break;
     case MSG_SCENE_ROOT_SEEK_TO_PREV_LEVEL:
         dirty = PathSeekToPrev(variants);
+        break;
+    case MSG_REFRESH_PREVIEW_CANVAS:
+        m_preview_canvas->SetDirty();
         break;
 	}
 

@@ -3,8 +3,10 @@
 #include "sopview/SceneTree.h"
 #include "sopview/Evaluator.h"
 #include "sopview/WxGeoPropList.h"
+#include "sopview/MessageID.h"
 
 #include <ee0/WxStageCanvas.h>
+#include <ee0/SubjectMgr.h>
 #include <blueprint/CompNode.h>
 
 #include <node0/SceneNode.h>
@@ -12,8 +14,10 @@
 namespace sopv
 {
 
-WxGeoProperty::WxGeoProperty(wxWindow* parent, const std::shared_ptr<SceneTree>& stree)
+WxGeoProperty::WxGeoProperty(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr,
+                             const std::shared_ptr<SceneTree>& stree)
     : wxNotebook(parent, wxID_ANY, wxDefaultPosition, wxSize(500, -1))
+    , m_sub_mgr(sub_mgr)
     , m_stree(stree)
 {
     InitLayout();
@@ -86,7 +90,7 @@ void WxGeoProperty::Clear()
 
 void WxGeoProperty::SetPreviewCanvasDirty(wxListEvent& event)
 {
-    m_preview_canvas->SetDirty();
+    m_sub_mgr->NotifyObservers(MSG_REFRESH_PREVIEW_CANVAS);
 }
 
 }

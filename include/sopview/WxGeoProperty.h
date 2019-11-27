@@ -2,6 +2,8 @@
 
 #include "sopview/ReflectPropTypes.h"
 
+#include <ee0/typedef.h>
+
 #include <node0/typedef.h>
 #include <sop/GeoAttrClass.h>
 
@@ -10,7 +12,6 @@
 class wxListEvent;
 
 namespace sop { class GeoAttribute; class GroupMgr; }
-namespace ee0 { class WxStageCanvas; }
 
 namespace sopv
 {
@@ -21,15 +22,12 @@ class WxGeoPropList;
 class WxGeoProperty : public wxNotebook
 {
 public:
-    WxGeoProperty(wxWindow* parent, const std::shared_ptr<SceneTree>& stree);
+    WxGeoProperty(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr,
+        const std::shared_ptr<SceneTree>& stree);
 
     void LoadFromNode(const n0::SceneNodePtr& node);
 
     std::vector<size_t> GetSelectedIndices(sop::GeoAttrClass cls) const;
-
-    void SetPreviewCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas) {
-        m_preview_canvas = canvas;
-    }
 
 private:
     void InitLayout();
@@ -41,10 +39,9 @@ private:
 private:
     WxGeoPropList* m_lists2[static_cast<int>(sop::GeoAttrClass::MaxTypeNum)];
 
-    std::shared_ptr<SceneTree> m_stree = nullptr;
+    ee0::SubjectMgrPtr m_sub_mgr = nullptr;
 
-    // for refresh
-    std::shared_ptr<ee0::WxStageCanvas> m_preview_canvas = nullptr;
+    std::shared_ptr<SceneTree> m_stree = nullptr;
 
 }; // WxGeoProperty
 
