@@ -38,9 +38,16 @@ std::shared_ptr<NodeProxy> hou_get_node(const std::string& path)
 {
     std::vector<std::string> tokens;
     cpputil::StringHelper::Split(path, "/", tokens);
-    assert(tokens.size() >= 2 && tokens[0] == "obj");
+    assert(tokens.size() >= 1 && tokens[0] == "obj");
+
     CTX.stree->SetDepth(0);
     std::vector<n0::SceneNodePtr> paths;
+
+    if (tokens.size() == 1) {
+        paths.push_back(CTX.stree->GetCurrNode());
+        return std::make_shared<NodeProxy>(CTX, paths);
+    }
+
     for (size_t i = 1, n = tokens.size(); i < n; ++i)
     {
         auto& name = tokens[i];
