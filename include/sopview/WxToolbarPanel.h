@@ -16,7 +16,7 @@ class SceneTree;
 class WxToolbarPanel : public wxPanel, public ee0::Observer
 {
 public:
-	WxToolbarPanel(wxWindow* parent, ee0::WxStagePage* stage_page,
+	WxToolbarPanel(wxWindow* parent, ee0::WxStagePage* graph_stage,
         const std::shared_ptr<SceneTree>& stree);
 
 	virtual void OnNotify(uint32_t msg, const ee0::VariantSet& variants) override;
@@ -32,7 +32,7 @@ private:
     void OnRootToNextLevel(const ee0::VariantSet& variants);
 
 private:
-    ee0::WxStagePage* m_stage_page;
+    ee0::WxStagePage* m_graph_stage;
 
     WxGeoProperty* m_geo_prop;
 

@@ -15,14 +15,14 @@
 namespace sopv
 {
 
-WxToolbarPanel::WxToolbarPanel(wxWindow* parent, ee0::WxStagePage* stage_page,
+WxToolbarPanel::WxToolbarPanel(wxWindow* parent, ee0::WxStagePage* graph_stage,
                                const std::shared_ptr<SceneTree>& stree)
 	: wxPanel(parent)
-    , m_stage_page(stage_page)
+    , m_graph_stage(graph_stage)
 {
 	InitLayout(stree);
 
-    auto& sub_mgr = stage_page->GetSubjectMgr();
+    auto& sub_mgr = graph_stage->GetSubjectMgr();
     sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_INSERT, this);
     sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_CLEAR, this);
     sub_mgr->RegisterObserver(MSG_SCENE_ROOT_TO_NEXT_LEVEL, this);
@@ -46,11 +46,11 @@ void WxToolbarPanel::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
 
 void WxToolbarPanel::InitLayout(const std::shared_ptr<SceneTree>& stree)
 {
-    auto sub_mgr = m_stage_page->GetSubjectMgr();
+    auto sub_mgr = m_graph_stage->GetSubjectMgr();
 
 	auto sizer = new wxBoxSizer(wxVERTICAL);
     // geometry spreadsheet
-    sizer->Add(m_geo_prop = new WxGeoProperty(this, stree), wxEXPAND);
+    sizer->Add(m_geo_prop = new WxGeoProperty(this, sub_mgr, stree), wxEXPAND);
     // property
 	sizer->Add(m_node_prop = new WxNodeProperty(this, sub_mgr, stree), wxEXPAND);
     // nav bar
@@ -65,7 +65,7 @@ void WxToolbarPanel::InitLayout(const std::shared_ptr<SceneTree>& stree)
         var.m_val.ul = depth;
         vars.SetVariant("depth", var);
 
-        m_stage_page->GetSubjectMgr()->NotifyObservers(MSG_SCENE_ROOT_SEEK_TO_PREV_LEVEL, vars);
+        m_graph_stage->GetSubjectMgr()->NotifyObservers(MSG_SCENE_ROOT_SEEK_TO_PREV_LEVEL, vars);
     });
     sizer->Add(m_nav_bar);
 
