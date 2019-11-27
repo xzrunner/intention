@@ -118,6 +118,9 @@
     <ClInclude Include="..\..\..\include\sopview\WxNodeParmsDlg.h">
       <Filter>view\toolbar\node</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\WxGraphPage.h">
+      <Filter>view\blueprint</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">
@@ -183,6 +186,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxNodeParmsDlg.cpp">
       <Filter>view\toolbar\node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\WxGraphPage.cpp">
+      <Filter>view\blueprint</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

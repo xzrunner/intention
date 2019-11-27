@@ -32,6 +32,7 @@
     <ClInclude Include="..\..\..\include\sopview\Serializer.h" />
     <ClInclude Include="..\..\..\include\sopview\WxGeoProperty.h" />
     <ClInclude Include="..\..\..\include\sopview\WxGeoPropList.h" />
+    <ClInclude Include="..\..\..\include\sopview\WxGraphPage.h" />
     <ClInclude Include="..\..\..\include\sopview\WxNodeProperty.h" />
     <ClInclude Include="..\..\..\include\sopview\WxNodeParmsDlg.h" />
     <ClInclude Include="..\..\..\include\sopview\WxStageCanvas.h" />
@@ -56,6 +57,7 @@
     <ClCompile Include="..\..\..\source\Serializer.cpp" />
     <ClCompile Include="..\..\..\source\WxGeoProperty.cpp" />
     <ClCompile Include="..\..\..\source\WxGeoPropList.cpp" />
+    <ClCompile Include="..\..\..\source\WxGraphPage.cpp" />
     <ClCompile Include="..\..\..\source\WxNodeProperty.cpp" />
     <ClCompile Include="..\..\..\source\WxNodeParmsDlg.cpp" />
     <ClCompile Include="..\..\..\source\WxStageCanvas.cpp" />
