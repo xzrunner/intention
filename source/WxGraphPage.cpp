@@ -1,28 +1,26 @@
 #include "sopview/WxGraphPage.h"
 #include "sopview/MessageID.h"
 #include "sopview/SceneTree.h"
-#include "sopview/Node.h"
 #include "sopview/Evaluator.h"
 #include "sopview/RegistNodes.h"
+#include "sopview/NodeSelectOP.h"
+#include "sopview/SOPView.h"
+#include "sopview/RightPopupMenu.h"
+#include "sopview/WxStageCanvas.h"
+#include "sopview/WxToolbarPanel.h"
 
 #include <ee0/SubjectMgr.h>
-#include <ee0/EditPanelImpl.h>
-#include <ee0/GameObj.h>
 #include <ee0/WxStageCanvas.h>
-#include <ee0/MsgHelper.h>
-#include <blueprint/Blueprint.h>
+#include <ee2/ArrangeNodeCfg.h>
 #include <blueprint/MessageID.h>
-#include <blueprint/NodeHelper.h>
-#include <blueprint/NSCompNode.h>
-#include <blueprint/Node.h>
 #include <blueprint/CompNode.h>
+#include <blueprint/ArrangeNodeOP.h>
+#include <blueprint/ConnectPinOP.h>
+#include <vopview/WxGraphPage.h>
+#include <vopview/VOPView.h>
 
 #include <node0/SceneNode.h>
 #include <node0/CompComplex.h>
-#include <node2/CompBoundingBox.h>
-#include <node2/AABBSystem.h>
-#include <js/RapidJsonHelper.h>
-#include <ns/CompFactory.h>
 
 namespace
 {
@@ -58,7 +56,7 @@ WxGraphPage::WxGraphPage(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr,
     if (!m_root->HasUniqueComp<bp::CompNode>())
     {
         auto& cnode = m_root->AddUniqueComp<bp::CompNode>();
-        auto node = std::make_shared<node::Geometry>();
+        auto node = std::make_shared<node::Subnetwork>();
         node->SetName("obj");
         cnode.SetNode(node);
     }
@@ -66,6 +64,8 @@ WxGraphPage::WxGraphPage(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr,
 #ifdef SOPV_SCENE_TREE_DUMMY_ROOT
     m_stree->ToNextLevel(m_root);
 #endif // SOPV_SCENE_TREE_DUMMY_ROOT
+
+    GetImpl().SetPopupMenu(std::make_shared<RightPopupMenu>(this));
 
     for (auto& msg : MESSAGES) {
         m_sub_mgr->RegisterObserver(msg, this);
@@ -82,6 +82,22 @@ WxGraphPage::~WxGraphPage()
 void WxGraphPage::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
 {
     ee0::WxStagePage::OnNotify(msg, variants);
+
+    if (m_mode == ModeType::VOP)
+    {
+        if (msg == MSG_SCENE_ROOT_SEEK_TO_PREV_LEVEL)
+        {
+            if (PathPopToPrev(variants)) {
+                m_sub_mgr->NotifyObservers(ee0::MSG_SET_CANVAS_DIRTY);
+                m_preview_canvas->SetDirty();
+            }
+        }
+        else
+        {
+            m_vop_view->OnNotify(msg, variants);
+        }
+        return;
+    }
 
 	bool dirty = false;
 	switch (msg)
@@ -119,10 +135,10 @@ void WxGraphPage::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
         dirty = true;
         break;
     case MSG_SCENE_ROOT_TO_NEXT_LEVEL:
-        dirty = ChangeSceneRoot(variants);
+        dirty = PathPushToNext(variants);
         break;
     case MSG_SCENE_ROOT_SEEK_TO_PREV_LEVEL:
-        dirty = PathSeekToPrev(variants);
+        dirty = PathPopToPrev(variants);
         break;
     case MSG_REFRESH_PREVIEW_CANVAS:
         m_preview_canvas->SetDirty();
@@ -139,12 +155,76 @@ void WxGraphPage::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
 void WxGraphPage::Traverse(std::function<bool(const ee0::GameObj&)> func,
                            const ee0::VariantSet& variants , bool inverse) const
 {
-    m_root->GetSharedComp<n0::CompComplex>().Traverse(func, inverse);
+    switch (m_mode)
+    {
+    case ModeType::SOP:
+        m_root->GetSharedComp<n0::CompComplex>().Traverse(func, inverse);
+        break;
+    case ModeType::VOP:
+        m_vop_view->GetRootNode()->GetSharedComp<n0::CompComplex>().Traverse(func, inverse);
+        break;
+    default:
+        assert(0);
+    }
 }
 
-void WxGraphPage::SetPreviewCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas)
+void WxGraphPage::SetupCanvas(const std::shared_ptr<ee0::WxStageCanvas>& canvas,
+                              const std::shared_ptr<ee0::WxStageCanvas>& preview_canvas)
 {
-    m_preview_canvas = canvas;
+    GetImpl().SetCanvas(canvas);
+
+    m_preview_canvas = preview_canvas;
+    std::static_pointer_cast<WxStageCanvas>(preview_canvas)->SetSceneTree(m_stree);
+
+    if (preview_canvas)
+    {
+        auto sop_preview_canvas = std::static_pointer_cast<WxStageCanvas>(preview_canvas);
+        sop_preview_canvas->SetPropView(m_toolbar->GetGeoPropView());
+        sop_preview_canvas->SetGraphStage(this);
+    }
+
+    auto cam = canvas->GetCamera();
+    m_sop_op = CreateSopEditOP(cam);
+    m_vop_op = CreateVopEditOP(cam);
+
+    GetImpl().SetEditOP(m_sop_op);
+}
+
+ee0::EditOPPtr WxGraphPage::CreateSopEditOP(const std::shared_ptr<pt0::Camera>& cam)
+{
+    auto select_op_sop = std::make_shared<NodeSelectOP>(cam, *this);
+    select_op_sop->SetSceneTree(m_stree);
+
+    ee2::ArrangeNodeCfg cfg;
+    cfg.is_auto_align_open = false;
+    cfg.is_deform_open     = false;
+    cfg.is_offset_open     = false;
+    cfg.is_rotate_open     = false;
+    auto arrange_op_sop = std::make_shared<bp::ArrangeNodeOP>(
+        cam, *this, ECS_WORLD_VAR cfg, select_op_sop
+    );
+
+    auto& nodes = SOPView::Instance()->GetAllNodes();
+    auto op = std::make_shared<bp::ConnectPinOP>(cam, *this, nodes);
+    op->SetPrevEditOP(arrange_op_sop);
+    return op;
+}
+
+ee0::EditOPPtr WxGraphPage::CreateVopEditOP(const std::shared_ptr<pt0::Camera>& cam)
+{
+    ee2::ArrangeNodeCfg cfg;
+    cfg.is_auto_align_open = false;
+    cfg.is_deform_open     = false;
+    cfg.is_offset_open     = false;
+    cfg.is_rotate_open     = false;
+    auto arrange_op_sop = std::make_shared<bp::ArrangeNodeOP>(
+        cam, *this, ECS_WORLD_VAR cfg, nullptr
+    );
+
+    auto& nodes = vopv::VOPView::Instance()->GetAllNodes();
+    auto op = std::make_shared<bp::ConnectPinOP>(cam, *this, nodes);
+    op->SetPrevEditOP(arrange_op_sop);
+    return op;
 }
 
 bool WxGraphPage::InsertSceneObj(const ee0::VariantSet& variants)
@@ -153,6 +233,19 @@ bool WxGraphPage::InsertSceneObj(const ee0::VariantSet& variants)
     GD_ASSERT(var.m_type == ee0::VT_PVOID, "no var in vars: obj");
     const ee0::GameObj* obj = static_cast<const ee0::GameObj*>(var.m_val.pv);
     GD_ASSERT(obj, "err scene obj");
+
+    // prepare CompComplex
+    if ((*obj)->HasUniqueComp<bp::CompNode>())
+    {
+        auto& bp_node = (*obj)->GetUniqueComp<bp::CompNode>().GetNode();
+        auto type = bp_node->get_type();
+        if (type.is_derived_from<node::Compound>())
+        {
+            if (!(*obj)->HasSharedComp<n0::CompComplex>()) {
+                (*obj)->AddSharedComp<n0::CompComplex>();
+            }
+        }
+    }
 
     return m_stree->Add(*obj);
 }
@@ -220,7 +313,7 @@ bool WxGraphPage::UpdateNodeProp(const ee0::VariantSet& variants)
     }
 }
 
-bool WxGraphPage::ChangeSceneRoot(const ee0::VariantSet& variants)
+bool WxGraphPage::PathPushToNext(const ee0::VariantSet& variants)
 {
     auto var = variants.GetVariant("obj");
     GD_ASSERT(var.m_type == ee0::VT_PVOID, "no var in vars: obj");
@@ -229,24 +322,76 @@ bool WxGraphPage::ChangeSceneRoot(const ee0::VariantSet& variants)
 
     if (m_root == *obj) {
         return false;
-    } else {
-        m_sub_mgr->NotifyObservers(ee0::MSG_NODE_SELECTION_CLEAR);
-        m_root = *obj;
-        return true;
     }
+
+    assert((*obj)->HasUniqueComp<bp::CompNode>());
+    auto& cnode = (*obj)->GetUniqueComp<bp::CompNode>();
+    auto bp_node = cnode.GetNode();
+    if (bp_node && bp_node->get_type() == rttr::type::get<node::AttributeVOP>())
+    {
+        if (!m_vop_view) {
+            m_vop_view = std::make_shared<vopv::WxGraphPage>(m_parent, nullptr, nullptr);
+            m_vop_view->SetPreviewCanvas(m_preview_canvas);
+        }
+        m_vop_view->SetRootNode(*obj);
+        ChangeMode(ModeType::VOP);
+    }
+    else
+    {
+        m_root = *obj;
+    }
+
+    m_sub_mgr->NotifyObservers(ee0::MSG_NODE_SELECTION_CLEAR);
+
+    return true;
 }
 
-bool WxGraphPage::PathSeekToPrev(const ee0::VariantSet& variants)
+bool WxGraphPage::PathPopToPrev(const ee0::VariantSet& variants)
 {
-    auto var = variants.GetVariant("depth");
-    GD_ASSERT(var.m_type == ee0::VT_ULONG, "no var in vars: obj");
-    auto depth = var.m_val.ul;
-    if (m_stree->SetDepth(depth)) {
-        m_sub_mgr->NotifyObservers(ee0::MSG_NODE_SELECTION_CLEAR);
-        m_root = m_stree->GetCurrNode();
-        return true;
-    } else {
+    auto var_depth = variants.GetVariant("depth");
+    GD_ASSERT(var_depth.m_type == ee0::VT_ULONG, "no var in vars: obj");
+    auto depth = var_depth.m_val.ul;
+    if (!m_stree->SetDepth(depth)) {
         return false;
+    }
+
+    auto node = m_stree->GetCurrNode();
+    assert(node->HasUniqueComp<bp::CompNode>());
+    auto& cnode = node->GetUniqueComp<bp::CompNode>();
+    auto bp_node = cnode.GetNode();
+    if (bp_node && bp_node->get_type() == rttr::type::get<node::AttributeVOP>())
+    {
+        m_vop_view->SetRootNode(node);
+        ChangeMode(ModeType::VOP);
+    }
+    else
+    {
+        m_root = m_stree->GetCurrNode();
+        ChangeMode(ModeType::SOP);
+    }
+
+    m_sub_mgr->NotifyObservers(ee0::MSG_NODE_SELECTION_CLEAR);
+
+    return true;
+}
+
+void WxGraphPage::ChangeMode(ModeType mode)
+{
+    if (mode == m_mode) {
+        return;
+    }
+
+    m_mode = mode;
+    switch (mode)
+    {
+    case ModeType::SOP:
+        GetImpl().SetEditOP(m_sop_op);
+        break;
+    case ModeType::VOP:
+        GetImpl().SetEditOP(m_vop_op);
+        break;
+    default:
+        assert(0);
     }
 }
 

@@ -32,8 +32,6 @@ rttr::registration::class_<sopv::Node>("sopv::node")
 )
 ;
 
-REGIST_NODE_RTTI_DEFAULT(Geometry, geometry)
-
 // attribute
 REGIST_NODE_RTTI(AttributeCreate, attribcreate::2.0,
 .property("group", &sopv::node::AttributeCreate::group_name)           \
@@ -873,6 +871,7 @@ REGIST_NODE_RTTI(Split, split,
 	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("GroupName")) \
 )                                                                      \
 )
+REGIST_NODE_RTTI_DEFAULT(Subnetwork, subnetwork)
 REGIST_NODE_RTTI(Switch, switch,
 .property("input", &sopv::node::Switch::selected)                     \
 (                                                                     \

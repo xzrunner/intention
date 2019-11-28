@@ -123,12 +123,12 @@ void Serializer::InitParentChildren(const n0::SceneNodePtr& node)
         return;
     }
 
-    std::shared_ptr<node::Geometry> parent = nullptr;
+    std::shared_ptr<node::Subnetwork> parent = nullptr;
     if (node->HasUniqueComp<bp::CompNode>()) {
         auto& cnode = node->GetUniqueComp<bp::CompNode>();
         auto bp_node = cnode.GetNode();
-        if (bp_node->get_type().is_derived_from<node::Geometry>()) {
-            parent = std::static_pointer_cast<node::Geometry>(bp_node);
+        if (bp_node->get_type().is_derived_from<node::Subnetwork>()) {
+            parent = std::static_pointer_cast<node::Subnetwork>(bp_node);
         }
     }
 

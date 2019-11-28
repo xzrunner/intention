@@ -55,7 +55,7 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
     auto bp_node = cnode.GetNode();
     assert(bp_node);
     auto bp_type = bp_node->get_type();
-    assert(bp_type.is_derived_from<node::Geometry>());
+    assert(bp_type.is_derived_from<node::Compound>());
 
     auto eval = stree->GetCurrEval();
     assert(node->HasSharedComp<n0::CompComplex>());
@@ -79,8 +79,8 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
             continue;
         }
 
-        //if (bp_type.is_derived_from<node::Geometry>())
-        if (bp_type == rttr::type::get<node::Geometry>())
+        //if (bp_type.is_derived_from<node::Subnetwork>())
+        if (bp_type == rttr::type::get<node::Subnetwork>())
         {
             stree->Push(c);
             DrawNode3D(rc, stree);

@@ -12,15 +12,15 @@
 #include <node0/NodeFlagsHelper.h>
 #include <node0/NodeFlags.h>
 #include <ns/NodeFactory.h>
-#include <sop/node/Geometry.h>
+#include <sop/node/Subnetwork.h>
 
 #include <assert.h>
 
 namespace
 {
 
-void RebuildBackFromFront(std::shared_ptr<sop::node::Geometry>& dst,
-                          const std::shared_ptr<sopv::node::Geometry>& src,
+void RebuildBackFromFront(std::shared_ptr<sop::node::Subnetwork>& dst,
+                          const std::shared_ptr<sopv::node::Subnetwork>& src,
                           const sopv::Evaluator& eval)
 {
     dst->ClearChildren();
@@ -30,7 +30,7 @@ void RebuildBackFromFront(std::shared_ptr<sop::node::Geometry>& dst,
         if (!dst_c) {
             continue;
         }
-        sop::node::Geometry::AddChild(dst, dst_c);
+        sop::node::Subnetwork::AddChild(dst, dst_c);
 
         //// calc again, for expr which need level info
         //sopv::SOPAdapter::UpdatePropBackFromFront(*c, *dst_c, eval);
@@ -97,10 +97,10 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
         if (curr.node->HasUniqueComp<bp::CompNode>())
         {
             auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-            if (bp_parent && bp_parent->get_type().is_derived_from<node::Geometry>())
+            if (bp_parent && bp_parent->get_type().is_derived_from<node::Subnetwork>())
             {
-                auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
-                geo->children.push_back(bp_node);
+                auto sub_nw = std::static_pointer_cast<node::Subnetwork>(bp_parent);
+                sub_nw->children.push_back(bp_node);
             }
         }
 
@@ -115,14 +115,13 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
             assert(curr_node->HasUniqueComp<bp::CompNode>());
             auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
             auto child = m_path.parts.back().eval->QueryBackNode(*bp_node);
-            assert(parent->get_type().is_derived_from<sop::node::Geometry>());
-            sop::node::Geometry::AddChild(std::static_pointer_cast<sop::node::Geometry>(parent), child);
+            assert(parent->get_type().is_derived_from<sop::node::Subnetwork>());
+            sop::node::Subnetwork::AddChild(std::static_pointer_cast<sop::node::Subnetwork>(parent), child);
         }
 
         // prepare ccomplex
         auto type = bp_node->get_type();
-        if (type.is_derived_from<node::Geometry>() ||
-            type == rttr::type::get<node::AttributeVOP>())
+        if (type.is_derived_from<node::Subnetwork>())
         {
             if (!node->HasSharedComp<n0::CompComplex>()) {
                 node->AddSharedComp<n0::CompComplex>();
@@ -165,14 +164,14 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
             if (curr.node->HasUniqueComp<bp::CompNode>())
             {
                 auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-                if (bp_parent && bp_parent->get_type().is_derived_from<node::Geometry>())
+                if (bp_parent && bp_parent->get_type().is_derived_from<node::Subnetwork>())
                 {
-                    auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
+                    auto sub_nw = std::static_pointer_cast<node::Subnetwork>(bp_parent);
                     auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
-                    for (auto itr = geo->children.begin(); itr != geo->children.end(); )
+                    for (auto itr = sub_nw->children.begin(); itr != sub_nw->children.end(); )
                     {
                         if (*itr == bp_node) {
-                            itr = geo->children.erase(itr);
+                            itr = sub_nw->children.erase(itr);
                         } else {
                             ++itr;
                         }
@@ -188,17 +187,17 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
             if (curr.node->HasUniqueComp<bp::CompNode>() && m_path.parts.size() > 1)
             {
                 auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-                if (bp_parent && bp_parent->get_type().is_derived_from<node::Geometry>())
+                if (bp_parent && bp_parent->get_type().is_derived_from<node::Subnetwork>())
                 {
-                    auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
+                    auto sub_nw = std::static_pointer_cast<node::Subnetwork>(bp_parent);
 
                     auto& prev_eval = m_path.parts[m_path.parts.size() - 2].eval;
                     auto& curr_node = m_path.parts.back().node;
                     assert(curr_node->HasUniqueComp<bp::CompNode>());
                     auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
                     auto child = m_path.parts.back().eval->QueryBackNode(*bp_node);
-                    assert(parent->get_type().is_derived_from<sop::node::Geometry>());
-                    RebuildBackFromFront(std::static_pointer_cast<sop::node::Geometry>(parent), geo, *curr.eval);
+                    assert(parent->get_type().is_derived_from<sop::node::Subnetwork>());
+                    RebuildBackFromFront(std::static_pointer_cast<sop::node::Subnetwork>(parent), sub_nw, *curr.eval);
                 }
             }
         }
@@ -224,10 +223,10 @@ bool SceneTree::Clear()
     if (curr.node->HasUniqueComp<bp::CompNode>())
     {
         auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-        if (bp_parent && bp_parent->get_type().is_derived_from<node::Geometry>())
+        if (bp_parent && bp_parent->get_type().is_derived_from<node::Subnetwork>())
         {
-            auto geo = std::static_pointer_cast<node::Geometry>(bp_parent);
-            geo->children.clear();
+            auto sub_nw = std::static_pointer_cast<node::Subnetwork>(bp_parent);
+            sub_nw->children.clear();
         }
     }
 
@@ -242,8 +241,8 @@ bool SceneTree::Clear()
         auto& curr_node = m_path.parts.back().node;
         assert(curr_node->HasUniqueComp<bp::CompNode>());
         auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
-        assert(parent->get_type().is_derived_from<sop::node::Geometry>());
-        std::static_pointer_cast<sop::node::Geometry>(parent)->ClearChildren();
+        assert(parent->get_type().is_derived_from<sop::node::Subnetwork>());
+        std::static_pointer_cast<sop::node::Subnetwork>(parent)->ClearChildren();
     }
 
     return dirty;
@@ -264,7 +263,7 @@ bool SceneTree::Push(const n0::SceneNodePtr& node)
 
     auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
     auto type = bp_node->get_type();
-    if (!type.is_derived_from<node::Geometry>()) {
+    if (!type.is_derived_from<node::Subnetwork>()) {
         return false;
     }
 
@@ -288,13 +287,13 @@ bool SceneTree::Push(const n0::SceneNodePtr& node)
             if (node->HasUniqueComp<bp::CompNode>())
             {
                 auto bp_parent = node->GetUniqueComp<bp::CompNode>().GetNode();
-                if (bp_parent->get_type().is_derived_from<node::Geometry>())
+                if (bp_parent->get_type().is_derived_from<node::Subnetwork>())
                 {
-                    auto src = std::static_pointer_cast<node::Geometry>(bp_parent);
+                    auto src = std::static_pointer_cast<node::Subnetwork>(bp_parent);
                     auto dst = GetCurrEval()->QueryBackNode(*src);
-                    assert(dst && dst->get_type().is_derived_from<sop::node::Geometry>());
-                    auto dst_geo = std::static_pointer_cast<sop::node::Geometry>(dst);
-                    RebuildBackFromFront(dst_geo, src, *eval);
+                    assert(dst && dst->get_type().is_derived_from<sop::node::Subnetwork>());
+                    auto dst_sub_nw = std::static_pointer_cast<sop::node::Subnetwork>(dst);
+                    RebuildBackFromFront(dst_sub_nw, src, *eval);
                 }
             }
         }

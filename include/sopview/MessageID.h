@@ -10,7 +10,6 @@ enum MessageID
     MSG_SCENE_ROOT_SEEK_TO_PREV_LEVEL,
 
     MSG_REFRESH_PREVIEW_CANVAS,
-
 };
 
 }

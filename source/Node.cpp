@@ -167,17 +167,17 @@ void Node::InitPins(const std::string& name)
 	assert(method_imports.is_valid());
 	auto var_imports = method_imports.invoke(var);
 	assert(var_imports.is_valid()
-		&& var_imports.is_type<std::vector<hdiop::NodePort<sop::NodeVarType>>>());
-	auto& imports = var_imports.get_value<std::vector<hdiop::NodePort<sop::NodeVarType>>>();
+		&& var_imports.is_type<std::vector<hdiop::Node<sop::NodeVarType>::Port>>());
+	auto& imports = var_imports.get_value<std::vector<hdiop::Node<sop::NodeVarType>::Port>>();
 
 	auto method_exports = t.get_method("GetExports");
 	assert(method_exports.is_valid());
 	auto var_exports = method_exports.invoke(var);
 	assert(var_exports.is_valid()
-		&& var_exports.is_type<std::vector<hdiop::NodePort<sop::NodeVarType>>>());
-	auto& exports = var_exports.get_value<std::vector<hdiop::NodePort<sop::NodeVarType>>>();
+		&& var_exports.is_type<std::vector<hdiop::Node<sop::NodeVarType>::Port>>());
+	auto& exports = var_exports.get_value<std::vector<hdiop::Node<sop::NodeVarType>::Port>>();
 
-	auto rg2grp = [](std::vector<PinDesc>& dst, const std::vector<hdiop::NodePort<sop::NodeVarType>>& src)
+	auto rg2grp = [](std::vector<PinDesc>& dst, const std::vector<hdiop::Node<sop::NodeVarType>::Port>& src)
 	{
 		dst.reserve(dst.size() + src.size());
 		for (int i = 0, n = src.size(); i < n; ++i)

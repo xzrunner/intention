@@ -18,7 +18,7 @@
 #include <node2/CompBoundingBox.h>
 #include <node2/CompTransform.h>
 #include <ns/NodeFactory.h>
-#include <sop/node/Geometry.h>
+#include <sop/node/Subnetwork.h>
 
 using namespace boost::python;
 
@@ -55,7 +55,7 @@ NodeProxy::CreateNode(const std::string& type, const std::string& name,
     auto& cnode = scene_node->AddUniqueComp<bp::CompNode>();
     cnode.SetNode(child);
 
-    if (child->get_type().is_derived_from<node::Geometry>()) {
+    if (child->get_type().is_derived_from<node::Subnetwork>()) {
         scene_node->AddSharedComp<n0::CompComplex>();
     }
 
@@ -130,7 +130,7 @@ NodeProxy::GetChild(const std::string& name)
     auto bp_node = cnode.GetNode();
     assert(bp_node->get_type().is_derived_from<Node>());
 
-    if (bp_node->get_type().is_derived_from<node::Geometry>())
+    if (bp_node->get_type().is_derived_from<node::Subnetwork>())
     {
         assert(node->HasSharedComp<n0::CompComplex>());
         for (auto& c : node->GetSharedComp<n0::CompComplex>().GetAllChildren())
@@ -180,7 +180,7 @@ void NodeProxy::SetInput(int input_index, const std::shared_ptr<NodeProxy>& item
     m_ctx.stree->GetCurrEval()->OnConnected(*conn);
 }
 
-void NodeProxy::SetPosition(const sm::vec2& pos) 
+void NodeProxy::SetPosition(const sm::vec2& pos)
 {
     assert(!m_paths.empty());
     auto node = m_paths.back();
@@ -189,7 +189,7 @@ void NodeProxy::SetPosition(const sm::vec2& pos)
     ctrans.SetPosition(*node, pos * 100);
 }
 
-void NodeProxy::SetSize(const sm::vec2& size) 
+void NodeProxy::SetSize(const sm::vec2& size)
 {
     assert(!m_paths.empty());
     auto node = m_paths.back();

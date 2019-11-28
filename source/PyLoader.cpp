@@ -68,7 +68,7 @@ std::shared_ptr<NodeProxy> hou_get_node(const std::string& path)
                     paths.push_back(c);
                     return std::make_shared<NodeProxy>(CTX, paths);
                 } else {
-                    assert(bp_node->get_type() == rttr::type::get<sopv::node::Geometry>());
+                    assert(bp_node->get_type() == rttr::type::get<sopv::node::Subnetwork>());
                     CTX.stree->Push(c);
                 }
             }
@@ -78,7 +78,7 @@ std::shared_ptr<NodeProxy> hou_get_node(const std::string& path)
 
         scene_node->AddSharedComp<n0::CompComplex>();
 
-        auto sopv_node = std::make_shared<sopv::node::Geometry>();
+        auto sopv_node = std::make_shared<sopv::node::Subnetwork>();
         sopv_node->SetName(name);
         auto& cnode = scene_node->AddUniqueComp<bp::CompNode>();
         cnode.SetNode(sopv_node);

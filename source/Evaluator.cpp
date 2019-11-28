@@ -130,7 +130,7 @@ void Evaluator::OnDisconnecting(const bp::Connecting& conn)
 
 void Evaluator::OnRebuildConnection()
 {
-    std::vector<std::pair<hdiop::NodePortAddr, hdiop::NodePortAddr>> conns;
+    std::vector<std::pair<hdiop::Node<sop::NodeVarType>::PortAddr, hdiop::Node<sop::NodeVarType>::PortAddr>> conns;
     for (auto& itr : m_nodes_map)
     {
         auto& front = itr.first;

@@ -29,18 +29,32 @@ void nodes_regist_rttr();
 namespace node
 {
 
-#define SOPV_DEFINE_NODE(type, name, parm) \
-class type : public Node                   \
-{                                          \
-public:                                    \
-	type()                                 \
-		: Node(#type)                      \
-	{                                      \
-		InitPins(#name);                   \
-	}                                      \
-                                           \
-	parm                                   \
-	RTTR_ENABLE(Node)                      \
+#define SOPV_DEFINE_NODE(type, name, parm)            \
+class type : public Node                              \
+{                                                     \
+public:                                               \
+	type()                                            \
+		: Node(#type)                                 \
+	{                                                 \
+		InitPins(#name);                              \
+	}                                                 \
+                                                      \
+	parm                                              \
+	RTTR_ENABLE(Node)                                 \
+};
+
+#define SOPV_DEFINE_COMPOUND_NODE(type, name, parm)   \
+class type : public Node, public Compound             \
+{                                                     \
+public:                                               \
+	type()                                            \
+		: Node(#type)                                 \
+	{                                                 \
+		InitPins(#name);                              \
+	}                                                 \
+                                                      \
+	parm                                              \
+	RTTR_ENABLE(Node, Compound)                       \
 };
 
 #define SOPV_DEFINE_PROPS_NODE(type, name, parm) \
@@ -57,12 +71,12 @@ public:                                          \
 	RTTR_ENABLE(Node)                            \
 };
 
-#define SOPV_DEFINE_IMPORT_EXT_NODE(type, name, base, parm)          \
-class type : public base                                             \
+#define SOPV_DEFINE_IMPORT_EXT_NODE(type, name, parm)                \
+class type : public Node                                             \
 {                                                                    \
 public:                                                              \
 	type()                                                           \
-		: base(#type)                                                \
+		: Node(#type)                                                \
 	{                                                                \
 		InitPins(#name);                                             \
         SetExtensibleInputPorts(true);                               \
@@ -74,25 +88,17 @@ private:                                                             \
                                                                      \
 public:                                                              \
 	parm                                                             \
-	RTTR_ENABLE(base)                                                \
+	RTTR_ENABLE(Node)                                                \
 };
 
-#define SOPV_NODE_BASE Node
 #define SOPV_NODE_PROP
 
-// base
-class Geometry : public Node
+class Compound
 {
 public:
-    Geometry(const std::string& title = "Geometry")
-		: Node(title, true)
-	{
-		InitPins("geometry");
-	}
-
     std::vector<bp::NodePtr> children;
 
-	RTTR_ENABLE(Node)
+    RTTR_ENABLE()
 };
 
 // attribute
@@ -119,7 +125,7 @@ SOPV_DEFINE_NODE(AttributeTransfer, attribtransfer,
     AttributeName primitives_attrs = sop::GeoAttrClass::Primitive; \
     AttributeName detail_attrs     = sop::GeoAttrClass::Detail;    \
 )
-SOPV_DEFINE_NODE(AttributeVOP, attribvop, SOPV_NODE_PROP)
+SOPV_DEFINE_COMPOUND_NODE(AttributeVOP, attribvop, SOPV_NODE_PROP)
 SOPV_DEFINE_NODE(AttributeWrangle, attribwrangle,
     std::string vex_expr; \
 )
@@ -373,7 +379,7 @@ SOPV_DEFINE_NODE(ForeachEnd, block_end,
     bool        do_single_pass     = false;                             \
     int         single_pass_offset = 0;                                 \
 )
-SOPV_DEFINE_IMPORT_EXT_NODE(Merge, merge, SOPV_NODE_BASE, SOPV_NODE_PROP)
+SOPV_DEFINE_IMPORT_EXT_NODE(Merge, merge, SOPV_NODE_PROP)
 SOPV_DEFINE_PROPS_NODE(Null, null, SOPV_NODE_PROP)
 SOPV_DEFINE_NODE(Output, output,
     int output_idx = -1; \
@@ -381,10 +387,11 @@ SOPV_DEFINE_NODE(Output, output,
 SOPV_DEFINE_NODE(Python, python,
     std::string code; \
 )
-SOPV_DEFINE_IMPORT_EXT_NODE(Split, split, Geometry,
+SOPV_DEFINE_NODE(Split, split,
     GroupName group_name; \
 )
-SOPV_DEFINE_IMPORT_EXT_NODE(Switch, switch, SOPV_NODE_BASE,
+SOPV_DEFINE_COMPOUND_NODE(Subnetwork, subnetwork, SOPV_NODE_PROP)
+SOPV_DEFINE_IMPORT_EXT_NODE(Switch, switch,
     std::string selected = "0"; \
 )
 
