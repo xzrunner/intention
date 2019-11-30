@@ -57,6 +57,15 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
     auto bp_type = bp_node->get_type();
     assert(bp_type.is_derived_from<node::Compound>());
 
+    if (bp_type == rttr::type::get<node::AttributeVOP>())
+    {
+        auto n = stree->Pop();
+        assert(n);
+        DrawNode3D(rc, stree);
+        stree->Push(n);
+        return;
+    }
+
     auto eval = stree->GetCurrEval();
     assert(node->HasSharedComp<n0::CompComplex>());
     auto& ccomplex = node->GetSharedComp<n0::CompComplex>();

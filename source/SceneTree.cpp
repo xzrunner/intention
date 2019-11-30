@@ -302,17 +302,18 @@ bool SceneTree::Push(const n0::SceneNodePtr& node)
     return true;
 }
 
-bool SceneTree::Pop()
+n0::SceneNodePtr SceneTree::Pop()
 {
     if (m_path.parts.empty()) {
-        return false;
+        return nullptr;
     }
 
+    auto ret = m_path.parts.back().node;
     m_path.parts.pop_back();
 
     SetupCurrNode();
 
-    return true;
+    return ret;
 }
 
 bool SceneTree::SetDepth(size_t depth)
