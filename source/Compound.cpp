@@ -7,6 +7,7 @@
 
 #include <sop/node/Subnetwork.h>
 #include <sop/node/AttributeVOP.h>
+#include <vop/Evaluator.h>
 
 namespace sopv
 {
@@ -71,7 +72,7 @@ void Compound::InitChildren(const std::string& name)
     else if (t == rttr::type::get<sop::node::AttributeVOP>())
     {
         auto attr_vop = var.get_value<std::shared_ptr<sop::node::AttributeVOP>>();
-        for (auto& c : attr_vop->GetAllChildren())
+        for (auto& c : attr_vop->GetEval()->GetAllNodes())
         {
             assert(c);
             auto node = vopv::VOPAdapter::CreateFrontFromBack(*c);
