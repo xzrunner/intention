@@ -638,6 +638,42 @@ sop::NodePtr SOPAdapter::CreateBackFromFront(const bp::Node& node)
     return dst;
 }
 
+std::shared_ptr<Node>
+SOPAdapter::CreateFrontFromBack(const sop::Node& node)
+{
+    auto type = node.get_type();
+    auto src_type = type.get_name().to_string();
+    std::string dst_type;
+    std::string lib_str = "sopv";
+    auto find_lib = src_type.find("sop::");
+    if (find_lib != std::string::npos) {
+        dst_type = lib_str + "::" + src_type.substr(find_lib + strlen("sop::"));
+    }
+
+    std::shared_ptr<Node> dst = nullptr;
+
+    if (!dst_type.empty())
+    {
+	    rttr::type t = rttr::type::get_by_name(dst_type);
+	    if (!t.is_valid())
+        {
+            assert(0);
+	    }
+        else
+        {
+            rttr::variant var = t.create();
+            assert(var.is_valid());
+
+            dst = var.get_value<std::shared_ptr<Node>>();
+            assert(dst);
+
+            dst->SetName(node.GetName());
+        }
+    }
+
+    return dst;
+}
+
 int SOPAdapter::TypeBackToFront(sop::NodeVarType type)
 {
     int ret = -1;

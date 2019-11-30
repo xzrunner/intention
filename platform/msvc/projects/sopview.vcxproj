@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\sopview\Compound.h" />
     <ClInclude Include="..\..\..\include\sopview\Evaluator.h" />
     <ClInclude Include="..\..\..\include\sopview\PyLoaderCtx.h" />
     <ClInclude Include="..\..\..\include\sopview\PyParmValue.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="..\..\..\include\sopview\WxToolbarPanel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\Compound.cpp" />
     <ClCompile Include="..\..\..\source\Evaluator.cpp" />
     <ClCompile Include="..\..\..\source\PyParmValue.cpp" />
     <ClCompile Include="..\..\..\source\PyLoader.cpp" />

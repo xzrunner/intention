@@ -27,6 +27,8 @@ public:
 
     auto GetCurrEval() const { return m_path.parts.empty() ? nullptr : m_path.parts.back().eval; }
     auto GetCurrNode() const { return m_path.parts.empty() ? nullptr : m_path.parts.back().node; }
+    auto GetLastEval() const { return m_path.parts.size() >= 2 ? m_path.parts[m_path.parts.size() - 2].eval : nullptr; }
+    auto GetLastNode() const { return m_path.parts.size() >= 2 ? m_path.parts[m_path.parts.size() - 2].node : nullptr; }
 
     std::shared_ptr<Evaluator> QueryEval(const n0::SceneNodePtr& node) const;
 

@@ -63,6 +63,10 @@ void SOPView::InitNodes()
 	for (auto& t : list)
 	{
 		auto obj = t.create();
+        // Compound node has no rtti, should not be selected to create
+        if (!obj.is_valid()) {
+            continue;
+        }
 		assert(obj.is_valid());
 		auto node = obj.get_value<bp::NodePtr>();
 		assert(node);

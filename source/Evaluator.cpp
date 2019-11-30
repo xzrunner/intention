@@ -18,6 +18,18 @@
 namespace sopv
 {
 
+void Evaluator::OnNodeChanged(const bp::NodePtr& node)
+{
+    if (!node) {
+        return;
+    }
+
+    auto back = SOPAdapter::CreateBackFromFront(*node);
+    m_eval.NodeChaged(back);
+
+    Update();
+}
+
 void Evaluator::OnAddNode(const bp::Node& front, bool need_update)
 {
     auto back = SOPAdapter::CreateBackFromFront(front);

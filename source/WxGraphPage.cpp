@@ -21,6 +21,11 @@
 
 #include <node0/SceneNode.h>
 #include <node0/CompComplex.h>
+#include <node0/NodeFlagsHelper.h>
+#include <node0/NodeFlags.h>
+#include <node2/CompBoundingBox.h>
+#include <ns/NodeFactory.h>
+#include <sop/node/AttributeVOP.h>
 
 namespace
 {
@@ -95,6 +100,21 @@ void WxGraphPage::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
         else
         {
             m_vop_view->OnNotify(msg, variants);
+
+            switch (msg)
+            {
+            case bp::MSG_BP_CONN_INSERT:
+            case bp::MSG_BP_CONN_DELETE:
+            case bp::MSG_BP_CONN_REBUILD:
+            {
+                auto node = m_stree->GetLastNode();
+                if (node->HasUniqueComp<bp::CompNode>()) {
+                    auto bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
+                    m_stree->GetLastEval()->OnNodeChanged(bp_node);
+                }
+            }
+            break;
+            }
         }
         return;
     }
@@ -241,9 +261,32 @@ bool WxGraphPage::InsertSceneObj(const ee0::VariantSet& variants)
         auto type = bp_node->get_type();
         if (type.is_derived_from<node::Compound>())
         {
-            if (!(*obj)->HasSharedComp<n0::CompComplex>()) {
-                (*obj)->AddSharedComp<n0::CompComplex>();
+            auto& bp_children = std::static_pointer_cast<node::Compound>(bp_node)->GetAllChildren();
+            if (!(*obj)->HasSharedComp<n0::CompComplex>())
+            {
+                auto& ccomplex = (*obj)->AddSharedComp<n0::CompComplex>();
+                for (auto& child : bp_children)
+                {
+                    auto child_node = ns::NodeFactory::Create2D();
+
+                    auto& cnode = child_node->AddUniqueComp<bp::CompNode>();
+                    cnode.SetNode(child);
+
+                    //if (child->get_type().is_derived_from<node::Subnetwork>()) {
+                    //    child_node->AddSharedComp<n0::CompComplex>();
+                    //}
+
+                    auto& caabb = child_node->GetUniqueComp<n2::CompBoundingBox>();
+                    auto& style = child->GetStyle();
+                    caabb.SetSize(*child_node, sm::rect(style.width, style.height));
+
+                    n0::NodeFlagsHelper::SetFlag<n0::NodeNotVisible>(*child_node, true);
+
+                    ccomplex.AddChild(child_node);
+                }
             }
+            assert((*obj)->HasSharedComp<n0::CompComplex>()
+                && (*obj)->GetSharedComp<n0::CompComplex>().GetAllChildren().size() == bp_children.size());
         }
     }
 
@@ -330,10 +373,23 @@ bool WxGraphPage::PathPushToNext(const ee0::VariantSet& variants)
     if (bp_node && bp_node->get_type() == rttr::type::get<node::AttributeVOP>())
     {
         if (!m_vop_view) {
-            m_vop_view = std::make_shared<vopv::WxGraphPage>(m_parent, nullptr, nullptr);
+            m_vop_view = std::make_shared<vopv::WxGraphPage>(m_parent, nullptr);
             m_vop_view->SetPreviewCanvas(m_preview_canvas);
         }
-        m_vop_view->SetRootNode(*obj);
+
+        // reset visible
+        // todo: move to vopview's SceneTree
+        assert((*obj)->HasSharedComp<n0::CompComplex>());
+        auto& ccomplex = (*obj)->GetSharedComp<n0::CompComplex>();
+        for (auto& c : ccomplex.GetAllChildren()) {
+            n0::NodeFlagsHelper::SetFlag<n0::NodeNotVisible>(*c, false);
+        }
+
+        auto eval = m_stree->GetLastEval();
+        assert(eval);
+        auto attr_vop = std::static_pointer_cast<sop::node::AttributeVOP>(eval->QueryBackNode(*bp_node));
+        assert(attr_vop);
+        m_vop_view->SetRootNode(*obj, attr_vop->GetEval());
         ChangeMode(ModeType::VOP);
     }
     else
@@ -361,8 +417,9 @@ bool WxGraphPage::PathPopToPrev(const ee0::VariantSet& variants)
     auto bp_node = cnode.GetNode();
     if (bp_node && bp_node->get_type() == rttr::type::get<node::AttributeVOP>())
     {
-        m_vop_view->SetRootNode(node);
-        ChangeMode(ModeType::VOP);
+        assert(0);
+        //m_vop_view->SetRootNode(node);
+        //ChangeMode(ModeType::VOP);
     }
     else
     {

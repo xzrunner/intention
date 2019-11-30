@@ -18,6 +18,9 @@ namespace sopv
 class Evaluator : boost::noncopyable
 {
 public:
+    // update node
+    void OnNodeChanged(const bp::NodePtr& node);
+
     // update nodes
     void OnAddNode(const bp::Node& node, bool need_update = true);
     void OnRemoveNode(const bp::Node& node);

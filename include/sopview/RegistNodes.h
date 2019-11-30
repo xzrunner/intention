@@ -1,6 +1,7 @@
 #pragma once
 
 #include "sopview/Node.h"
+#include "sopview/Compound.h"
 #include "sopview/ReflectPropTypes.h"
 
 #include <blueprint/Pin.h>
@@ -44,17 +45,18 @@ public:                                               \
 };
 
 #define SOPV_DEFINE_COMPOUND_NODE(type, name, parm)   \
-class type : public Node, public Compound             \
+class type : public Compound                          \
 {                                                     \
 public:                                               \
 	type()                                            \
-		: Node(#type)                                 \
+		: Compound(#type)                             \
 	{                                                 \
 		InitPins(#name);                              \
+		InitChildren(#name);                          \
 	}                                                 \
                                                       \
 	parm                                              \
-	RTTR_ENABLE(Node, Compound)                       \
+	RTTR_ENABLE(Compound)                             \
 };
 
 #define SOPV_DEFINE_PROPS_NODE(type, name, parm) \
@@ -92,14 +94,6 @@ public:                                                              \
 };
 
 #define SOPV_NODE_PROP
-
-class Compound
-{
-public:
-    std::vector<bp::NodePtr> children;
-
-    RTTR_ENABLE()
-};
 
 // attribute
 SOPV_DEFINE_NODE(AttributeCreate, attribcreate::2.0,
@@ -387,7 +381,7 @@ SOPV_DEFINE_NODE(Output, output,
 SOPV_DEFINE_NODE(Python, python,
     std::string code; \
 )
-SOPV_DEFINE_NODE(Split, split,
+SOPV_DEFINE_COMPOUND_NODE(Split, split,
     GroupName group_name; \
 )
 SOPV_DEFINE_COMPOUND_NODE(Subnetwork, subnetwork, SOPV_NODE_PROP)

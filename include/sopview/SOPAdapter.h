@@ -15,6 +15,7 @@ namespace sopv
 
 class Evaluator;
 struct StrVec3;
+class Node;
 
 class SOPAdapter
 {
@@ -22,7 +23,10 @@ public:
     static void UpdatePropBackFromFront(const bp::Node& front,
         sop::Node& back, const Evaluator& eval);
 
-    static sop::NodePtr CreateBackFromFront(const bp::Node& front);
+    static sop::NodePtr
+        CreateBackFromFront(const bp::Node& front);
+    static std::shared_ptr<Node>
+        CreateFrontFromBack(const sop::Node& back);
 
     static int TypeBackToFront(sop::NodeVarType type);
     static sop::NodeVarType TypeFrontToBack(int pin_type);

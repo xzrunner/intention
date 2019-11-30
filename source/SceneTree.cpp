@@ -24,7 +24,9 @@ void RebuildBackFromFront(std::shared_ptr<sop::node::Subnetwork>& dst,
                           const sopv::Evaluator& eval)
 {
     dst->ClearChildren();
-    for (auto& c : src->children)
+
+    auto& children = src->GetAllChildren();
+    for (auto& c : children)
     {
         auto dst_c = eval.QueryBackNode(*c);
         if (!dst_c) {
@@ -37,7 +39,7 @@ void RebuildBackFromFront(std::shared_ptr<sop::node::Subnetwork>& dst,
     }
 
     // calc again, for expr which need level info
-    for (auto& c : src->children)
+    for (auto& c : children)
     {
         auto dst_c = eval.QueryBackNode(*c);
         sopv::SOPAdapter::UpdatePropBackFromFront(*c, *dst_c, eval);
@@ -97,10 +99,8 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
         if (curr.node->HasUniqueComp<bp::CompNode>())
         {
             auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-            if (bp_parent && bp_parent->get_type().is_derived_from<node::Subnetwork>())
-            {
-                auto sub_nw = std::static_pointer_cast<node::Subnetwork>(bp_parent);
-                sub_nw->children.push_back(bp_node);
+            if (bp_parent && bp_parent->get_type().is_derived_from<node::Compound>()) {
+                std::static_pointer_cast<node::Compound>(bp_parent)->AddChild(bp_node);
             }
         }
 
@@ -121,7 +121,7 @@ bool SceneTree::Add(const n0::SceneNodePtr& node)
 
         // prepare ccomplex
         auto type = bp_node->get_type();
-        if (type.is_derived_from<node::Subnetwork>())
+        if (type.is_derived_from<node::Compound>())
         {
             if (!node->HasSharedComp<n0::CompComplex>()) {
                 node->AddSharedComp<n0::CompComplex>();
@@ -164,18 +164,9 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
             if (curr.node->HasUniqueComp<bp::CompNode>())
             {
                 auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-                if (bp_parent && bp_parent->get_type().is_derived_from<node::Subnetwork>())
-                {
-                    auto sub_nw = std::static_pointer_cast<node::Subnetwork>(bp_parent);
+                if (bp_parent && bp_parent->get_type().is_derived_from<node::Compound>()) {
                     auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
-                    for (auto itr = sub_nw->children.begin(); itr != sub_nw->children.end(); )
-                    {
-                        if (*itr == bp_node) {
-                            itr = sub_nw->children.erase(itr);
-                        } else {
-                            ++itr;
-                        }
-                    }
+                    std::static_pointer_cast<node::Compound>(bp_parent)->RemoveChild(bp_node);
                 }
             }
 
@@ -189,7 +180,7 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
                 auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
                 if (bp_parent && bp_parent->get_type().is_derived_from<node::Subnetwork>())
                 {
-                    auto sub_nw = std::static_pointer_cast<node::Subnetwork>(bp_parent);
+                    auto subnetwork = std::static_pointer_cast<node::Subnetwork>(bp_parent);
 
                     auto& prev_eval = m_path.parts[m_path.parts.size() - 2].eval;
                     auto& curr_node = m_path.parts.back().node;
@@ -197,7 +188,7 @@ bool SceneTree::Remove(const n0::SceneNodePtr& node)
                     auto parent = prev_eval->QueryBackNode(*curr_node->GetUniqueComp<bp::CompNode>().GetNode());
                     auto child = m_path.parts.back().eval->QueryBackNode(*bp_node);
                     assert(parent->get_type().is_derived_from<sop::node::Subnetwork>());
-                    RebuildBackFromFront(std::static_pointer_cast<sop::node::Subnetwork>(parent), sub_nw, *curr.eval);
+                    RebuildBackFromFront(std::static_pointer_cast<sop::node::Subnetwork>(parent), subnetwork, *curr.eval);
                 }
             }
         }
@@ -223,10 +214,8 @@ bool SceneTree::Clear()
     if (curr.node->HasUniqueComp<bp::CompNode>())
     {
         auto bp_parent = curr.node->GetUniqueComp<bp::CompNode>().GetNode();
-        if (bp_parent && bp_parent->get_type().is_derived_from<node::Subnetwork>())
-        {
-            auto sub_nw = std::static_pointer_cast<node::Subnetwork>(bp_parent);
-            sub_nw->children.clear();
+        if (bp_parent && bp_parent->get_type().is_derived_from<node::Compound>()) {
+            std::static_pointer_cast<node::Compound>(bp_parent)->ClearAllChildren();
         }
     }
 
@@ -263,7 +252,7 @@ bool SceneTree::Push(const n0::SceneNodePtr& node)
 
     auto& bp_node = node->GetUniqueComp<bp::CompNode>().GetNode();
     auto type = bp_node->get_type();
-    if (!type.is_derived_from<node::Subnetwork>()) {
+    if (!type.is_derived_from<node::Compound>()) {
         return false;
     }
 

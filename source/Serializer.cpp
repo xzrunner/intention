@@ -123,25 +123,31 @@ void Serializer::InitParentChildren(const n0::SceneNodePtr& node)
         return;
     }
 
-    std::shared_ptr<node::Subnetwork> parent = nullptr;
-    if (node->HasUniqueComp<bp::CompNode>()) {
+    std::shared_ptr<node::Compound> parent = nullptr;
+    if (node->HasUniqueComp<bp::CompNode>())
+    {
         auto& cnode = node->GetUniqueComp<bp::CompNode>();
         auto bp_node = cnode.GetNode();
-        if (bp_node->get_type().is_derived_from<node::Subnetwork>()) {
-            parent = std::static_pointer_cast<node::Subnetwork>(bp_node);
+        auto bp_type = bp_node->get_type();
+        if (bp_type.is_derived_from<node::Compound>()) {
+            parent = std::static_pointer_cast<node::Compound>(bp_node);
         }
     }
 
     auto& ccomplex = node->GetSharedComp<n0::CompComplex>();
 
-    if (parent) {
-        for (auto& c : ccomplex.GetAllChildren()) {
-            if (c->HasUniqueComp<bp::CompNode>()) {
-                auto& cnode = c->GetUniqueComp<bp::CompNode>();
-                auto bp_node = cnode.GetNode();
-                if (bp_node) {
-                    parent->children.push_back(bp_node);
-                }
+    if (parent)
+    {
+        parent->ClearAllChildren();
+        for (auto& c : ccomplex.GetAllChildren())
+        {
+            if (!c->HasUniqueComp<bp::CompNode>()) {
+                continue;
+            }
+            auto& cnode = c->GetUniqueComp<bp::CompNode>();
+            auto bp_node = cnode.GetNode();
+            if (bp_node) {
+                parent->AddChild(bp_node);
             }
         }
     }
