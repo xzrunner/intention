@@ -11,6 +11,7 @@
 #include <blueprint/node/Function.h>
 #include <blueprint/node/Input.h>
 #include <blueprint/node/Output.h>
+#include <vopview/VOPAdapter.h>
 
 // attribute
 #include <sop/node/AttributeCreate.h>
@@ -163,6 +164,12 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
         dst.SetVertexAttribList({ src.vertices_attrs.str });
         dst.SetPrimitiveAttribList({ src.primitives_attrs.str });
         dst.SetDetailAttribList({ src.detail_attrs.str });
+    }
+    else if (type == rttr::type::get<node::AttributeVOP>())
+    {
+        auto& src = static_cast<const node::AttributeVOP&>(front);
+        auto& dst = static_cast<sop::node::AttributeVOP&>(back);
+        dst.SetEval(vopv::VOPAdapter::CreateBackEval(src.GetAllChildren()));
     }
     else if (type == rttr::type::get<node::AttributeWrangle>())
     {
