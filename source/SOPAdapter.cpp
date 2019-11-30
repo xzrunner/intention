@@ -584,9 +584,9 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
             dst_parms.ClearAllParms();
             for (auto& sp : src_parms->parms)
             {
-                sop::Variable d_val;
+                hdiop::Variable d_val;
                 try {
-                    d_val.type = sop::VarType::Float;
+                    d_val.type = hdiop::VarType::Float;
                     d_val.f = boost::lexical_cast<float>(sp.value);
                 } catch (boost::bad_lexical_cast&) {
                     continue;

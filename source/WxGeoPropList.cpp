@@ -401,7 +401,7 @@ std::string WxGeoPropList::IDToString(const he::TopoID& topo_id, size_t group_id
 
 std::string WxGeoPropList::VarToString(sop::ParmType type, const sop::ParmList& list, size_t item, int comp_idx) const
 {
-    assert(list.Type() == type);
+    assert(list.GetType() == type);
     switch (type)
     {
     case sop::ParmType::Boolean:

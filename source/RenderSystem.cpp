@@ -252,14 +252,14 @@ void RenderSystem::DrawNodeUV(const sop::Node& node)
     auto& uv_list = attr.QueryParmList(sop::GeoAttrClass::Point, sop::GeoAttr::GEO_ATTR_UV);
     if (uv_list)
     {
-        assert(uv_list->Type() == sop::ParmType::Float3);
+        assert(uv_list->GetType() == sop::ParmType::Float3);
         auto& uv_data = std::static_pointer_cast<sop::ParmFlt3List>(uv_list)->GetAllItems();
         auto& pts = attr.GetPoints();
         for (auto& prim : attr.GetPrimtives())
         {
             std::vector<sm::vec2> border;
             border.reserve(prim->vertices.size());
-            for (auto& v : prim->vertices) 
+            for (auto& v : prim->vertices)
             {
                 assert(v->point->attr_idx < uv_data.size());
                 auto& uv = uv_data[v->point->attr_idx];
@@ -274,14 +274,14 @@ void RenderSystem::DrawNodeUV(const sop::Node& node)
     uv_list = attr.QueryParmList(sop::GeoAttrClass::Vertex, sop::GeoAttr::GEO_ATTR_UV);
     if (uv_list)
     {
-        assert(uv_list->Type() == sop::ParmType::Float3);
+        assert(uv_list->GetType() == sop::ParmType::Float3);
         auto& uv_data = std::static_pointer_cast<sop::ParmFlt3List>(uv_list)->GetAllItems();
         auto& vts = attr.GetVertices();
         for (auto& prim : attr.GetPrimtives())
         {
             std::vector<sm::vec2> border;
             border.reserve(prim->vertices.size());
-            for (auto& v : prim->vertices) 
+            for (auto& v : prim->vertices)
             {
                 assert(v->point->attr_idx < uv_data.size());
                 auto& uv = uv_data[v->attr_idx];

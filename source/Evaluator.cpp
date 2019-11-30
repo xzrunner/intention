@@ -182,18 +182,18 @@ float Evaluator::CalcFloat(const std::string& expr, const sop::Node& node, float
     auto var = m_eval.CalcExpr(expr, sop::EvalContext(m_eval, node));
     switch (var.type)
     {
-    case sop::VarType::Bool:
+    case hdiop::VarType::Bool:
         return var.b ? 1.0f : 0.0f;
-    case sop::VarType::Int:
+    case hdiop::VarType::Int:
         return static_cast<float>(var.i);
-    case sop::VarType::Float:
+    case hdiop::VarType::Float:
         return var.f;
-    case sop::VarType::Float3:
+    case hdiop::VarType::Float3:
     {
         auto f3 = static_cast<const float*>(var.p);
         return f3[0];
     }
-    case sop::VarType::Double:
+    case hdiop::VarType::Double:
         return static_cast<float>(var.d);
     default:
         return expect;
@@ -205,18 +205,18 @@ int Evaluator::CalcInt(const std::string& expr, const sop::Node& node, int expec
     auto var = m_eval.CalcExpr(expr, sop::EvalContext(m_eval, node));
     switch (var.type)
     {
-    case sop::VarType::Bool:
+    case hdiop::VarType::Bool:
         return var.b ? 1 : 0;
-    case sop::VarType::Int:
+    case hdiop::VarType::Int:
         return var.i;
-    case sop::VarType::Float:
+    case hdiop::VarType::Float:
         return static_cast<int>(var.f);
-    case sop::VarType::Float3:
+    case hdiop::VarType::Float3:
     {
         auto f3 = static_cast<const float*>(var.p);
         return static_cast<int>(f3[0]);
     }
-    case sop::VarType::Double:
+    case hdiop::VarType::Double:
         return static_cast<int>(var.d);
     default:
         return expect;
