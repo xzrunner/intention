@@ -169,7 +169,7 @@ void SOPAdapter::UpdatePropBackFromFront(const bp::Node& front, sop::Node& back,
     {
         auto& src = static_cast<const node::AttributeVOP&>(front);
         auto& dst = static_cast<sop::node::AttributeVOP&>(back);
-        dst.SetEval(vopv::VOPAdapter::CreateBackEval(src.GetAllChildren()));
+        vopv::VOPAdapter::UpdateBackEval(dst.GetEval(), src.GetAllChildren());
     }
     else if (type == rttr::type::get<node::AttributeWrangle>())
     {
