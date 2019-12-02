@@ -124,6 +124,9 @@
     <ClInclude Include="..\..\..\include\sopview\Compound.h">
       <Filter>dataset\node</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\EditOpMode.h">
+      <Filter>view</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\source\PinCallback.cpp">

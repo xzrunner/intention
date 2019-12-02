@@ -1,5 +1,7 @@
 #pragma once
 
+#include "sopview/EditOpMode.h"
+
 #include <ee0/WxStagePage.h>
 
 namespace vopv { class WxGraphPage; }
@@ -44,14 +46,7 @@ private:
     bool PathPushToNext(const ee0::VariantSet& variants);
     bool PathPopToPrev(const ee0::VariantSet& variants);
 
-private:
-    enum class ModeType
-    {
-        SOP,
-        VOP
-    };
-
-    void ChangeMode(ModeType mode);
+    void ChangeEditOpMode(EditOpMode mode);
 
 private:
     n0::SceneNodePtr m_root = nullptr;
@@ -67,7 +62,7 @@ private:
     ee0::EditOPPtr m_sop_op = nullptr;
     ee0::EditOPPtr m_vop_op = nullptr;
 
-    ModeType m_mode = ModeType::SOP;
+    EditOpMode m_mode = EditOpMode::SOP;
 
 }; // WxGraphPage
 

@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\sopview\Compound.h" />
+    <ClInclude Include="..\..\..\include\sopview\EditOpMode.h" />
     <ClInclude Include="..\..\..\include\sopview\Evaluator.h" />
     <ClInclude Include="..\..\..\include\sopview\PyLoaderCtx.h" />
     <ClInclude Include="..\..\..\include\sopview\PyParmValue.h" />

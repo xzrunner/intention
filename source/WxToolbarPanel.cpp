@@ -8,6 +8,7 @@
 #include <ee0/SubjectMgr.h>
 #include <ee0/WxNavigationBar.h>
 #include <blueprint/CompNode.h>
+#include <vopview/WxNodeProperty.h>
 
 #include <guard/check.h>
 #include <node0/SceneNode.h>
@@ -44,6 +45,29 @@ void WxToolbarPanel::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
 	}
 }
 
+void WxToolbarPanel::ChangeEditOpMode(EditOpMode mode)
+{
+    if (mode == m_mode) {
+        return;
+    }
+
+    m_mode = mode;
+    switch (mode)
+    {
+    case EditOpMode::SOP:
+        m_sop_node_prop->Show();
+        m_vop_node_prop->Hide();
+        break;
+    case EditOpMode::VOP:
+        m_sop_node_prop->Hide();
+        m_vop_node_prop->Show();
+        Layout();
+        break;
+    default:
+        assert(0);
+    }
+}
+
 void WxToolbarPanel::InitLayout(const std::shared_ptr<SceneTree>& stree)
 {
     auto sub_mgr = m_graph_stage->GetSubjectMgr();
@@ -52,7 +76,9 @@ void WxToolbarPanel::InitLayout(const std::shared_ptr<SceneTree>& stree)
     // geometry spreadsheet
     sizer->Add(m_geo_prop = new WxGeoProperty(this, sub_mgr, stree), wxEXPAND);
     // property
-	sizer->Add(m_node_prop = new WxNodeProperty(this, sub_mgr, stree), wxEXPAND);
+	sizer->Add(m_sop_node_prop = new WxNodeProperty(this, sub_mgr, stree), wxEXPAND);
+    sizer->Add(m_vop_node_prop = new vopv::WxNodeProperty(this, sub_mgr), wxEXPAND);
+    m_vop_node_prop->Hide();
     // nav bar
     m_nav_bar = new ee0::WxNavigationBar(this);
     m_nav_bar->Push("obj");
@@ -82,12 +108,16 @@ void WxToolbarPanel::OnSelectionInsert(const ee0::VariantSet& variants)
     m_geo_prop->LoadFromNode(obj);
 
 	auto& cnode = obj->GetUniqueComp<bp::CompNode>();
-	m_node_prop->LoadFromNode(obj, cnode.GetNode());
+    auto prop = GetCurrNodeProp();
+    assert(prop);
+    prop->LoadFromNode(obj, cnode.GetNode());
 }
 
 void WxToolbarPanel::OnSelectionClear(const ee0::VariantSet& variants)
 {
-    m_node_prop->Clear();
+    auto prop = GetCurrNodeProp();
+    assert(prop);
+    prop->Clear();
 }
 
 void WxToolbarPanel::OnRootToNextLevel(const ee0::VariantSet& variants)
@@ -108,6 +138,20 @@ void WxToolbarPanel::OnRootToNextLevel(const ee0::VariantSet& variants)
 
     auto sopv_node = std::static_pointer_cast<Node>(bp_node);
     m_nav_bar->Push(sopv_node->GetName());
+}
+
+bp::WxNodeProperty* WxToolbarPanel::GetCurrNodeProp() const
+{
+    switch (m_mode)
+    {
+    case EditOpMode::SOP:
+        return m_sop_node_prop;
+    case EditOpMode::VOP:
+        return m_vop_node_prop;
+    default:
+        assert(0);
+        return nullptr;
+    }
 }
 
 }

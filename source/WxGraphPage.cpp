@@ -88,7 +88,7 @@ void WxGraphPage::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
 {
     ee0::WxStagePage::OnNotify(msg, variants);
 
-    if (m_mode == ModeType::VOP)
+    if (m_mode == EditOpMode::VOP)
     {
         if (msg == MSG_SCENE_ROOT_SEEK_TO_PREV_LEVEL)
         {
@@ -177,10 +177,10 @@ void WxGraphPage::Traverse(std::function<bool(const ee0::GameObj&)> func,
 {
     switch (m_mode)
     {
-    case ModeType::SOP:
+    case EditOpMode::SOP:
         m_root->GetSharedComp<n0::CompComplex>().Traverse(func, inverse);
         break;
-    case ModeType::VOP:
+    case EditOpMode::VOP:
         m_vop_view->GetRootNode()->GetSharedComp<n0::CompComplex>().Traverse(func, inverse);
         break;
     default:
@@ -373,7 +373,7 @@ bool WxGraphPage::PathPushToNext(const ee0::VariantSet& variants)
     if (bp_node && bp_node->get_type() == rttr::type::get<node::AttributeVOP>())
     {
         if (!m_vop_view) {
-            m_vop_view = std::make_shared<vopv::WxGraphPage>(m_parent, nullptr);
+            m_vop_view = std::make_shared<vopv::WxGraphPage>(m_parent, nullptr, m_root);
             m_vop_view->SetPreviewCanvas(m_preview_canvas);
         }
 
@@ -390,7 +390,7 @@ bool WxGraphPage::PathPushToNext(const ee0::VariantSet& variants)
         auto attr_vop = std::static_pointer_cast<sop::node::AttributeVOP>(eval->QueryBackNode(*bp_node));
         assert(attr_vop);
         m_vop_view->SetRootNode(*obj, attr_vop->GetEval());
-        ChangeMode(ModeType::VOP);
+        ChangeEditOpMode(EditOpMode::VOP);
     }
     else
     {
@@ -419,12 +419,12 @@ bool WxGraphPage::PathPopToPrev(const ee0::VariantSet& variants)
     {
         assert(0);
         //m_vop_view->SetRootNode(node);
-        //ChangeMode(ModeType::VOP);
+        //ChangeEditOpMode(EditOpMode::VOP);
     }
     else
     {
         m_root = m_stree->GetCurrNode();
-        ChangeMode(ModeType::SOP);
+        ChangeEditOpMode(EditOpMode::SOP);
     }
 
     m_sub_mgr->NotifyObservers(ee0::MSG_NODE_SELECTION_CLEAR);
@@ -432,8 +432,10 @@ bool WxGraphPage::PathPopToPrev(const ee0::VariantSet& variants)
     return true;
 }
 
-void WxGraphPage::ChangeMode(ModeType mode)
+void WxGraphPage::ChangeEditOpMode(EditOpMode mode)
 {
+    m_toolbar->ChangeEditOpMode(mode);
+
     if (mode == m_mode) {
         return;
     }
@@ -441,10 +443,10 @@ void WxGraphPage::ChangeMode(ModeType mode)
     m_mode = mode;
     switch (mode)
     {
-    case ModeType::SOP:
+    case EditOpMode::SOP:
         GetImpl().SetEditOP(m_sop_op);
         break;
-    case ModeType::VOP:
+    case EditOpMode::VOP:
         GetImpl().SetEditOP(m_vop_op);
         break;
     default:

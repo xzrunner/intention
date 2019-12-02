@@ -1,16 +1,18 @@
 #pragma once
 
+#include "sopview/EditOpMode.h"
+
 #include <ee0/Observer.h>
 
 #include <wx/panel.h>
 
 namespace ee0 { class WxStagePage; class WxNavigationBar; }
+namespace bp { class WxNodeProperty; }
 
 namespace sopv
 {
 
 class WxGeoProperty;
-class WxNodeProperty;
 class SceneTree;
 
 class WxToolbarPanel : public wxPanel, public ee0::Observer
@@ -23,6 +25,8 @@ public:
 
     auto GetGeoPropView() const { return m_geo_prop; }
 
+    void ChangeEditOpMode(EditOpMode mode);
+
 private:
 	void InitLayout(const std::shared_ptr<SceneTree>& stree);
 
@@ -31,12 +35,17 @@ private:
 
     void OnRootToNextLevel(const ee0::VariantSet& variants);
 
+    bp::WxNodeProperty* GetCurrNodeProp() const;
+
 private:
     ee0::WxStagePage* m_graph_stage;
 
     WxGeoProperty* m_geo_prop;
 
-    WxNodeProperty* m_node_prop;
+    bp::WxNodeProperty* m_sop_node_prop;
+    bp::WxNodeProperty* m_vop_node_prop;
+
+    EditOpMode m_mode = EditOpMode::SOP;
 
     ee0::WxNavigationBar* m_nav_bar;
 
