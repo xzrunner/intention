@@ -523,39 +523,4 @@ bool WxNodeProperty::UpdateView(wxPropertyGridEvent& event)
     return dirty;
 }
 
-wxEnumProperty* WxNodeProperty::CreateEnumProp(const std::string& label, rttr::type type, int init_val)
-{
-    wxArrayString choices;
-
-    auto vars = type.get_enumeration().get_values();
-    choices.resize(vars.size());
-    for (auto& var : vars)
-    {
-        auto idx = var.to_int();
-        auto desc = type.get_enumeration().get_metadata(idx);
-        assert(desc.is_valid());
-        choices[idx] = desc.to_string();
-    }
-
-    auto wx_prop = new wxEnumProperty(label, wxPG_LABEL, choices);
-    wx_prop->SetValue(init_val);
-    return wx_prop;
-}
-
-rttr::variant WxNodeProperty::QueryEnumPropByLabel(const std::string& label, rttr::type type)
-{
-    auto vars = type.get_enumeration().get_values();
-    for (auto& var : vars)
-    {
-        auto idx = var.to_int();
-        auto desc = type.get_enumeration().get_metadata(idx);
-        assert(desc.is_valid());
-        if (label == desc.to_string()) {
-            return var;
-        }
-    }
-    assert(0);
-    return rttr::variant();
-}
-
 }
