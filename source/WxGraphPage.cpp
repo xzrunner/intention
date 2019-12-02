@@ -106,6 +106,7 @@ void WxGraphPage::OnNotify(uint32_t msg, const ee0::VariantSet& variants)
             case bp::MSG_BP_CONN_INSERT:
             case bp::MSG_BP_CONN_DELETE:
             case bp::MSG_BP_CONN_REBUILD:
+            case bp::MSG_BP_NODE_PROP_CHANGED:
             {
                 auto node = m_stree->GetLastNode();
                 if (node->HasUniqueComp<bp::CompNode>()) {
