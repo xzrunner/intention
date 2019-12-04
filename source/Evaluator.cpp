@@ -142,7 +142,7 @@ void Evaluator::OnDisconnecting(const bp::Connecting& conn)
 
 void Evaluator::OnRebuildConnection()
 {
-    std::vector<std::pair<hdiop::Node<sop::NodeVarType>::PortAddr, hdiop::Node<sop::NodeVarType>::PortAddr>> conns;
+    std::vector<std::pair<dag::Node<sop::NodeVarType>::PortAddr, dag::Node<sop::NodeVarType>::PortAddr>> conns;
     for (auto& itr : m_nodes_map)
     {
         auto& front = itr.first;
@@ -182,18 +182,18 @@ float Evaluator::CalcFloat(const std::string& expr, const sop::Node& node, float
     auto var = m_eval.CalcExpr(expr, sop::EvalContext(m_eval, node));
     switch (var.type)
     {
-    case hdiop::VarType::Bool:
+    case dag::VarType::Bool:
         return var.b ? 1.0f : 0.0f;
-    case hdiop::VarType::Int:
+    case dag::VarType::Int:
         return static_cast<float>(var.i);
-    case hdiop::VarType::Float:
+    case dag::VarType::Float:
         return var.f;
-    case hdiop::VarType::Float3:
+    case dag::VarType::Float3:
     {
         auto f3 = static_cast<const float*>(var.p);
         return f3[0];
     }
-    case hdiop::VarType::Double:
+    case dag::VarType::Double:
         return static_cast<float>(var.d);
     default:
         return expect;
@@ -205,18 +205,18 @@ int Evaluator::CalcInt(const std::string& expr, const sop::Node& node, int expec
     auto var = m_eval.CalcExpr(expr, sop::EvalContext(m_eval, node));
     switch (var.type)
     {
-    case hdiop::VarType::Bool:
+    case dag::VarType::Bool:
         return var.b ? 1 : 0;
-    case hdiop::VarType::Int:
+    case dag::VarType::Int:
         return var.i;
-    case hdiop::VarType::Float:
+    case dag::VarType::Float:
         return static_cast<int>(var.f);
-    case hdiop::VarType::Float3:
+    case dag::VarType::Float3:
     {
         auto f3 = static_cast<const float*>(var.p);
         return static_cast<int>(f3[0]);
     }
-    case hdiop::VarType::Double:
+    case dag::VarType::Double:
         return static_cast<int>(var.d);
     default:
         return expect;
