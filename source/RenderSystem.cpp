@@ -10,7 +10,7 @@
 #include <geoshape/Point3D.h>
 #include <geoshape/Polygon3D.h>
 #include <geoshape/Box.h>
-#include <polymesh3/Geometry.h>
+#include <polymesh3/Polytope.h>
 #include <sop/Node.h>
 #include <sop/GeometryImpl.h>
 #include <sop/ParmList.h>
