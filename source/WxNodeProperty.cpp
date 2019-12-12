@@ -267,7 +267,7 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
 
         wxArrayString attr_names;
         attr_names.push_back("");
-        for (auto& list : lists) 
+        for (auto& list : lists)
         {
             if (list->GetName() == attr_name.str) {
                 idx = attr_names.size();
@@ -281,11 +281,6 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         }
         attr_prop->SetValue(idx);
         m_pg->Append(attr_prop);
-    }
-    else if (prop_type.is_enumeration())
-    {
-        auto wx_prop = CreateEnumProp(ui_info.desc, prop_type, prop.get_value(node).get_value<int>());
-        m_pg->Append(wx_prop);
     }
     else
     {
@@ -463,25 +458,6 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
             attr_name.str = lists[idx - 1]->GetName();
         }
         prop.set_value(m_node, attr_name);
-    }
-    else if (prop_type.is_enumeration() && key == ui_info.desc)
-    {
-        if (val.CheckType<int>())
-        {
-            auto t = val.GetType();
-            auto idx = wxANY_AS(val, int);
-            auto vars = prop_type.get_enumeration().get_values();
-            assert(idx >= 0 && idx < static_cast<int>(vars.size()));
-            bool find = false;
-            for (auto& var : vars) {
-                if (var.to_int() == idx) {
-                    prop.set_value(m_node, var);
-                    find = true;
-                    break;
-                }
-            }
-            assert(find);
-        }
     }
     else
     {

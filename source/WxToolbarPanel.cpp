@@ -8,7 +8,6 @@
 #include <ee0/SubjectMgr.h>
 #include <ee0/WxNavigationBar.h>
 #include <blueprint/CompNode.h>
-#include <vopview/WxNodeProperty.h>
 
 #include <guard/check.h>
 #include <node0/SceneNode.h>
@@ -77,7 +76,7 @@ void WxToolbarPanel::InitLayout(const std::shared_ptr<SceneTree>& stree)
     sizer->Add(m_geo_prop = new WxGeoProperty(this, sub_mgr, stree), wxEXPAND);
     // property
 	sizer->Add(m_sop_node_prop = new WxNodeProperty(this, sub_mgr, stree), wxEXPAND);
-    sizer->Add(m_vop_node_prop = new vopv::WxNodeProperty(this, sub_mgr), wxEXPAND);
+    sizer->Add(m_vop_node_prop = new bp::WxNodeProperty(this, sub_mgr), wxEXPAND);
     m_vop_node_prop->Hide();
     // nav bar
     m_nav_bar = new ee0::WxNavigationBar(this);
