@@ -377,8 +377,8 @@ void RenderSystem::DrawFace(const pm3::Polytope& poly, size_t face_idx,
 {
 	std::vector<sm::vec2> polygon;
     auto& face = poly.Faces()[face_idx];
-	polygon.reserve(face->points.size());
-	for (auto& v : face->points) {
+	polygon.reserve(face->border.size());
+	for (auto& v : face->border) {
 		polygon.push_back(m_vp.TransPosProj3ToProj2(poly.Points()[v]->pos, cam_mat));
 	}
 	m_pt.AddPolygonFilled(polygon.data(), polygon.size(), color);
