@@ -231,7 +231,7 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         m_pg->AppendIn(prop, new wxStringProperty(wxT("GroupName"), wxPG_LABEL, v.group_name));
         m_pg->AppendIn(prop, new wxStringProperty(wxT("ExprStr"),   wxPG_LABEL, v.expr_str));
 
-        auto op_prop = CreateEnumProp(ui_info.desc, rttr::type::get<sop::GroupMerge>(), static_cast<int>(v.merge_op));
+        auto op_prop = ee0::WxPropHelper::CreateEnumProp(ui_info.desc, rttr::type::get<sop::GroupMerge>(), static_cast<int>(v.merge_op));
         m_pg->AppendIn(prop, op_prop);
     }
     else if (prop_type == rttr::type::get<AttrCreateItem>())
@@ -242,8 +242,8 @@ bool WxNodeProperty::InitView(const rttr::property& prop, const bp::NodePtr& nod
         prop->SetExpanded(false);
 
         m_pg->AppendIn(prop, new wxStringProperty(wxT("Name"),  wxPG_LABEL, item.name));
-        m_pg->AppendIn(prop, CreateEnumProp("Class", rttr::type::get<sop::GeoAttrClass>(), static_cast<int>(item.cls)));
-        m_pg->AppendIn(prop, CreateEnumProp("Type", rttr::type::get<sop::node::AttributeCreate::ItemType>(), static_cast<int>(item.type)));
+        m_pg->AppendIn(prop, ee0::WxPropHelper::CreateEnumProp("Class", rttr::type::get<sop::GeoAttrClass>(), static_cast<int>(item.cls)));
+        m_pg->AppendIn(prop, ee0::WxPropHelper::CreateEnumProp("Type", rttr::type::get<sop::node::AttributeCreate::ItemType>(), static_cast<int>(item.type)));
         m_pg->AppendIn(prop, new wxFloatProperty("Val X", wxPG_LABEL, item.value.x));
         m_pg->AppendIn(prop, new wxFloatProperty("Val Y", wxPG_LABEL, item.value.y));
         m_pg->AppendIn(prop, new wxFloatProperty("Val Z", wxPG_LABEL, item.value.z));
@@ -395,7 +395,7 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         v.expr_str   = tokens[1];
 
         auto op_str = tokens[2];
-        v.merge_op = QueryEnumPropByLabel(op_str, rttr::type::get<sop::GroupMerge>()).get_value<sop::GroupMerge>();
+        v.merge_op = ee0::WxPropHelper::QueryEnumPropByLabel(op_str, rttr::type::get<sop::GroupMerge>()).get_value<sop::GroupMerge>();
 
         prop.set_value(m_node, v);
     }
@@ -424,10 +424,10 @@ bool WxNodeProperty::UpdateView(const rttr::property& prop, const wxPGProperty& 
         item.name = tokens[idx++];
 
         auto cls_str = tokens[idx++];
-        item.cls = QueryEnumPropByLabel(cls_str, rttr::type::get<sop::GeoAttrClass>()).get_value<sop::GeoAttrClass>();
+        item.cls = ee0::WxPropHelper::QueryEnumPropByLabel(cls_str, rttr::type::get<sop::GeoAttrClass>()).get_value<sop::GeoAttrClass>();
 
         auto type_str = tokens[idx++];
-        item.type = QueryEnumPropByLabel(type_str, rttr::type::get<sop::node::AttributeCreate::ItemType>()).get_value<sop::node::AttributeCreate::ItemType>();
+        item.type = ee0::WxPropHelper::QueryEnumPropByLabel(type_str, rttr::type::get<sop::node::AttributeCreate::ItemType>()).get_value<sop::node::AttributeCreate::ItemType>();
 
         for (int i = 0; i < 4; ++i) {
             item.value.xyzw[i] = std::atof(tokens[idx++].c_str());
