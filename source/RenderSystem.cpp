@@ -116,9 +116,9 @@ void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) cons
     }
 
     auto node = geo->GetNode();
-    if (node->HasSharedComp<n3::CompShape>())
+    if (node->HasUniqueComp<n3::CompShape>())
     {
-        auto& shapes = node->GetSharedComp<n3::CompShape>().GetShapes();
+        auto& shapes = node->GetUniqueComp<n3::CompShape>().GetShapes();
         if (!shapes.empty())
         {
             pt3::RenderParams rp;
