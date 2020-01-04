@@ -127,7 +127,7 @@ void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) cons
             rp.cam_mat = &m_cam_mat;
             rp.radius = NODE_RADIUS;
             rp.color = LIGHT_SELECT_COLOR;
-            rp.draw_ctrl_node = true;
+            rp.mask.set(pt3::RenderParams::DrawCtrlNode);
 
             for (auto& s : shapes) {
                 pt3::RenderSystem::DrawShape(*s, rp);
@@ -150,7 +150,7 @@ void RenderSystem::DrawNode2D(const sop::Node& back, const bp::Node& front) cons
         rp.cam_mat = &m_cam_mat;
         rp.radius = NODE_RADIUS;
         rp.color = 0xffff0000;
-        rp.draw_ctrl_node = true;
+        rp.mask.set(pt3::RenderParams::DrawCtrlNode);
 
         // draw bounding
         if (group_create.keep_in_bounding)
@@ -323,12 +323,12 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc, const sop::Node& bac
     if (front.GetDisplay())
     {
         // draw face
-        rp.type = pt3::RenderParams::DRAW_MESH;
+        rp.mask.reset(pt3::RenderParams::DrawMeshBorder);
         n3::RenderSystem::Draw(*sn, rp, rc);
     }
 
     // draw edge
-    rp.type = pt3::RenderParams::DRAW_BORDER_MESH;
+    rp.mask.set(pt3::RenderParams::DrawMeshBorder);
     n3::RenderSystem::Draw(*sn, rp, rc);
 }
 
