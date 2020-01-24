@@ -31,7 +31,6 @@
     <ClInclude Include="..\..\..\include\sopview\RenderSystem.h" />
     <ClInclude Include="..\..\..\include\sopview\RightPopupMenu.h" />
     <ClInclude Include="..\..\..\include\sopview\SceneTree.h" />
-    <ClInclude Include="..\..\..\include\sopview\Serializer.h" />
     <ClInclude Include="..\..\..\include\sopview\WxGeoProperty.h" />
     <ClInclude Include="..\..\..\include\sopview\WxGeoPropList.h" />
     <ClInclude Include="..\..\..\include\sopview\WxGraphPage.h" />
@@ -57,7 +56,6 @@
     <ClCompile Include="..\..\..\source\RenderSystem.cpp" />
     <ClCompile Include="..\..\..\source\RightPopupMenu.cpp" />
     <ClCompile Include="..\..\..\source\SceneTree.cpp" />
-    <ClCompile Include="..\..\..\source\Serializer.cpp" />
     <ClCompile Include="..\..\..\source\WxGeoProperty.cpp" />
     <ClCompile Include="..\..\..\source\WxGeoPropList.cpp" />
     <ClCompile Include="..\..\..\source\WxGraphPage.cpp" />

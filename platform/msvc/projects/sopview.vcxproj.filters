@@ -61,9 +61,6 @@
     <ClInclude Include="..\..\..\include\sopview\RightPopupMenu.h">
       <Filter>view\blueprint</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\sopview\Serializer.h">
-      <Filter>view\blueprint</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\SceneTree.h">
       <Filter>view\blueprint</Filter>
     </ClInclude>
@@ -160,9 +157,6 @@
       <Filter>view\blueprint</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\NodeSelectOP.cpp">
-      <Filter>view\blueprint</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\Serializer.cpp">
       <Filter>view\blueprint</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp">
