@@ -186,7 +186,7 @@ void Node::InitPins(const std::string& name)
 
 			auto& s = src[i];
             d.type = SOPAdapter::TypeBackToFront(s.var.type);
-            d.name = s.var.name;
+            d.name = s.var.full_name;
 
             dst.push_back(d);
 		}
