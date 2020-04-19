@@ -10,7 +10,7 @@ class SceneTree;
 class WxNodeProperty : public bp::WxNodeProperty
 {
 public:
-	WxNodeProperty(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr,
+	WxNodeProperty(const ur2::Device& dev, wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr,
         const std::shared_ptr<SceneTree>& stree);
 
     virtual void LoadFromNode(const n0::SceneNodePtr& obj, const bp::NodePtr& node) override;

@@ -4,6 +4,7 @@
 #include "sopview/WxGeoProperty.h"
 #include "sopview/Evaluator.h"
 #include "sopview/SceneTree.h"
+#include "sopview/HeightfieldRenderer.h"
 
 #include <blueprint/CompNode.h>
 
@@ -37,15 +38,17 @@ namespace sopv
 
 const float RenderSystem::UV_SCALE = 512;
 
-RenderSystem::RenderSystem(const pt3::Viewport& vp,
+RenderSystem::RenderSystem(const ur2::Device& dev,
+                           const pt3::Viewport& vp,
                            const sm::mat4& cam_mat)
     : m_vp(vp)
     , m_cam_mat(cam_mat)
+    , m_hf_renderer(dev)
 {
 }
 
-void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
-                              const std::shared_ptr<SceneTree>& stree) const
+void RenderSystem::DrawNode3D(const ur2::Device& dev, ur2::Context& ctx,
+                              const pt0::RenderContext& rc, const std::shared_ptr<SceneTree>& stree) const
 {
     auto node = stree->GetCurrNode();
     if (!node->HasUniqueComp<bp::CompNode>()) {
@@ -61,8 +64,8 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
     {
         auto n = stree->Pop();
         assert(n);
-        DrawNode3D(rc, stree);
-        stree->Push(n);
+        DrawNode3D(dev, ctx, rc, stree);
+        stree->Push(dev, n);
         return;
     }
 
@@ -91,14 +94,14 @@ void RenderSystem::DrawNode3D(const pt0::RenderContext& rc,
         //if (bp_type.is_derived_from<node::Subnetwork>())
         if (bp_type == rttr::type::get<node::Subnetwork>())
         {
-            stree->Push(c);
-            DrawNode3D(rc, stree);
+            stree->Push(dev, c);
+            DrawNode3D(dev, ctx, rc, stree);
             stree->Pop();
         }
         else
         {
             auto back = eval->QueryBackNode(*bp_node);
-            DrawNode3D(rc, *back, *std::static_pointer_cast<Node>(bp_node));
+            DrawNode3D(dev, ctx, rc, *back, *std::static_pointer_cast<Node>(bp_node));
         }
     }
 }
@@ -303,33 +306,18 @@ void RenderSystem::DrawNodeUV(const sop::Node& node)
     }
 }
 
-void RenderSystem::DrawNode3D(const pt0::RenderContext& rc, const sop::Node& back, const Node& front) const
+void RenderSystem::DrawNode3D(const ur2::Device& dev, ur2::Context& ctx,
+                              const pt0::RenderContext& rc, const sop::Node& back, const Node& front) const
 {
     auto geo = back.GetGeometry();
-    if (!geo) {
-        return;
+    if (geo) {
+        return DrawGeometry(dev, ctx, rc, *geo, front);
+    } else {
+        auto vol = back.GetVolume();
+        if (vol) {
+            return DrawVolume(dev, ctx, vol);
+        }
     }
-
-    auto sn = geo->GetNode();
-    if (!sn) {
-        return;
-    }
-
-    pt3::RenderParams rp;
-    rp.painter  = &m_pt;
-    rp.viewport = &m_vp;
-    rp.cam_mat  = &m_cam_mat;
-
-    if (front.GetDisplay())
-    {
-        // draw face
-        rp.mask.reset(pt3::RenderParams::DrawMeshBorder);
-        n3::RenderSystem::Draw(*sn, rp, rc);
-    }
-
-    // draw edge
-    rp.mask.set(pt3::RenderParams::DrawMeshBorder);
-    n3::RenderSystem::Draw(*sn, rp, rc);
 }
 
 void RenderSystem::DrawGroup(const sop::Group& group, const sop::GeometryImpl& geo) const
@@ -382,6 +370,37 @@ void RenderSystem::DrawFace(const pm3::Polytope& poly, size_t face_idx,
 		polygon.push_back(m_vp.TransPosProj3ToProj2(poly.Points()[v]->pos, cam_mat));
 	}
 	m_pt.AddPolygonFilled(polygon.data(), polygon.size(), color);
+}
+
+void RenderSystem::DrawGeometry(const ur2::Device& dev, ur2::Context& ctx,
+                                const pt0::RenderContext& rc, const sop::GeometryImpl& geo, const Node& front) const
+{
+    auto sn = geo.GetNode();
+    if (!sn) {
+        return;
+    }
+
+    pt3::RenderParams rp;
+    rp.painter  = &m_pt;
+    rp.viewport = &m_vp;
+    rp.cam_mat  = &m_cam_mat;
+
+    if (front.GetDisplay())
+    {
+        // draw face
+        rp.mask.reset(pt3::RenderParams::DrawMeshBorder);
+        n3::RenderSystem::Draw(dev, ctx, *sn, rp, rc);
+    }
+
+    // draw edge
+    rp.mask.set(pt3::RenderParams::DrawMeshBorder);
+    n3::RenderSystem::Draw(dev, ctx, *sn, rp, rc);
+}
+
+void RenderSystem::DrawVolume(const ur2::Device& dev, ur2::Context& ctx,
+                              const std::shared_ptr<sop::Volume>& vol) const
+{
+    m_hf_renderer.Draw(dev, ctx, vol);
 }
 
 }

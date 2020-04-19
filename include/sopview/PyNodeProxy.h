@@ -13,6 +13,8 @@
 
 #include <boost/python.hpp>
 
+namespace ur2 { class Device; }
+
 namespace sopv
 {
 
@@ -28,7 +30,7 @@ class NodeProxy
 public:
     NodeProxy(PyLoaderCtx& ctx, const std::vector<n0::SceneNodePtr>& paths);
 
-    std::shared_ptr<NodeProxy> CreateNode(const std::string& type, const std::string& name,
+    std::shared_ptr<NodeProxy> CreateNode(const ur2::Device& dev, const std::string& type, const std::string& name,
         bool run_init_scripts = false, bool load_contents = false, bool exact_type_name = false);
     std::shared_ptr<NodeProxy> CreateNetworkBox(const std::string& name);
     std::shared_ptr<NodeProxy> FindNetworkBox(const std::string& name);

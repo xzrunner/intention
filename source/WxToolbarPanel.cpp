@@ -15,12 +15,12 @@
 namespace sopv
 {
 
-WxToolbarPanel::WxToolbarPanel(wxWindow* parent, ee0::WxStagePage* graph_stage,
+WxToolbarPanel::WxToolbarPanel(const ur2::Device& dev, wxWindow* parent, ee0::WxStagePage* graph_stage,
                                const std::shared_ptr<SceneTree>& stree)
 	: wxPanel(parent)
     , m_graph_stage(graph_stage)
 {
-	InitLayout(stree);
+	InitLayout(dev, stree);
 
     auto& sub_mgr = graph_stage->GetSubjectMgr();
     sub_mgr->RegisterObserver(ee0::MSG_NODE_SELECTION_INSERT, this);
@@ -67,7 +67,7 @@ void WxToolbarPanel::ChangeEditOpMode(EditOpMode mode)
     }
 }
 
-void WxToolbarPanel::InitLayout(const std::shared_ptr<SceneTree>& stree)
+void WxToolbarPanel::InitLayout(const ur2::Device& dev, const std::shared_ptr<SceneTree>& stree)
 {
     auto sub_mgr = m_graph_stage->GetSubjectMgr();
 
@@ -75,8 +75,8 @@ void WxToolbarPanel::InitLayout(const std::shared_ptr<SceneTree>& stree)
     // geometry spreadsheet
     sizer->Add(m_geo_prop = new WxGeoProperty(this, sub_mgr, stree), wxEXPAND);
     // property
-	sizer->Add(m_sop_node_prop = new WxNodeProperty(this, sub_mgr, stree), wxEXPAND);
-    sizer->Add(m_vop_node_prop = new bp::WxNodeProperty(this, sub_mgr), wxEXPAND);
+	sizer->Add(m_sop_node_prop = new WxNodeProperty(dev, this, sub_mgr, stree), wxEXPAND);
+    sizer->Add(m_vop_node_prop = new bp::WxNodeProperty(dev, this, sub_mgr), wxEXPAND);
     m_vop_node_prop->Hide();
     // nav bar
     m_nav_bar = new ee0::WxNavigationBar(this);

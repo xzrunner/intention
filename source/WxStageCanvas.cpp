@@ -21,6 +21,7 @@
 #include <painting3/WindowContext.h>
 #include <painting3/PerspCam.h>
 #include <painting3/OrthoCam.h>
+#include <painting3/Shader.h>
 #include <sop/GeometryImpl.h>
 
 namespace
@@ -34,9 +35,9 @@ const uint32_t LIGHT_SELECT_COLOR = 0x88000088;
 namespace sopv
 {
 
-WxStageCanvas::WxStageCanvas(ee0::WxStagePage* stage, ECS_WORLD_PARAM
-                             const ee0::RenderContext& rc)
-    : ee3::WxStageCanvas(stage, ECS_WORLD_VAR &rc, nullptr, true)
+WxStageCanvas::WxStageCanvas(const ur2::Device& dev, ee0::WxStagePage* stage,
+                             ECS_WORLD_PARAM const ee0::RenderContext& rc)
+    : ee3::WxStageCanvas(dev, stage, ECS_WORLD_VAR &rc, nullptr, true)
     , m_viewports(*this)
 {
     m_uv_op = std::make_shared<ee2::CamControlOP>(m_viewports.m_cam_uv,
@@ -81,21 +82,30 @@ void WxStageCanvas::DrawForeground3D() const
             pt0::RenderVariant(persp->GetPos())
         );
     }
-    auto& wc = pt3::Blackboard::Instance()->GetWindowContext();
-    assert(wc);
-    rc.AddVar(
-        pt3::MaterialMgr::PosTransUniforms::view.name,
-        pt0::RenderVariant(wc->GetViewMat())
-    );
-    rc.AddVar(
-        pt3::MaterialMgr::PosTransUniforms::projection.name,
-        pt0::RenderVariant(wc->GetProjMat())
-    );
+    //auto& wc = pt3::Blackboard::Instance()->GetWindowContext();
+    //assert(wc);
+    //rc.AddVar(
+    //    pt3::MaterialMgr::PosTransUniforms::view.name,
+    //    pt0::RenderVariant(wc->GetViewMat())
+    //);
+    //rc.AddVar(
+    //    pt3::MaterialMgr::PosTransUniforms::projection.name,
+    //    pt0::RenderVariant(wc->GetProjMat())
+    //);
 
     auto cam_mat = m_camera->GetProjectionMat() * m_camera->GetViewMat();
-    RenderSystem rs(GetViewport(), cam_mat);
+    RenderSystem rs(m_dev, GetViewport(), cam_mat);
 
-    rs.DrawNode3D(rc, m_stree);
+    auto& shaders = rs.GetHfRenderer().GetAllShaders();
+    //if (!shaders.empty()) {
+    //    assert(shaders.size() == 1);
+    //    auto& wc = std::const_pointer_cast<pt3::WindowContext>(GetWidnowContext().wc3);
+    //    if (shaders[0]->get_type() == rttr::type::get<pt3::Shader>()) {
+    //        std::static_pointer_cast<pt3::Shader>(shaders[0])->AddNotify(wc);
+    //    }
+    //}
+
+    rs.DrawNode3D(m_dev, *GetRenderContext().ur_ctx, rc, m_stree);
 }
 
 void WxStageCanvas::DrawForeground2D() const
@@ -109,7 +119,7 @@ void WxStageCanvas::DrawForeground2D() const
     }
 
     auto cam_mat = m_camera->GetProjectionMat() * m_camera->GetViewMat();
-    RenderSystem rs(GetViewport(), cam_mat);
+    RenderSystem rs(m_dev, GetViewport(), cam_mat);
 
     if (m_uv_mode)
     {
@@ -139,7 +149,8 @@ void WxStageCanvas::DrawForeground2D() const
         }
     }
 
-    pt2::RenderSystem::DrawPainter(rs.GetPainter());
+    ur2::RenderState ur_rs;
+    pt2::RenderSystem::DrawPainter(m_dev, *GetRenderContext().ur_ctx, ur_rs, rs.GetPainter());
 }
 
 void WxStageCanvas::OnKeyDownImpl(wxKeyEvent& event)
@@ -287,23 +298,23 @@ bool WxStageCanvas::Viewports::ChangeVP(ViewportType type)
         auto& vp = m_canvas.GetViewport();
         cam->OnSize(vp.Width(), vp.Height());
 
-        // update 2d render ctx
-        auto& wc2 = pt2::Blackboard::Instance()->GetWindowContext();
-        if (wc2)
-        {
-            if (cam->TypeID() == pt0::GetCamTypeID<pt2::OrthoCamera>()) {
-                auto ortho2d = std::static_pointer_cast<pt2::OrthoCamera>(cam);
-                wc2->SetView(ortho2d->GetPosition(), ortho2d->GetScale());
-            } else {
-                wc2->SetView({ 0, 0 }, 1);
-            }
-        }
+        //// update 2d render ctx
+        //auto& wc2 = pt2::Blackboard::Instance()->GetWindowContext();
+        //if (wc2)
+        //{
+        //    if (cam->TypeID() == pt0::GetCamTypeID<pt2::OrthoCamera>()) {
+        //        auto ortho2d = std::static_pointer_cast<pt2::OrthoCamera>(cam);
+        //        wc2->SetView(ortho2d->GetPosition(), ortho2d->GetScale());
+        //    } else {
+        //        wc2->SetView({ 0, 0 }, 1);
+        //    }
+        //}
 
-        // update 3d render ctx
-        auto& wc3 = pt3::Blackboard::Instance()->GetWindowContext();
-        if (wc3) {
-            wc3->SetProjection(cam->GetProjectionMat());
-        }
+        //// update 3d render ctx
+        //auto& wc3 = pt3::Blackboard::Instance()->GetWindowContext();
+        //if (wc3) {
+        //    wc3->SetProjection(cam->GetProjectionMat());
+        //}
 
         m_canvas.SetCamera(cam);
     }

@@ -69,7 +69,7 @@ std::shared_ptr<NodeProxy> hou_get_node(const std::string& path)
                     return std::make_shared<NodeProxy>(CTX, paths);
                 } else {
                     assert(bp_node->get_type() == rttr::type::get<sopv::node::Subnetwork>());
-                    CTX.stree->Push(c);
+                    CTX.stree->Push(*CTX.dev, c);
                 }
             }
         }
@@ -87,9 +87,9 @@ std::shared_ptr<NodeProxy> hou_get_node(const std::string& path)
         auto& style = sopv_node->GetStyle();
         caabb.SetSize(*scene_node, sm::rect(style.width, style.height));
 
-        CTX.stree->Add(scene_node);
+        CTX.stree->Add(*CTX.dev, scene_node);
 
-        CTX.stree->Push(scene_node);
+        CTX.stree->Push(*CTX.dev, scene_node);
 
         paths.push_back(scene_node);
     }

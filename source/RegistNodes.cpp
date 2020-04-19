@@ -749,6 +749,18 @@ REGIST_NODE_RTTI(Dungeon, dungeon,
 // rigging
 REGIST_NODE_RTTI_DEFAULT(Lattice, lattice)
 
+// terrain
+REGIST_NODE_RTTI(HeightField, heightfield,
+.property("sizex", &sopv::node::HeightField::sizex)                          \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Width"))           \
+)                                                                            \
+.property("sizey", &sopv::node::HeightField::sizey)                          \
+(                                                                            \
+	rttr::metadata(ee0::UIMetaInfoTag(), ee0::UIMetaInfo("Height"))          \
+)                                                                            \
+)
+
 // utility
 REGIST_NODE_RTTI(Blast, blast,
 .property("group", &sopv::node::Blast::group_name)                           \

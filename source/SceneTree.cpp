@@ -63,12 +63,12 @@ void SceneTree::AfterLoadFromFile()
     SetupCurrNode();
 }
 
-bool SceneTree::Add(const n0::SceneNodePtr& node)
+bool SceneTree::Add(const ur2::Device& dev, const n0::SceneNodePtr& node)
 {
 #ifndef SOPV_SCENE_TREE_DUMMY_ROOT
     if (m_path.parts.empty())
     {
-        auto eval = std::make_shared<Evaluator>();
+        auto eval = std::make_shared<Evaluator>(dev);
         if (m_is_loading) {
             eval->EnableUpdateSopEval(false);
         }
@@ -244,7 +244,7 @@ SceneTree::QueryEval(const n0::SceneNodePtr& node) const
     return itr == m_eval_cache.end() ? nullptr : itr->second;
 }
 
-bool SceneTree::Push(const n0::SceneNodePtr& node)
+bool SceneTree::Push(const ur2::Device& dev, const n0::SceneNodePtr& node)
 {
     if (!node->HasUniqueComp<bp::CompNode>()) {
         return false;
@@ -260,7 +260,7 @@ bool SceneTree::Push(const n0::SceneNodePtr& node)
     auto itr = m_eval_cache.find(node);
     if (itr == m_eval_cache.end())
     {
-        auto eval = std::make_shared<Evaluator>();
+        auto eval = std::make_shared<Evaluator>(dev);
         if (m_is_loading) {
             eval->EnableUpdateSopEval(false);
         }
@@ -374,12 +374,12 @@ void SceneTree::LoadEnd()
     }
 }
 
-void SceneTree::InitDummyRoot()
+void SceneTree::InitDummyRoot(const ur2::Device& dev)
 {
     auto node = ns::NodeFactory::Create2D();
     node->AddSharedComp<n0::CompComplex>();
 
-    auto eval = std::make_shared<Evaluator>();
+    auto eval = std::make_shared<Evaluator>(dev);
     if (m_is_loading) {
         eval->EnableUpdateSopEval(false);
     }

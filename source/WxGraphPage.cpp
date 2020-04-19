@@ -65,7 +65,8 @@ WxGraphPage::WxGraphPage(wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr,
         node->SetName("obj");
         cnode.SetNode(node);
     }
-    m_stree->Add(m_root);
+    auto& dev = GetImpl().GetCanvas()->GetRenderDevice();
+    m_stree->Add(dev, m_root);
 #ifdef SOPV_SCENE_TREE_DUMMY_ROOT
     m_stree->ToNextLevel(m_root);
 #endif // SOPV_SCENE_TREE_DUMMY_ROOT
@@ -291,7 +292,8 @@ bool WxGraphPage::InsertSceneObj(const ee0::VariantSet& variants)
         }
     }
 
-    return m_stree->Add(*obj);
+    auto& dev = GetImpl().GetCanvas()->GetRenderDevice();
+    return m_stree->Add(dev, *obj);
 }
 
 bool WxGraphPage::DeleteSceneObj(const ee0::VariantSet& variants)

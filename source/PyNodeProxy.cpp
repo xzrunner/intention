@@ -13,6 +13,7 @@
 
 #include <blueprint/NSCompNode.h>
 
+#include <unirender2/Device.h>
 #include <node0/SceneNode.h>
 #include <node0/CompComplex.h>
 #include <node2/CompBoundingBox.h>
@@ -25,7 +26,7 @@ using namespace boost::python;
 namespace
 {
 
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(hou_node_create_node_overloads, NodeProxy::CreateNode, 2, 5)
+BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(hou_node_create_node_overloads, NodeProxy::CreateNode, 3, 6)
 BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(hou_node_set_input_overloads, NodeProxy::SetInput, 2, 3)
 
 }
@@ -43,7 +44,7 @@ NodeProxy::NodeProxy(PyLoaderCtx& ctx, const std::vector<n0::SceneNodePtr>& path
 }
 
 std::shared_ptr<NodeProxy>
-NodeProxy::CreateNode(const std::string& type, const std::string& name,
+NodeProxy::CreateNode(const ur2::Device& dev, const std::string& type, const std::string& name,
                       bool run_init_scripts, bool load_contents, bool exact_type_name)
 {
     auto child = CreateNodeByName(type);
@@ -65,9 +66,9 @@ NodeProxy::CreateNode(const std::string& type, const std::string& name,
 
     m_ctx.stree->SetDepth(0);
     for (auto& n : m_paths) {
-        m_ctx.stree->Push(n);
+        m_ctx.stree->Push(dev, n);
     }
-    m_ctx.stree->Add(scene_node);
+    m_ctx.stree->Add(dev, scene_node);
 
     auto paths = m_paths;
     paths.push_back(scene_node);

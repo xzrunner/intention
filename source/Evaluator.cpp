@@ -238,14 +238,14 @@ void Evaluator::EnableUpdateSopEval(bool up)
     m_update_sop_eval = up;
 
     if (up) {
-        m_eval.Update();
+        m_eval.Update(m_dev);
     }
 }
 
 void Evaluator::Update()
 {
     if (m_update_sop_eval) {
-        m_eval.Update();
+        m_eval.Update(m_dev);
     }
 
     UpdateGroupName();

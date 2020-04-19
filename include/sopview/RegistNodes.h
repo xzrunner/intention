@@ -341,6 +341,12 @@ SOPV_DEFINE_NODE(Dungeon, dungeon,
 // rigging
 SOPV_DEFINE_NODE(Lattice, lattice, SOPV_NODE_PROP)
 
+// terrain
+SOPV_DEFINE_NODE(HeightField, heightfield,
+    size_t sizex = 128; \
+    size_t sizey = 128; \
+)
+
 // utility
 SOPV_DEFINE_NODE(Blast, blast,
     GroupName group_name;                             \

@@ -28,12 +28,6 @@
     <Filter Include="view\toolbar">
       <UniqueIdentifier>{6e7dc0ea-4d5e-4b85-a725-0e3a4eb30e73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="view\stage">
-      <UniqueIdentifier>{7f05f1d0-8c59-44e6-90f1-c8ab12f71f6c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="view\blueprint">
-      <UniqueIdentifier>{37717c11-dc74-4af9-bb4e-18b0f9892744}</UniqueIdentifier>
-    </Filter>
     <Filter Include="view\toolbar\geo">
       <UniqueIdentifier>{e8fbf975-be0a-4cdf-ade7-7f8628b481c3}</UniqueIdentifier>
     </Filter>
@@ -43,6 +37,12 @@
     <Filter Include="tools\serialize">
       <UniqueIdentifier>{e6b86047-da07-4a98-aa7a-86680ad8d4c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="view\preview">
+      <UniqueIdentifier>{7f05f1d0-8c59-44e6-90f1-c8ab12f71f6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view\editor">
+      <UniqueIdentifier>{37717c11-dc74-4af9-bb4e-18b0f9892744}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\sopview\SOPView.h" />
@@ -50,19 +50,19 @@
       <Filter>view\toolbar</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\WxStageCanvas.h">
-      <Filter>view\stage</Filter>
+      <Filter>view\preview</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\RenderSystem.h">
-      <Filter>view\stage</Filter>
+      <Filter>view\preview</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\NodeSelectOP.h">
-      <Filter>view\blueprint</Filter>
+      <Filter>view\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\RightPopupMenu.h">
-      <Filter>view\blueprint</Filter>
+      <Filter>view\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\SceneTree.h">
-      <Filter>view\blueprint</Filter>
+      <Filter>view\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\Evaluator.h">
       <Filter>tools\eval</Filter>
@@ -116,13 +116,16 @@
       <Filter>view\toolbar\node</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\WxGraphPage.h">
-      <Filter>view\blueprint</Filter>
+      <Filter>view\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\Compound.h">
       <Filter>dataset\node</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\sopview\EditOpMode.h">
       <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sopview\HeightfieldRenderer.h">
+      <Filter>view\preview</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -145,19 +148,19 @@
       <Filter>tools\eval</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxStageCanvas.cpp">
-      <Filter>view\stage</Filter>
+      <Filter>view\preview</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\RenderSystem.cpp">
-      <Filter>view\stage</Filter>
+      <Filter>view\preview</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\SceneTree.cpp">
-      <Filter>view\blueprint</Filter>
+      <Filter>view\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\RightPopupMenu.cpp">
-      <Filter>view\blueprint</Filter>
+      <Filter>view\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\NodeSelectOP.cpp">
-      <Filter>view\blueprint</Filter>
+      <Filter>view\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxToolbarPanel.cpp">
       <Filter>view\toolbar</Filter>
@@ -188,10 +191,13 @@
       <Filter>view\toolbar\node</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\WxGraphPage.cpp">
-      <Filter>view\blueprint</Filter>
+      <Filter>view\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\Compound.cpp">
       <Filter>dataset\node</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\HeightfieldRenderer.cpp">
+      <Filter>view\preview</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

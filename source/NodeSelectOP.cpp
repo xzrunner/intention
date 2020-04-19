@@ -6,6 +6,7 @@
 #include <ee0/WxStagePage.h>
 #include <ee0/SubjectMgr.h>
 #include <ee0/MsgHelper.h>
+#include <ee0/WxStageCanvas.h>
 #include <blueprint/CompNode.h>
 
 #include <node0/SceneNode.h>
@@ -46,7 +47,8 @@ bool NodeSelectOP::OnMouseLeftDClick(int x, int y)
         return false;
     }
 
-    if (m_stree && m_stree->Push(node) ||
+    auto& dev = m_stage.GetImpl().GetCanvas()->GetRenderDevice();
+    if (m_stree && m_stree->Push(dev, node) ||
         bp_node->get_type().is_derived_from<node::Compound>()) {
         ee0::MsgHelper::SendObjMsg(*m_stage.GetSubjectMgr(), node, MSG_SCENE_ROOT_TO_NEXT_LEVEL);
         return true;
