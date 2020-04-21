@@ -62,7 +62,7 @@ void Node::Draw(const ur2::Device& dev, ur2::Context& ctx,
     mat.Scale(s, s);
     auto pos = rp.GetMatrix() * sm::vec2(0, 0);
     mat.Translate(pos.x + m_style.width * 0.8f, pos.y);
-    pt2::RenderSystem::DrawText(m_name, bp::RenderSystem::Instance()->GetTitleTB(),
+    pt2::RenderSystem::DrawText(ctx, m_name, bp::RenderSystem::Instance()->GetTitleTB(),
         mat, bp::RenderSystem::COL_TEXT, bp::RenderSystem::COL_ZERO);
 
     //if (m_preview) {
