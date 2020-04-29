@@ -13,7 +13,7 @@
 
 #include <blueprint/NSCompNode.h>
 
-#include <unirender2/Device.h>
+#include <unirender/Device.h>
 #include <node0/SceneNode.h>
 #include <node0/CompComplex.h>
 #include <node2/CompBoundingBox.h>
@@ -44,7 +44,7 @@ NodeProxy::NodeProxy(PyLoaderCtx& ctx, const std::vector<n0::SceneNodePtr>& path
 }
 
 std::shared_ptr<NodeProxy>
-NodeProxy::CreateNode(const ur2::Device& dev, const std::string& type, const std::string& name,
+NodeProxy::CreateNode(const ur::Device& dev, const std::string& type, const std::string& name,
                       bool run_init_scripts, bool load_contents, bool exact_type_name)
 {
     auto child = CreateNodeByName(type);

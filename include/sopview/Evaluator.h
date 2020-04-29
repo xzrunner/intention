@@ -18,7 +18,7 @@ namespace sopv
 class Evaluator : boost::noncopyable
 {
 public:
-    Evaluator(const ur2::Device& dev) : m_dev(dev) {}
+    Evaluator(const ur::Device& dev) : m_dev(dev) {}
 
     // update node
     void OnNodeChanged(const bp::NodePtr& node);
@@ -52,7 +52,7 @@ private:
     void UpdateGroupName();
 
 private:
-    const ur2::Device& m_dev;
+    const ur::Device& m_dev;
 
     sop::Evaluator m_eval;
 

@@ -35,7 +35,7 @@ const uint32_t LIGHT_SELECT_COLOR = 0x88000088;
 namespace sopv
 {
 
-WxStageCanvas::WxStageCanvas(const ur2::Device& dev, ee0::WxStagePage* stage,
+WxStageCanvas::WxStageCanvas(const ur::Device& dev, ee0::WxStagePage* stage,
                              ECS_WORLD_PARAM const ee0::RenderContext& rc)
     : ee3::WxStageCanvas(dev, stage, ECS_WORLD_VAR &rc, nullptr, true)
     , m_viewports(*this)
@@ -149,7 +149,7 @@ void WxStageCanvas::DrawForeground2D() const
         }
     }
 
-    ur2::RenderState ur_rs;
+    ur::RenderState ur_rs;
     pt2::RenderSystem::DrawPainter(m_dev, *GetRenderContext().ur_ctx, ur_rs, rs.GetPainter());
 }
 

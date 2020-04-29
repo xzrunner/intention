@@ -20,10 +20,10 @@ class Node;
 class RenderSystem
 {
 public:
-    RenderSystem(const ur2::Device& dev,
+    RenderSystem(const ur::Device& dev,
         const pt3::Viewport& vp, const sm::mat4& cam_mat);
 
-    void DrawNode3D(const ur2::Device& dev, ur2::Context& ctx,
+    void DrawNode3D(const ur::Device& dev, ur::Context& ctx,
         const pt0::RenderContext& rc, const std::shared_ptr<SceneTree>& stre) const;
     void DrawNode2D(const sop::Node& back, const bp::Node& front) const;
 
@@ -38,7 +38,7 @@ public:
     static const float UV_SCALE;
 
 private:
-    void DrawNode3D(const ur2::Device& dev, ur2::Context& ctx,
+    void DrawNode3D(const ur::Device& dev, ur::Context& ctx,
         const pt0::RenderContext& rc, const sop::Node& back, const Node& front) const;
 
     void DrawGroup(const sop::Group& group, const sop::GeometryImpl& geo) const;
@@ -46,9 +46,9 @@ private:
     void DrawFace(const pm3::Polytope& poly, size_t face_idx,
         uint32_t color, const sm::mat4& cam_mat) const;
 
-    void DrawGeometry(const ur2::Device& dev, ur2::Context& ctx,
+    void DrawGeometry(const ur::Device& dev, ur::Context& ctx,
         const pt0::RenderContext& rc, const sop::GeometryImpl& geo, const Node& front) const;
-    void DrawVolume(const ur2::Device& dev, ur2::Context& ctx,
+    void DrawVolume(const ur::Device& dev, ur::Context& ctx,
         const std::shared_ptr<sop::Volume>& vol) const;
 
 private:

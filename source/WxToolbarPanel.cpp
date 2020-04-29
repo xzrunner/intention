@@ -15,7 +15,7 @@
 namespace sopv
 {
 
-WxToolbarPanel::WxToolbarPanel(const ur2::Device& dev, wxWindow* parent, ee0::WxStagePage* graph_stage,
+WxToolbarPanel::WxToolbarPanel(const ur::Device& dev, wxWindow* parent, ee0::WxStagePage* graph_stage,
                                const std::shared_ptr<SceneTree>& stree)
 	: wxPanel(parent)
     , m_graph_stage(graph_stage)
@@ -67,7 +67,7 @@ void WxToolbarPanel::ChangeEditOpMode(EditOpMode mode)
     }
 }
 
-void WxToolbarPanel::InitLayout(const ur2::Device& dev, const std::shared_ptr<SceneTree>& stree)
+void WxToolbarPanel::InitLayout(const ur::Device& dev, const std::shared_ptr<SceneTree>& stree)
 {
     auto sub_mgr = m_graph_stage->GetSubjectMgr();
 

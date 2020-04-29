@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SM_Vector.h>
-#include <unirender2/typedef.h>
+#include <unirender/typedef.h>
 #include <renderpipeline/IRenderer.h>
 #include <renderpipeline/RendererImpl.h>
 
@@ -34,35 +34,35 @@ struct HeightfieldVertex
 class HeightfieldRenderer : public rp::IRenderer, public rp::RendererImpl<HeightfieldVertex, uint32_t>, private boost::noncopyable
 {
 public:
-    HeightfieldRenderer(const ur2::Device& dev);
+    HeightfieldRenderer(const ur::Device& dev);
 
-    virtual void Flush(ur2::Context& ctx) override {}
+    virtual void Flush(ur::Context& ctx) override {}
 
     void Clear();
 
-    void Draw(const ur2::Device& dev, ur2::Context& ctx,
+    void Draw(const ur::Device& dev, ur::Context& ctx,
         const std::shared_ptr<sop::Volume>& vol);
 
 private:
-    void InitTextuers(const ur2::Device& dev);
-    void InitShader(const ur2::Device& dev);
+    void InitTextuers(const ur::Device& dev);
+    void InitShader(const ur::Device& dev);
 
-    void Setup(const ur2::Device& dev, ur2::Context& ctx,
+    void Setup(const ur::Device& dev, ur::Context& ctx,
         const std::shared_ptr<sop::Volume>& vol);
 
-    void BuildVertBuf(ur2::Context& ctx);
-    void DrawVertBuf(ur2::Context& ctx) const;
+    void BuildVertBuf(ur::Context& ctx);
+    void DrawVertBuf(ur::Context& ctx) const;
 
-    static ur2::TexturePtr
-        GenHeightMap(const ur2::Device& dev, const sop::Volume& vol);
+    static ur::TexturePtr
+        GenHeightMap(const ur::Device& dev, const sop::Volume& vol);
 
 private:
     std::shared_ptr<sop::Volume> m_vol = nullptr;
 
-    ur2::TexturePtr m_height_map = nullptr;
+    ur::TexturePtr m_height_map = nullptr;
 
-    ur2::TexturePtr m_detail_map = nullptr;
-    ur2::TexturePtr m_splat_map[4];
+    ur::TexturePtr m_detail_map = nullptr;
+    ur::TexturePtr m_splat_map[4];
 
 }; // HeightfieldRenderer
 

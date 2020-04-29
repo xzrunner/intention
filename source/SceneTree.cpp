@@ -63,7 +63,7 @@ void SceneTree::AfterLoadFromFile()
     SetupCurrNode();
 }
 
-bool SceneTree::Add(const ur2::Device& dev, const n0::SceneNodePtr& node)
+bool SceneTree::Add(const ur::Device& dev, const n0::SceneNodePtr& node)
 {
 #ifndef SOPV_SCENE_TREE_DUMMY_ROOT
     if (m_path.parts.empty())
@@ -244,7 +244,7 @@ SceneTree::QueryEval(const n0::SceneNodePtr& node) const
     return itr == m_eval_cache.end() ? nullptr : itr->second;
 }
 
-bool SceneTree::Push(const ur2::Device& dev, const n0::SceneNodePtr& node)
+bool SceneTree::Push(const ur::Device& dev, const n0::SceneNodePtr& node)
 {
     if (!node->HasUniqueComp<bp::CompNode>()) {
         return false;
@@ -374,7 +374,7 @@ void SceneTree::LoadEnd()
     }
 }
 
-void SceneTree::InitDummyRoot(const ur2::Device& dev)
+void SceneTree::InitDummyRoot(const ur::Device& dev)
 {
     auto node = ns::NodeFactory::Create2D();
     node->AddSharedComp<n0::CompComplex>();

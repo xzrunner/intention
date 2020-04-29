@@ -1,9 +1,9 @@
 #include "sopview/HeightfieldRenderer.h"
 
 #include <sop/Volume.h>
-#include <unirender2/ShaderProgram.h>
-#include <unirender2/Texture.h>
-#include <unirender2/TextureDescription.h>
+#include <unirender/ShaderProgram.h>
+#include <unirender/Texture.h>
+#include <unirender/TextureDescription.h>
 #include <painting0/Shader.h>
 #include <painting0/ModelMatUpdater.h>
 #include <painting3/ViewMatUpdater.h>
@@ -77,7 +77,7 @@ void main()
 namespace sopv
 {
 
-HeightfieldRenderer::HeightfieldRenderer(const ur2::Device& dev)
+HeightfieldRenderer::HeightfieldRenderer(const ur::Device& dev)
     : rp::RendererImpl<HeightfieldVertex, uint32_t>(dev)
 {
     InitTextuers(dev);
@@ -89,7 +89,7 @@ void HeightfieldRenderer::Clear()
     m_vol.reset();
 }
 
-void HeightfieldRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx,
+void HeightfieldRenderer::Draw(const ur::Device& dev, ur::Context& ctx,
                                const std::shared_ptr<sop::Volume>& vol)
 {
     if (m_shaders.empty()) {
@@ -103,7 +103,7 @@ void HeightfieldRenderer::Draw(const ur2::Device& dev, ur2::Context& ctx,
     //DrawVertBuf();
 }
 
-void HeightfieldRenderer::InitTextuers(const ur2::Device& dev)
+void HeightfieldRenderer::InitTextuers(const ur::Device& dev)
 {
     m_detail_map = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\detailMap.tga");
 
@@ -113,7 +113,7 @@ void HeightfieldRenderer::InitTextuers(const ur2::Device& dev)
     m_splat_map[3] = model::TextureLoader::LoadFromFile(dev, "D:\\OneDrive\\asset\\terrain\\highestTile.tga");
 }
 
-void HeightfieldRenderer::InitShader(const ur2::Device& dev)
+void HeightfieldRenderer::InitShader(const ur::Device& dev)
 {
     //std::vector<ur::VertexAttrib> layout;
     //layout.push_back(ur::VertexAttrib(rp::VERT_POSITION_NAME, 3, 4, 20, 0));
@@ -127,7 +127,7 @@ void HeightfieldRenderer::InitShader(const ur2::Device& dev)
     m_shaders.push_back(shader);
 }
 
-void HeightfieldRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
+void HeightfieldRenderer::Setup(const ur::Device& dev, ur::Context& ctx,
                                 const std::shared_ptr<sop::Volume>& vol)
 {
     m_vol = vol;
@@ -160,7 +160,7 @@ void HeightfieldRenderer::Setup(const ur2::Device& dev, ur2::Context& ctx,
     }
 }
 
-void HeightfieldRenderer::BuildVertBuf(ur2::Context& ctx)
+void HeightfieldRenderer::BuildVertBuf(ur::Context& ctx)
 {
     assert(m_vol);
     auto& sz = m_vol->GetSize();
@@ -192,26 +192,26 @@ void HeightfieldRenderer::BuildVertBuf(ur2::Context& ctx)
         }
     }
 
-    ur2::RenderState rs;
+    ur::RenderState rs;
 
     assert(m_shaders.size() == 1);
-    FlushBuffer(ctx, ur2::PrimitiveType::Triangles, rs, m_shaders[0]);
+    FlushBuffer(ctx, ur::PrimitiveType::Triangles, rs, m_shaders[0]);
 }
 
-void HeightfieldRenderer::DrawVertBuf(ur2::Context& ctx) const
+void HeightfieldRenderer::DrawVertBuf(ur::Context& ctx) const
 {
     if (!m_vol || !m_va) {
         return;
     }
 
-    ur2::DrawState ds;
+    ur::DrawState ds;
     assert(m_shaders.size() == 1);
     ds.program = m_shaders.front();
     ds.vertex_array = m_va;
-    ctx.Draw(ur2::PrimitiveType::Triangles, ds, nullptr);
+    ctx.Draw(ur::PrimitiveType::Triangles, ds, nullptr);
 }
 
-ur2::TexturePtr HeightfieldRenderer::GenHeightMap(const ur2::Device& dev, const sop::Volume& vol)
+ur::TexturePtr HeightfieldRenderer::GenHeightMap(const ur::Device& dev, const sop::Volume& vol)
 {
     auto& sz = vol.GetSize();
     if (sz.x == 0 || sz.z == 0 || sz.y != 1) {
@@ -226,11 +226,11 @@ ur2::TexturePtr HeightfieldRenderer::GenHeightMap(const ur2::Device& dev, const 
         pixels[i] = static_cast<unsigned char>(vals[i] * 255.0f);
     }
 
-    ur2::TextureDescription desc;
-    desc.target = ur2::TextureTarget::Texture2D;
+    ur::TextureDescription desc;
+    desc.target = ur::TextureTarget::Texture2D;
     desc.width  = sz.x;
     desc.height = sz.z;
-    desc.format = ur2::TextureFormat::A8;
+    desc.format = ur::TextureFormat::A8;
     return dev.CreateTexture(desc, pixels.data());
 }
 

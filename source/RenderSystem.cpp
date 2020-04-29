@@ -38,7 +38,7 @@ namespace sopv
 
 const float RenderSystem::UV_SCALE = 512;
 
-RenderSystem::RenderSystem(const ur2::Device& dev,
+RenderSystem::RenderSystem(const ur::Device& dev,
                            const pt3::Viewport& vp,
                            const sm::mat4& cam_mat)
     : m_vp(vp)
@@ -47,7 +47,7 @@ RenderSystem::RenderSystem(const ur2::Device& dev,
 {
 }
 
-void RenderSystem::DrawNode3D(const ur2::Device& dev, ur2::Context& ctx,
+void RenderSystem::DrawNode3D(const ur::Device& dev, ur::Context& ctx,
                               const pt0::RenderContext& rc, const std::shared_ptr<SceneTree>& stree) const
 {
     auto node = stree->GetCurrNode();
@@ -306,7 +306,7 @@ void RenderSystem::DrawNodeUV(const sop::Node& node)
     }
 }
 
-void RenderSystem::DrawNode3D(const ur2::Device& dev, ur2::Context& ctx,
+void RenderSystem::DrawNode3D(const ur::Device& dev, ur::Context& ctx,
                               const pt0::RenderContext& rc, const sop::Node& back, const Node& front) const
 {
     auto geo = back.GetGeometry();
@@ -372,7 +372,7 @@ void RenderSystem::DrawFace(const pm3::Polytope& poly, size_t face_idx,
 	m_pt.AddPolygonFilled(polygon.data(), polygon.size(), color);
 }
 
-void RenderSystem::DrawGeometry(const ur2::Device& dev, ur2::Context& ctx,
+void RenderSystem::DrawGeometry(const ur::Device& dev, ur::Context& ctx,
                                 const pt0::RenderContext& rc, const sop::GeometryImpl& geo, const Node& front) const
 {
     auto sn = geo.GetNode();
@@ -397,7 +397,7 @@ void RenderSystem::DrawGeometry(const ur2::Device& dev, ur2::Context& ctx,
     n3::RenderSystem::Draw(dev, ctx, *sn, rp, rc);
 }
 
-void RenderSystem::DrawVolume(const ur2::Device& dev, ur2::Context& ctx,
+void RenderSystem::DrawVolume(const ur::Device& dev, ur::Context& ctx,
                               const std::shared_ptr<sop::Volume>& vol) const
 {
     m_hf_renderer.Draw(dev, ctx, vol);

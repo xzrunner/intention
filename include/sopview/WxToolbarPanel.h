@@ -6,7 +6,7 @@
 
 #include <wx/panel.h>
 
-namespace ur2 { class Device; }
+namespace ur { class Device; }
 namespace ee0 { class WxStagePage; class WxNavigationBar; }
 namespace bp { class WxNodeProperty; }
 
@@ -19,7 +19,7 @@ class SceneTree;
 class WxToolbarPanel : public wxPanel, public ee0::Observer
 {
 public:
-	WxToolbarPanel(const ur2::Device& dev, wxWindow* parent, ee0::WxStagePage* graph_stage,
+	WxToolbarPanel(const ur::Device& dev, wxWindow* parent, ee0::WxStagePage* graph_stage,
         const std::shared_ptr<SceneTree>& stree);
 
 	virtual void OnNotify(uint32_t msg, const ee0::VariantSet& variants) override;
@@ -29,7 +29,7 @@ public:
     void ChangeEditOpMode(EditOpMode mode);
 
 private:
-	void InitLayout(const ur2::Device& dev,
+	void InitLayout(const ur::Device& dev,
         const std::shared_ptr<SceneTree>& stree);
 
     void OnSelectionInsert(const ee0::VariantSet& variants);

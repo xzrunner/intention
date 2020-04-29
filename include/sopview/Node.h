@@ -15,7 +15,7 @@ public:
     Node& operator = (const Node& node);
     virtual ~Node();
 
-    virtual void Draw(const ur2::Device& dev, ur2::Context& ctx,
+    virtual void Draw(const ur::Device& dev, ur::Context& ctx,
         const n2::RenderParams& rp) const override;
 
     virtual void StoreToJson(const std::string& dir, rapidjson::Value& val, rapidjson::MemoryPoolAllocator<>& alloc) override;

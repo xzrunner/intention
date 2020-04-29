@@ -7,7 +7,7 @@
 #include <vector>
 #include <map>
 
-namespace ur2 { class Device; }
+namespace ur { class Device; }
 namespace bp { class Node; }
 
 namespace sopv
@@ -22,7 +22,7 @@ public:
 
     void AfterLoadFromFile();
 
-    bool Add(const ur2::Device& dev, const n0::SceneNodePtr& node);
+    bool Add(const ur::Device& dev, const n0::SceneNodePtr& node);
     bool Remove(const n0::SceneNodePtr& node);
     bool Clear();
 
@@ -33,7 +33,7 @@ public:
 
     std::shared_ptr<Evaluator> QueryEval(const n0::SceneNodePtr& node) const;
 
-    bool Push(const ur2::Device& dev, const n0::SceneNodePtr& node);
+    bool Push(const ur::Device& dev, const n0::SceneNodePtr& node);
     n0::SceneNodePtr Pop();
     bool SetDepth(size_t depth);
 
@@ -45,7 +45,7 @@ public:
     void LoadEnd();
 
 private:
-    void InitDummyRoot(const ur2::Device& dev);
+    void InitDummyRoot(const ur::Device& dev);
 
     bool IsCurrChild(const n0::SceneNodePtr& node) const;
 

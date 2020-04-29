@@ -127,7 +127,7 @@ const char* STR_GROUP_NULL = "null";
 namespace sopv
 {
 
-WxNodeProperty::WxNodeProperty(const ur2::Device& dev, wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr,
+WxNodeProperty::WxNodeProperty(const ur::Device& dev, wxWindow* parent, const ee0::SubjectMgrPtr& sub_mgr,
                                const std::shared_ptr<SceneTree>& stree)
 	: bp::WxNodeProperty(dev, parent, sub_mgr)
     , m_stree(stree)

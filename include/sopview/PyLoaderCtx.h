@@ -3,7 +3,7 @@
 #include <memory>
 #include <map>
 
-namespace ur2 { class Device; }
+namespace ur { class Device; }
 
 namespace sopv
 {
@@ -17,7 +17,7 @@ class NodeProxy;
 
 struct PyLoaderCtx
 {
-    std::shared_ptr<ur2::Device> dev = nullptr;
+    std::shared_ptr<ur::Device> dev = nullptr;
 
     std::shared_ptr<SceneTree> stree = nullptr;
 
