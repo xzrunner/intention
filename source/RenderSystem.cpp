@@ -389,12 +389,14 @@ void RenderSystem::DrawGeometry(const ur::Device& dev, ur::Context& ctx,
     {
         // draw face
         rp.mask.reset(pt3::RenderParams::DrawMeshBorder);
-        n3::RenderSystem::Draw(dev, ctx, *sn, rp, rc);
+        ur::DrawState ds;
+        n3::RenderSystem::Draw(dev, ctx, ds, *sn, rp, rc);
     }
 
     // draw edge
     rp.mask.set(pt3::RenderParams::DrawMeshBorder);
-    n3::RenderSystem::Draw(dev, ctx, *sn, rp, rc);
+    ur::DrawState ds;
+    n3::RenderSystem::Draw(dev, ctx, ds, *sn, rp, rc);
 }
 
 void RenderSystem::DrawVolume(const ur::Device& dev, ur::Context& ctx,
