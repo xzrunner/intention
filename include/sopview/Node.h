@@ -19,7 +19,8 @@ public:
         const n2::RenderParams& rp) const override;
 
     virtual void StoreToJson(const std::string& dir, rapidjson::Value& val, rapidjson::MemoryPoolAllocator<>& alloc) override;
-    virtual void LoadFromJson(const std::string& dir, const rapidjson::Value& val) override;
+    virtual void LoadFromJson(const ur::Device& dev, const std::string& dir, 
+		const rapidjson::Value& val) override;
 
     auto& GetName() const { return m_name; }
     void  SetName(const std::string& name) { m_name = name; }

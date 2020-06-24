@@ -99,9 +99,9 @@ void Node::StoreToJson(const std::string& dir, rapidjson::Value& val, rapidjson:
     }
 }
 
-void Node::LoadFromJson(const std::string& dir, const rapidjson::Value& val)
+void Node::LoadFromJson(const ur::Device& dev, const std::string& dir, const rapidjson::Value& val)
 {
-    bp::Node::LoadFromJson(dir, val);
+    bp::Node::LoadFromJson(dev, dir, val);
 
     if (val.HasMember("node_parms"))
     {
